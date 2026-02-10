@@ -6,18 +6,52 @@ if (!isset($_SESSION['admin'])) {
 }
 include "../config/db.php";
 
-/* Add Member */
+$message = "";
+$editData = null;
+
+/* Handle Form Submission (Add or Update) */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name  = $_POST['name'];
     $phone = $_POST['phone'];
     $email = $_POST['email'];
 
-    $stmt = $conn->prepare("
-        INSERT INTO Member (Member_Name, Phone_Number, Email)
-        VALUES (?, ?, ?)
-    ");
-    $stmt->bind_param("sss", $name, $phone, $email);
+    if (isset($_POST['update_id']) && !empty($_POST['update_id'])) {
+        // Update Existing Member
+        $id = $_POST['update_id'];
+        $stmt = $conn->prepare("UPDATE Member SET Member_Name=?, Phone_Number=?, Email=? WHERE Member_ID=?");
+        $stmt->bind_param("sssi", $name, $phone, $email, $id);
+        if ($stmt->execute()) {
+            $_SESSION['message'] = "Member updated successfully!";
+        } else {
+            $_SESSION['error'] = "Failed to update member.";
+        }
+    } else {
+        // Add New Member
+        $stmt = $conn->prepare("INSERT INTO Member (Member_Name, Phone_Number, Email) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $name, $phone, $email);
+        if ($stmt->execute()) {
+            $_SESSION['message'] = "Member added successfully!";
+        } else {
+            $_SESSION['error'] = "Failed to add member.";
+        }
+    }
+    header("Location: members.php");
+    exit;
+}
+
+/* Check for Session Messages */
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
+}
+
+/* Handle Edit Request */
+if (isset($_GET['edit'])) {
+    $id = $_GET['edit'];
+    $stmt = $conn->prepare("SELECT * FROM Member WHERE Member_ID=?");
+    $stmt->bind_param("i", $id);
     $stmt->execute();
+    $editData = $stmt->get_result()->fetch_assoc();
 }
 
 /* Fetch Members with issue count */
@@ -27,99 +61,150 @@ $members = $conn->query("
     FROM Member M
     LEFT JOIN Issue I ON M.Member_ID = I.Member_ID
     GROUP BY M.Member_ID
+    ORDER BY M.Member_ID DESC
 ");
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>LMS | Members</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 flex text-sm">
-
-<?php include "../includers/sidebar.php"; ?>
-
-<div class="flex-1 flex flex-col min-h-screen ml-64">
+    <title>LMS | Members Management</title>
     <?php include "../includers/headers.php"; ?>
+</head>
+<body class="bg-gray-50 text-slate-800 font-sans antialiased">
 
-    <main class="p-8">
-        <h1 class="text-2xl font-bold mb-6 text-gray-800">Members Management</h1>
+<div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <?php include "../includers/sidebar.php"; ?>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <!-- Add Member Form -->
-            <div class="bg-white p-6 rounded-lg shadow-sm h-fit">
-                <h2 class="text-lg font-bold mb-4 border-b pb-2 text-gray-700">Add New Member</h2>
-                <form method="POST" class="space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Full Name</label>
-                        <input type="text" name="name" required 
-                               class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                               placeholder="John Doe">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Phone Number</label>
-                        <input type="text" name="phone" required
-                               class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                               placeholder="(555) 123-4567">
-                    </div>
-
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Email</label>
-                        <input type="email" name="email" required
-                               class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                               placeholder="john@example.com">
-                    </div>
-
-                    <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition font-medium shadow">
-                        Add Member
-                    </button>
-                </form>
-            </div>
-
-            <!-- Members List -->
-            <div class="lg:col-span-2 bg-white rounded-lg shadow-sm overflow-hidden">
-                <div class="p-4 border-b bg-gray-50">
-                    <h2 class="text-lg font-bold text-gray-700">Registered Members</h2>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-gray-50 text-gray-500 font-semibold border-b">
-                            <tr>
-                                <th class="p-4">ID</th>
-                                <th class="p-4">Name</th>
-                                <th class="p-4">Phone</th>
-                                <th class="p-4">Email</th>
-                                <th class="p-4 text-center">Issues</th>
-                                <th class="p-4 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            <?php while ($row = $members->fetch_assoc()) { ?>
-                            <tr class="hover:bg-gray-50 transition">
-                                <td class="p-4 text-gray-600"><?= $row['Member_ID'] ?></td>
-                                <td class="p-4 font-medium text-gray-900"><?= $row['Member_Name'] ?></td>
-                                <td class="p-4 text-gray-600"><?= $row['Phone_Number'] ?></td>
-                                <td class="p-4 text-gray-600"><?= $row['Email'] ?></td>
-                                <td class="p-4 text-center">
-                                    <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full">
-                                        <?= $row['Issued_Count'] ?>
-                                    </span>
-                                </td>
-                                <td class="p-4 text-center">
-                                    <a href="#" class="text-blue-600 hover:text-blue-800 text-xs font-medium">Edit</a>
-                                </td>
-                            </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+    <!-- Main Content -->
+    <div class="flex-1 ml-64 flex flex-col relative z-0">
+        
+        <main class="p-8 space-y-8">
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
+                <div>
+                    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Members Management</h1>
+                    <p class="text-slate-500 mt-1">Manage library members and their details.</p>
                 </div>
             </div>
 
-        </div>
-    </main>
+            <?php if ($message): ?>
+                <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-start gap-3 animate-fade-in" role="alert">
+                    <i class="fas fa-check-circle mt-0.5 text-green-500"></i>
+                    <div>
+                        <p class="font-bold text-sm">Success</p>
+                        <p class="text-sm"><?= $message ?></p>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                
+                <!-- Form Card -->
+                <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden animate-fade-in-up md:sticky md:top-24">
+                    <div class="px-6 py-4 bg-gray-50/50 border-b border-gray-100 flex justify-between items-center">
+                        <h2 class="font-bold text-slate-700">
+                            <?= $editData ? 'Edit Member' : 'Add New Member' ?>
+                        </h2>
+                        <?php if($editData): ?>
+                            <a href="members.php" class="text-xs text-red-500 hover:text-red-700 font-medium">Cancel Edit</a>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <form method="POST" class="p-6 space-y-5">
+                        <input type="hidden" name="update_id" value="<?= $editData['Member_ID'] ?? '' ?>">
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Full Name</label>
+                            <div class="relative">
+                                <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input type="text" name="name" required 
+                                       value="<?= $editData['Member_Name'] ?? '' ?>"
+                                       class="w-full pl-8 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm"
+                                       placeholder="John Doe">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Phone Number</label>
+                            <div class="relative">
+                                <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input type="text" name="phone" required
+                                       value="<?= $editData['Phone_Number'] ?? '' ?>"
+                                       class="w-full pl-8 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm"
+                                       placeholder="(555) 123-4567">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Email</label>
+                            <div class="relative">
+                                <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input type="email" name="email" required
+                                       value="<?= $editData['Email'] ?? '' ?>"
+                                       class="w-full pl-8 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm"
+                                       placeholder="john@example.com">
+                            </div>
+                        </div>
+
+                        <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-bold shadow-lg shadow-indigo-500/30 transition-all transform active:scale-95 flex items-center justify-center gap-2 text-sm">
+                            <i class="fas <?= $editData ? 'fa-save' : 'fa-plus' ?>"></i>
+                            <span><?= $editData ? 'Update Member' : 'Add Member' ?></span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- List Card -->
+                <div class="lg:col-span-2 bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="px-6 py-4 bg-gray-50/50 border-b border-gray-100">
+                        <h2 class="font-bold text-slate-700">Registered Members</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-gray-600">
+                            <thead class="bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">ID</th>
+                                    <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">Details</th>
+                                    <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">Contact</th>
+                                    <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider text-center">Issues</th>
+                                    <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <?php while ($row = $members->fetch_assoc()) { ?>
+                                <tr class="hover:bg-indigo-50/30 transition-colors group">
+                                    <td class="p-4 font-mono text-xs text-slate-400">#<?= $row['Member_ID'] ?></td>
+                                    <td class="p-4">
+                                        <div class="font-bold text-slate-800"><?= $row['Member_Name'] ?></div>
+                                        <div class="text-xs text-slate-400">Member since 2024</div>
+                                    </td>
+                                    <td class="p-4">
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-xs"><i class="fas fa-envelope w-4 text-slate-400"></i> <?= $row['Email'] ?></span>
+                                            <span class="text-xs"><i class="fas fa-phone w-4 text-slate-400"></i> <?= $row['Phone_Number'] ?></span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4 text-center">
+                                        <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700">
+                                            <?= $row['Issued_Count'] ?>
+                                        </span>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <a href="members.php?edit=<?= $row['Member_ID'] ?>" class="text-indigo-600 hover:text-indigo-800 font-medium text-xs bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
+                                            Edit
+                                        </a>
+                                    </td>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
 </div>
 
 </body>

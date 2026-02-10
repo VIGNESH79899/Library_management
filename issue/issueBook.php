@@ -34,73 +34,122 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>LMS | Issue Book</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 flex text-sm">
-
-<?php include "../includers/sidebar.php"; ?>
-
-<div class="flex-1 flex flex-col min-h-screen ml-64">
     <?php include "../includers/headers.php"; ?>
+</head>
+<body class="bg-gray-50 text-slate-800 font-sans antialiased">
 
-    <main class="p-8">
-        <div class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-md">
-            <h1 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Issue Book</h1>
+<div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <?php include "../includers/sidebar.php"; ?>
 
-            <?php if (isset($message)) { ?>
-                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-                    <p><?= $message ?></p>
-                </div>
-            <?php } ?>
+    <!-- Main Content -->
+    <div class="flex-1 ml-64 flex flex-col relative z-0">
+        
+        <main class="p-8 space-y-8 flex items-center justify-center min-h-[calc(100vh-80px)]">
+            
+            <div class="w-full max-w-2xl animate-fade-in-up">
+                <!-- Wrapper -->
+                <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden">
+                    
+                    <div class="px-8 py-6 bg-gradient-brand text-white relative overflow-hidden">
+                        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+                        <div class="relative z-10">
+                            <h1 class="text-2xl font-bold tracking-tight text-indigo-700">Issue New Book</h1>
+                            <p class="text-indigo-500 text-sm mt-1">Select a member and a book to process a new loan.</p>
+                        </div>
+                    </div>
 
-            <?php if (isset($error)) { ?>
-                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
-                    <p><?= $error ?></p>
-                </div>
-            <?php } ?>
-
-            <form method="POST" class="space-y-6">
-                
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Select Member</label>
-                    <select name="member_id" required 
-                            class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                        <option value="">-- Select Member --</option>
-                        <?php while ($m = $members->fetch_assoc()) { ?>
-                            <option value="<?= $m['Member_ID'] ?>">
-                                <?= $m['Member_Name'] ?> (ID: <?= $m['Member_ID'] ?>)
-                            </option>
+                    <div class="p-8">
+                        <?php if (isset($message)) { ?>
+                            <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-3 animate-fade-in" role="alert">
+                                <i class="fas fa-check-circle mt-0.5 text-green-500"></i>
+                                <div>
+                                    <p class="font-bold text-sm">Success</p>
+                                    <p class="text-sm"><?= $message ?></p>
+                                </div>
+                            </div>
                         <?php } ?>
-                    </select>
-                </div>
 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Select Book</label>
-                    <select name="book_id" required 
-                            class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                        <option value="">-- Select Available Book --</option>
-                        <?php while ($b = $books->fetch_assoc()) { ?>
-                            <option value="<?= $b['Book_ID'] ?>">
-                                <?= $b['Title'] ?> (by <?= $b['Author'] ?>)
-                            </option>
+                        <?php if (isset($error)) { ?>
+                            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-3 animate-fade-in" role="alert">
+                                <i class="fas fa-exclamation-circle mt-0.5 text-red-500"></i>
+                                <div>
+                                    <p class="font-bold text-sm">Error</p>
+                                    <p class="text-sm"><?= $error ?></p>
+                                </div>
+                            </div>
                         <?php } ?>
-                    </select>
+
+                        <form method="POST" class="space-y-6">
+                            
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-slate-700">Select Member</label>
+                                <div class="relative">
+                                    <select name="member_id" required 
+                                            class="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all appearance-none cursor-pointer text-slate-700">
+                                        <option value="">-- Choose Member --</option>
+                                        <?php 
+                                        // Reset pointer if reused
+                                        $members->data_seek(0);
+                                        while ($m = $members->fetch_assoc()) { ?>
+                                            <option value="<?= $m['Member_ID'] ?>">
+                                                <?= $m['Member_Name'] ?> (ID: <?= $m['Member_ID'] ?>)
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-slate-700">Select Book</label>
+                                <div class="relative">
+                                    <select name="book_id" required 
+                                            class="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all appearance-none cursor-pointer text-slate-700">
+                                        <option value="">-- Choose Book --</option>
+                                        <?php 
+                                        // Reset pointer
+                                        $books->data_seek(0);
+                                        while ($b = $books->fetch_assoc()) { ?>
+                                            <option value="<?= $b['Book_ID'] ?>">
+                                                <?= $b['Title'] ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-400 mt-1">Only books with status 'Available' are shown.</p>
+                            </div>
+
+                            <div class="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 flex gap-3 text-sm text-indigo-800">
+                                <i class="fas fa-info-circle mt-0.5 text-indigo-500"></i>
+                                <div>
+                                    <p class="font-bold text-xs uppercase tracking-wide text-indigo-500 mb-1">Loan Policy</p>
+                                    <p>The book will be issued for <span class="font-bold">7 days</span> starting from today (<?= date('M d, Y') ?>). Please ensure the member has no outstanding fines.</p>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 flex items-center gap-4">
+                                <a href="../dashboard/dashboard.php" class="px-6 py-3 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 font-medium transition-colors">Cancel</a>
+                                <button class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-bold shadow-lg shadow-indigo-500/30 transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Confirm Issue</span>
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
                 </div>
-
-                <div class="bg-blue-50 p-4 rounded text-sm text-blue-800">
-                    <p><strong>Note:</strong> Book will be issued for 7 days from today.</p>
-                </div>
-
-                <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition font-medium shadow">
-                    Issue Book
-                </button>
-
-            </form>
-        </div>
-    </main>
+            </div>
+        </main>
+    </div>
 </div>
 
 </body>
