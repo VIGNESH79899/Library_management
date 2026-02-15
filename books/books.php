@@ -31,6 +31,8 @@ $books = $conn->query("
 
     <!-- Main Content -->
     <div class="flex-1 ml-64 flex flex-col relative z-0">
+        <!-- Top Navigation -->
+        <?php include "../includers/navbar.php"; ?>
         
         <!-- Helper for mobile toggle if needed later -->
         

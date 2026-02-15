@@ -79,6 +79,8 @@ $members = $conn->query("
 
     <!-- Main Content -->
     <div class="flex-1 ml-64 flex flex-col relative z-0">
+        <!-- Top Navigation -->
+        <?php include "../includers/navbar.php"; ?>
         
         <main class="p-8 space-y-8">
             <!-- Header -->
