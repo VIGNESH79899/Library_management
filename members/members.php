@@ -14,12 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name  = $_POST['name'];
     $phone = $_POST['phone'];
     $email = $_POST['email'];
+    $address = $_POST['address'];
 
     if (isset($_POST['update_id']) && !empty($_POST['update_id'])) {
         // Update Existing Member
         $id = $_POST['update_id'];
-        $stmt = $conn->prepare("UPDATE Member SET Member_Name=?, Phone_Number=?, Email=? WHERE Member_ID=?");
-        $stmt->bind_param("sssi", $name, $phone, $email, $id);
+        $stmt = $conn->prepare("UPDATE Member SET Member_Name=?, Phone_Number=?, Email=?, Address=? WHERE Member_ID=?");
+        $stmt->bind_param("ssssi", $name, $phone, $email, $address, $id);
         if ($stmt->execute()) {
             $_SESSION['message'] = "Member updated successfully!";
         } else {
@@ -27,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         // Add New Member
-        $stmt = $conn->prepare("INSERT INTO Member (Member_Name, Phone_Number, Email) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $name, $phone, $email);
+        $stmt = $conn->prepare("INSERT INTO Member (Member_Name, Phone_Number, Email, Address) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $name, $phone, $email, $address);
         if ($stmt->execute()) {
             $_SESSION['message'] = "Member added successfully!";
         } else {
@@ -44,6 +45,13 @@ if (isset($_SESSION['message'])) {
     $message = $_SESSION['message'];
     unset($_SESSION['message']);
 }
+if (isset($_SESSION['error'])) {
+    $error = $_SESSION['error'];
+    unset($_SESSION['error']);
+} else {
+    $error = "";
+}
+
 
 /* Handle Edit Request */
 if (isset($_GET['edit'])) {
@@ -56,7 +64,7 @@ if (isset($_GET['edit'])) {
 
 /* Fetch Members with issue count */
 $members = $conn->query("
-    SELECT M.Member_ID, M.Member_Name, M.Phone_Number, M.Email,
+    SELECT M.Member_ID, M.Member_Name, M.Phone_Number, M.Email, M.Address,
            COUNT(I.Issue_ID) AS Issued_Count
     FROM Member M
     LEFT JOIN Issue I ON M.Member_ID = I.Member_ID
@@ -97,6 +105,16 @@ $members = $conn->query("
                     <div>
                         <p class="font-bold text-sm">Success</p>
                         <p class="text-sm"><?= $message ?></p>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($error): ?>
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-3 animate-fade-in" role="alert">
+                    <i class="fas fa-exclamation-circle mt-0.5 text-red-500"></i>
+                    <div>
+                        <p class="font-bold text-sm">Error</p>
+                        <p class="text-sm"><?= $error ?></p>
                     </div>
                 </div>
             <?php endif; ?>
@@ -150,6 +168,16 @@ $members = $conn->query("
                             </div>
                         </div>
 
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Address / Location</label>
+                            <div class="relative">
+                                <i class="fas fa-map-marker-alt absolute left-3 top-3 text-slate-400 text-xs"></i>
+                                <textarea name="address" rows="2"
+                                       class="w-full pl-8 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm resize-none"
+                                       placeholder="123 Library St, Booktown"><?= $editData['Address'] ?? '' ?></textarea>
+                            </div>
+                        </div>
+
                         <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-bold shadow-lg shadow-indigo-500/30 transition-all transform active:scale-95 flex items-center justify-center gap-2 text-sm">
                             <i class="fas <?= $editData ? 'fa-save' : 'fa-plus' ?>"></i>
                             <span><?= $editData ? 'Update Member' : 'Add Member' ?></span>
@@ -179,7 +207,10 @@ $members = $conn->query("
                                     <td class="p-4 font-mono text-xs text-slate-400">#<?= $row['Member_ID'] ?></td>
                                     <td class="p-4">
                                         <div class="font-bold text-slate-800"><?= $row['Member_Name'] ?></div>
-                                        <div class="text-xs text-slate-400">Member since 2024</div>
+                                        <div class="text-xs text-slate-500 mt-1 flex items-start gap-1">
+                                            <i class="fas fa-map-marker-alt mt-0.5 text-slate-400"></i>
+                                            <?= !empty($row['Address']) ? substr($row['Address'], 0, 30) . (strlen($row['Address']) > 30 ? '...' : '') : 'No location set' ?>
+                                        </div>
                                     </td>
                                     <td class="p-4">
                                         <div class="flex flex-col gap-1">
