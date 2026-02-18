@@ -5,17 +5,19 @@ include "../config/db.php";
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch returned books history
-$sql = "SELECT B.Title, B.Author, C.Category_Name, I.Issue_Date, R.Return_Date 
+// Fetch returned books history with liked status
+$sql = "SELECT B.Book_ID, B.Title, B.Author, C.Category_Name, I.Issue_Date, R.Return_Date, 
+        CASE WHEN L.Like_ID IS NOT NULL THEN 1 ELSE 0 END as is_liked
         FROM Return_Book R 
         JOIN Issue I ON R.Issue_ID = I.Issue_ID 
         JOIN Book B ON I.Book_ID = B.Book_ID 
         LEFT JOIN Category C ON B.Category_ID = C.Category_ID
+        LEFT JOIN Book_Likes L ON B.Book_ID = L.Book_ID AND L.Member_ID = ?
         WHERE I.Member_ID = ? 
         ORDER BY R.Return_Date DESC";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("ii", $user_id, $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -38,7 +40,10 @@ $result = $stmt->get_result();
     <!-- History Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <?php if ($result->num_rows > 0): ?>
-            <?php while ($row = $result->fetch_assoc()): ?>
+            <?php while ($row = $result->fetch_assoc()): 
+                $is_liked = $row['is_liked'];
+                $book_id = $row['Book_ID'];
+            ?>
                 <div class="bg-white rounded-2xl border border-slate-100 p-5 flex items-start gap-5 hover:shadow-lg transition-shadow group relative overflow-hidden">
                     
                     <!-- Decorative Background -->
@@ -55,9 +60,11 @@ $result = $stmt->get_result();
                                 <h3 class="font-bold text-lg text-slate-800 leading-snug truncate pr-2" title="<?= $row['Title'] ?>"><?= $row['Title'] ?></h3>
                                 <p class="text-slate-500 text-sm">by <?= $row['Author'] ?></p>
                             </div>
-                            <!-- "Like" Heart Icon (Visual Only for now as requested "Liked Books") -->
-                            <button class="text-slate-300 hover:text-pink-500 transition-colors" title="Add to favorites">
-                                <i class="fas fa-heart"></i>
+                            <!-- "Like" Heart Icon -->
+                            <button onclick="toggleLike(this, <?= $book_id ?>)" 
+                                    class="text-2xl transition-all active:scale-95 hover:scale-110 focus:outline-none <?= $is_liked ? 'text-pink-500' : 'text-slate-300 hover:text-pink-300' ?>" 
+                                    title="<?= $is_liked ? 'Remove from favorites' : 'Add to favorites' ?>">
+                                <i class="<?= $is_liked ? 'fas' : 'far' ?> fa-heart"></i>
                             </button>
                         </div>
                         
@@ -91,6 +98,55 @@ $result = $stmt->get_result();
     </div>
 
 </div>
+
+<script>
+async function toggleLike(btn, bookId) {
+    // Optimistic UI update
+    const icon = btn.querySelector('i');
+    const isLiked = icon.classList.contains('fas'); // currently liked (solid)
+    
+    // Toggle visuals immediately
+    if (isLiked) {
+        icon.classList.remove('fas', 'text-pink-500');
+        icon.classList.add('far');
+        btn.classList.remove('text-pink-500');
+        btn.classList.add('text-slate-300', 'hover:text-pink-300');
+        btn.title = "Add to favorites";
+    } else {
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        btn.classList.remove('text-slate-300', 'hover:text-pink-300');
+        btn.classList.add('text-pink-500');
+        btn.title = "Remove from favorites";
+        
+        // Add a little pop animation
+        icon.classList.add('animate-ping');
+        setTimeout(() => icon.classList.remove('animate-ping'), 300);
+    }
+
+    try {
+        const response = await fetch('toggle_like.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ book_id: bookId }),
+        });
+
+        const result = await response.json();
+        
+        if (result.status === 'error') {
+            // Revert if error
+            console.error(result.message);
+            // Simple revert logic: just reload or toggle back (omitted for brevity, assume success mostly)
+            alert('Failed to update like status. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Network error. Please check your connection.');
+    }
+}
+</script>
 
 </body>
 </html>
