@@ -10,15 +10,6 @@ if (isset($_SESSION['success'])) {
     unset($_SESSION['success']);
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    $sql = "SELECT Member_ID, Member_Name, Password FROM Member WHERE Email = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
 
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
