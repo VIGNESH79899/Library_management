@@ -101,12 +101,16 @@ $result = $stmt->get_result();
 
 <script>
 async function toggleLike(btn, bookId) {
+    // Prevent multiple rapid clicks
+    if (btn.disabled) return;
+    btn.disabled = true;
+
     // Optimistic UI update
     const icon = btn.querySelector('i');
-    const isLiked = icon.classList.contains('fas'); // currently liked (solid)
+    const wasLiked = icon.classList.contains('fas'); // currently liked (solid)
     
     // Toggle visuals immediately
-    if (isLiked) {
+    if (wasLiked) {
         icon.classList.remove('fas', 'text-pink-500');
         icon.classList.add('far');
         btn.classList.remove('text-pink-500');
@@ -133,17 +137,41 @@ async function toggleLike(btn, bookId) {
             body: JSON.stringify({ book_id: bookId }),
         });
 
+        // Check if response is JSON
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+             throw new Error("Received non-JSON response from server");
+        }
+
         const result = await response.json();
         
         if (result.status === 'error') {
-            // Revert if error
-            console.error(result.message);
-            // Simple revert logic: just reload or toggle back (omitted for brevity, assume success mostly)
-            alert('Failed to update like status. Please try again.');
+            throw new Error(result.message || "Unknown error");
         }
+        
     } catch (error) {
-        console.error('Error:', error);
-        alert('Network error. Please check your connection.');
+        console.error('Like toggle failed:', error);
+        
+        // Revert UI on error
+        if (wasLiked) {
+            // It was liked, we tried to unlike and failed, so make it liked again
+            icon.classList.add('fas', 'text-pink-500');
+            icon.classList.remove('far');
+            btn.classList.add('text-pink-500');
+            btn.classList.remove('text-slate-300', 'hover:text-pink-300');
+            btn.title = "Remove from favorites";
+        } else {
+            // It was unliked, we tried to like and failed, so make it unliked again
+            icon.classList.remove('fas', 'text-pink-500');
+            icon.classList.add('far');
+            btn.classList.remove('text-pink-500');
+            btn.classList.add('text-slate-300', 'hover:text-pink-300');
+            btn.title = "Add to favorites";
+        }
+        
+        alert('Failed to update: ' + error.message);
+    } finally {
+        btn.disabled = false;
     }
 }
 </script>
