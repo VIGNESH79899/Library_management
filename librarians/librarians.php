@@ -9,6 +9,31 @@ include "../config/db.php";
 $message = "";
 $editData = null;
 
+/* Handle Delete Request */
+if (isset($_GET['delete'])) {
+    $delete_id = $_GET['delete'];
+    
+    // Check if librarian has issued books to prevent foreign key errors
+    $check = $conn->prepare("SELECT Count(*) as count FROM Issue WHERE Librarian_ID = ?");
+    $check->bind_param("i", $delete_id);
+    $check->execute();
+    $result = $check->get_result()->fetch_assoc();
+    
+    if ($result['count'] > 0) {
+        $_SESSION['error'] = "Cannot delete librarian. They have issued books history.";
+    } else {
+        $stmt = $conn->prepare("DELETE FROM Librarian WHERE Librarian_ID=?");
+        $stmt->bind_param("i", $delete_id);
+        if ($stmt->execute()) {
+             $_SESSION['message'] = "Librarian deleted successfully!";
+        } else {
+             $_SESSION['error'] = "Failed to delete librarian.";
+        }
+    }
+    header("Location: librarians.php");
+    exit;
+}
+
 /* Handle Form Submission */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name  = $_POST['name'];
@@ -42,6 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_SESSION['message'])) {
     $message = $_SESSION['message'];
     unset($_SESSION['message']);
+}
+if (isset($_SESSION['error'])) {
+    $error = $_SESSION['error'];
+    unset($_SESSION['error']);
+} else {
+    $error = "";
 }
 
 /* Handle Edit Request */
@@ -77,7 +108,7 @@ $librarians = $conn->query("
     <?php include "../includers/sidebar.php"; ?>
 
     <!-- Main Content -->
-    <div class="flex-1 ml-64 flex flex-col relative z-0">
+    <div class="flex-1 ml-64 flex flex-col relative z-0 transition-all duration-300">
         <!-- Top Navigation -->
         <?php include "../includers/navbar.php"; ?>
         
@@ -96,6 +127,16 @@ $librarians = $conn->query("
                     <div>
                         <p class="font-bold text-sm">Success</p>
                         <p class="text-sm"><?= $message ?></p>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($error): ?>
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-3 animate-fade-in" role="alert">
+                    <i class="fas fa-exclamation-circle mt-0.5 text-red-500"></i>
+                    <div>
+                        <p class="font-bold text-sm">Error</p>
+                        <p class="text-sm"><?= $error ?></p>
                     </div>
                 </div>
             <?php endif; ?>
@@ -192,12 +233,32 @@ $librarians = $conn->query("
                                         </span>
                                     </td>
                                     <td class="p-4 text-right">
-                                        <a href="librarians.php?edit=<?= $row['Librarian_ID'] ?>" class="text-indigo-600 hover:text-indigo-800 font-medium text-xs bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
-                                            Edit
-                                        </a>
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="view_librarian_history.php?id=<?= $row['Librarian_ID'] ?>" 
+                                               class="h-8 w-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all shadow-sm" 
+                                               title="View Issued Books">
+                                                <i class="fas fa-eye text-xs"></i>
+                                            </a>
+                                            <a href="librarians.php?edit=<?= $row['Librarian_ID'] ?>" 
+                                               class="h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm" 
+                                               title="Edit">
+                                                <i class="fas fa-pen text-xs"></i>
+                                            </a>
+                                            <a href="librarians.php?delete=<?= $row['Librarian_ID'] ?>" 
+                                               class="h-8 w-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-sm" 
+                                               title="Delete"
+                                               onclick="return confirm('Are you sure you want to delete this librarian?');">
+                                                <i class="fas fa-trash text-xs"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php } ?>
+                                <?php if($librarians->num_rows === 0): ?>
+                                    <tr>
+                                        <td colspan="5" class="p-8 text-center text-slate-400 italic">No librarians found. Add the first one!</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

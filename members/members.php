@@ -9,6 +9,32 @@ include "../config/db.php";
 $message = "";
 $editData = null;
 
+/* Handle Delete Request */
+if (isset($_GET['delete'])) {
+    $delete_id = $_GET['delete'];
+    
+    // Check if member has issued books (active or past history)
+    $check = $conn->prepare("SELECT Count(*) as count FROM Issue WHERE Member_ID = ?");
+    $check->bind_param("i", $delete_id);
+    $check->execute();
+    $result = $check->get_result()->fetch_assoc();
+    
+    if ($result['count'] > 0) {
+        $_SESSION['error'] = "Cannot delete member. They have borrowing history.";
+    } else {
+        $stmt = $conn->prepare("DELETE FROM Member WHERE Member_ID=?");
+        $stmt->bind_param("i", $delete_id);
+        if ($stmt->execute()) {
+             $_SESSION['message'] = "Member deleted successfully!";
+        } else {
+             $_SESSION['error'] = "Failed to delete member.";
+        }
+    }
+    header("Location: members.php");
+    exit;
+}
+
+
 /* Handle Form Submission (Add or Update) */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name  = $_POST['name'];
@@ -86,7 +112,7 @@ $members = $conn->query("
     <?php include "../includers/sidebar.php"; ?>
 
     <!-- Main Content -->
-    <div class="flex-1 ml-64 flex flex-col relative z-0">
+    <div class="flex-1 ml-64 flex flex-col relative z-0 transition-all duration-300">
         <!-- Top Navigation -->
         <?php include "../includers/navbar.php"; ?>
         
@@ -224,12 +250,32 @@ $members = $conn->query("
                                         </span>
                                     </td>
                                     <td class="p-4 text-right">
-                                        <a href="members.php?edit=<?= $row['Member_ID'] ?>" class="text-indigo-600 hover:text-indigo-800 font-medium text-xs bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
-                                            Edit
-                                        </a>
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="view_member_history.php?id=<?= $row['Member_ID'] ?>" 
+                                               class="h-8 w-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all shadow-sm" 
+                                               title="View Borrowing History">
+                                                <i class="fas fa-history text-xs"></i>
+                                            </a>
+                                            <a href="members.php?edit=<?= $row['Member_ID'] ?>" 
+                                               class="h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm" 
+                                               title="Edit">
+                                                <i class="fas fa-pen text-xs"></i>
+                                            </a>
+                                            <a href="members.php?delete=<?= $row['Member_ID'] ?>" 
+                                               class="h-8 w-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-sm" 
+                                               title="Delete"
+                                               onclick="return confirm('Are you sure you want to delete this member?');">
+                                                <i class="fas fa-trash text-xs"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php } ?>
+                                <?php if($members->num_rows === 0): ?>
+                                    <tr>
+                                        <td colspan="5" class="p-8 text-center text-slate-400 italic">No members found. Add the first one!</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
