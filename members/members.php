@@ -228,9 +228,9 @@ $members = $conn->query("
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
-                                <?php while ($row = $members->fetch_assoc()) { ?>
+                                <?php $cnt = 1; while ($row = $members->fetch_assoc()) { ?>
                                 <tr class="hover:bg-indigo-50/30 transition-colors group">
-                                    <td class="p-4 font-mono text-xs text-slate-400">#<?= $row['Member_ID'] ?></td>
+                                    <td class="p-4 font-mono text-xs text-slate-400" title="Database ID: <?= $row['Member_ID'] ?>">#<?= $cnt++ ?></td>
                                     <td class="p-4">
                                         <div class="font-bold text-slate-800"><?= $row['Member_Name'] ?></div>
                                         <div class="text-xs text-slate-500 mt-1 flex items-start gap-1">
