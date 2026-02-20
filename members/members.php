@@ -52,15 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $_SESSION['error'] = "Failed to update member.";
         }
-    } else {
-        // Add New Member
-        $stmt = $conn->prepare("INSERT INTO Member (Member_Name, Phone_Number, Email, Address) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $name, $phone, $email, $address);
-        if ($stmt->execute()) {
-            $_SESSION['message'] = "Member added successfully!";
-        } else {
-            $_SESSION['error'] = "Failed to add member.";
-        }
     }
     header("Location: members.php");
     exit;
@@ -121,7 +112,7 @@ $members = $conn->query("
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                 <div>
                     <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Members Management</h1>
-                    <p class="text-slate-500 mt-1">Manage library members and their details.</p>
+                    <p class="text-slate-500 mt-1">Manage registered library members.</p>
                 </div>
             </div>
 
@@ -147,26 +138,23 @@ $members = $conn->query("
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                 
-                <!-- Form Card -->
+                <?php if ($editData): ?>
+                <!-- Form Card (Only visible when editing) -->
                 <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden animate-fade-in-up md:sticky md:top-24">
                     <div class="px-6 py-4 bg-gray-50/50 border-b border-gray-100 flex justify-between items-center">
-                        <h2 class="font-bold text-slate-700">
-                            <?= $editData ? 'Edit Member' : 'Add New Member' ?>
-                        </h2>
-                        <?php if($editData): ?>
-                            <a href="members.php" class="text-xs text-red-500 hover:text-red-700 font-medium">Cancel Edit</a>
-                        <?php endif; ?>
+                        <h2 class="font-bold text-slate-700">Edit Member</h2>
+                        <a href="members.php" class="text-xs text-red-500 hover:text-red-700 font-medium">Cancel Edit</a>
                     </div>
                     
                     <form method="POST" class="p-6 space-y-5">
-                        <input type="hidden" name="update_id" value="<?= $editData['Member_ID'] ?? '' ?>">
+                        <input type="hidden" name="update_id" value="<?= $editData['Member_ID'] ?>">
                         
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1">Full Name</label>
                             <div class="relative">
                                 <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-xs"></i>
                                 <input type="text" name="name" required 
-                                       value="<?= $editData['Member_Name'] ?? '' ?>"
+                                       value="<?= $editData['Member_Name'] ?>"
                                        class="w-full pl-8 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm"
                                        placeholder="John Doe">
                             </div>
@@ -177,7 +165,7 @@ $members = $conn->query("
                             <div class="relative">
                                 <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-xs"></i>
                                 <input type="text" name="phone" required
-                                       value="<?= $editData['Phone_Number'] ?? '' ?>"
+                                       value="<?= $editData['Phone_Number'] ?>"
                                        class="w-full pl-8 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm"
                                        placeholder="(555) 123-4567">
                             </div>
@@ -188,7 +176,7 @@ $members = $conn->query("
                             <div class="relative">
                                 <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-xs"></i>
                                 <input type="email" name="email" required
-                                       value="<?= $editData['Email'] ?? '' ?>"
+                                       value="<?= $editData['Email'] ?>"
                                        class="w-full pl-8 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm"
                                        placeholder="john@example.com">
                             </div>
@@ -200,72 +188,73 @@ $members = $conn->query("
                                 <i class="fas fa-map-marker-alt absolute left-3 top-3 text-slate-400 text-xs"></i>
                                 <textarea name="address" rows="2"
                                        class="w-full pl-8 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-sm resize-none"
-                                       placeholder="123 Library St, Booktown"><?= $editData['Address'] ?? '' ?></textarea>
+                                       placeholder="123 Library St, Booktown"><?= $editData['Address'] ?></textarea>
                             </div>
                         </div>
 
                         <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-bold shadow-lg shadow-indigo-500/30 transition-all transform active:scale-95 flex items-center justify-center gap-2 text-sm">
-                            <i class="fas <?= $editData ? 'fa-save' : 'fa-plus' ?>"></i>
-                            <span><?= $editData ? 'Update Member' : 'Add Member' ?></span>
+                            <i class="fas fa-save"></i>
+                            <span>Update Member</span>
                         </button>
                     </form>
                 </div>
+                <?php endif; ?>
 
                 <!-- List Card -->
-                <div class="lg:col-span-2 bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s;">
+                <div class="<?= $editData ? 'lg:col-span-2' : 'lg:col-span-3' ?> bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s;">
                     <div class="px-6 py-4 bg-gray-50/50 border-b border-gray-100">
-                        <h2 class="font-bold text-slate-700">Registered Members</h2>
+                        <h2 class="font-bold text-slate-700 text-lg">Registered Members</h2>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-gray-600">
+                        <table class="w-full text-left text-base text-gray-600">
                             <thead class="bg-gray-50 border-b border-gray-100">
                                 <tr>
-                                    <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">ID</th>
-                                    <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">Details</th>
-                                    <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">Contact</th>
-                                    <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider text-center">Issues</th>
-                                    <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                                    <th class="p-4 font-semibold text-sm text-gray-500 uppercase tracking-wider">ID</th>
+                                    <th class="p-4 font-semibold text-sm text-gray-500 uppercase tracking-wider">Details</th>
+                                    <th class="p-4 font-semibold text-sm text-gray-500 uppercase tracking-wider">Contact</th>
+                                    <th class="p-4 font-semibold text-sm text-gray-500 uppercase tracking-wider text-center">Issues</th>
+                                    <th class="p-4 font-semibold text-sm text-gray-500 uppercase tracking-wider text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 <?php $cnt = 1; while ($row = $members->fetch_assoc()) { ?>
                                 <tr class="hover:bg-indigo-50/30 transition-colors group">
-                                    <td class="p-4 font-mono text-xs text-slate-400" title="Database ID: <?= $row['Member_ID'] ?>">#<?= $cnt++ ?></td>
+                                    <td class="p-4 font-mono text-sm text-slate-400" title="Database ID: <?= $row['Member_ID'] ?>">#<?= $cnt++ ?></td>
                                     <td class="p-4">
-                                        <div class="font-bold text-slate-800"><?= $row['Member_Name'] ?></div>
-                                        <div class="text-xs text-slate-500 mt-1 flex items-start gap-1">
-                                            <i class="fas fa-map-marker-alt mt-0.5 text-slate-400"></i>
-                                            <?= !empty($row['Address']) ? substr($row['Address'], 0, 30) . (strlen($row['Address']) > 30 ? '...' : '') : 'No location set' ?>
+                                        <div class="font-bold text-slate-800 text-lg"><?= $row['Member_Name'] ?></div>
+                                        <div class="text-sm text-slate-500 mt-1 flex items-start gap-1">
+                                            <i class="fas fa-map-marker-alt mt-1 text-slate-400"></i>
+                                            <?= !empty($row['Address']) ? substr($row['Address'], 0, 40) . (strlen($row['Address']) > 40 ? '...' : '') : 'No location set' ?>
                                         </div>
                                     </td>
                                     <td class="p-4">
-                                        <div class="flex flex-col gap-1">
-                                            <span class="text-xs"><i class="fas fa-envelope w-4 text-slate-400"></i> <?= $row['Email'] ?></span>
-                                            <span class="text-xs"><i class="fas fa-phone w-4 text-slate-400"></i> <?= $row['Phone_Number'] ?></span>
+                                        <div class="flex flex-col gap-1.5">
+                                            <span class="text-sm"><i class="fas fa-envelope w-5 text-slate-400"></i> <?= $row['Email'] ?></span>
+                                            <span class="text-sm"><i class="fas fa-phone w-5 text-slate-400"></i> <?= $row['Phone_Number'] ?></span>
                                         </div>
                                     </td>
                                     <td class="p-4 text-center">
-                                        <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700">
+                                        <span class="inline-flex items-center justify-center h-8 w-8 rounded-full text-sm font-bold bg-indigo-100 text-indigo-700">
                                             <?= $row['Issued_Count'] ?>
                                         </span>
                                     </td>
                                     <td class="p-4 text-right">
                                         <div class="flex items-center justify-end gap-2">
                                             <a href="view_member_history.php?id=<?= $row['Member_ID'] ?>" 
-                                               class="h-8 w-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all shadow-sm" 
+                                               class="h-9 w-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all shadow-sm" 
                                                title="View Borrowing History">
-                                                <i class="fas fa-history text-xs"></i>
+                                                <i class="fas fa-history text-sm"></i>
                                             </a>
                                             <a href="members.php?edit=<?= $row['Member_ID'] ?>" 
-                                               class="h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm" 
+                                               class="h-9 w-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm" 
                                                title="Edit">
-                                                <i class="fas fa-pen text-xs"></i>
+                                                <i class="fas fa-pen text-sm"></i>
                                             </a>
                                             <a href="members.php?delete=<?= $row['Member_ID'] ?>" 
-                                               class="h-8 w-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-sm" 
+                                               class="h-9 w-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-sm" 
                                                title="Delete"
                                                onclick="return confirm('Are you sure you want to delete this member?');">
-                                                <i class="fas fa-trash text-xs"></i>
+                                                <i class="fas fa-trash text-sm"></i>
                                             </a>
                                         </div>
                                     </td>
@@ -273,7 +262,7 @@ $members = $conn->query("
                                 <?php } ?>
                                 <?php if($members->num_rows === 0): ?>
                                     <tr>
-                                        <td colspan="5" class="p-8 text-center text-slate-400 italic">No members found. Add the first one!</td>
+                                        <td colspan="5" class="p-8 text-center text-slate-400 italic text-base">No registered members found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
