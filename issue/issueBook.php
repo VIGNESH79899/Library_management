@@ -10,25 +10,37 @@ $members = $conn->query("SELECT * FROM Member");
 $books = $conn->query("SELECT * FROM Book WHERE Status='Available'");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $book_id = $_POST['book_id'];
-    $member_id = $_POST['member_id'];
-    $librarian_id = 1; // Assuming default admin librarian for now, or fetch from session
+    $book_id      = (int) $_POST['book_id'];
+    $member_id    = (int) $_POST['member_id'];
+    $librarian_id = 1; // Default admin librarian
 
-    $issue_date = date('Y-m-d');
-    $due_date = date('Y-m-d', strtotime('+7 days'));
+    $issue_date     = date('Y-m-d');
+    $due_date_input = trim($_POST['due_date'] ?? '');
+    $today          = date('Y-m-d');
 
-    $conn->begin_transaction();
-    try {
-        $stmt = $conn->prepare("INSERT INTO Issue (Book_ID, Member_ID, Librarian_ID, Issue_Date, Due_Date) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("iiiss", $book_id, $member_id, $librarian_id, $issue_date, $due_date);
-        $stmt->execute();
+    // Validate due date
+    if (empty($due_date_input) || $due_date_input <= $today) {
+        $error = 'Please select a valid due date (must be after today).';
+    } elseif ($due_date_input > date('Y-m-d', strtotime('+365 days'))) {
+        $error = 'Due date cannot exceed 1 year from today.';
+    } else {
+        $due_date = $due_date_input;
+    }
 
-        $conn->query("UPDATE Book SET Status='Issued' WHERE Book_ID=$book_id");
-        $conn->commit();
-        $message = "Book issued successfully!";
-    } catch (Exception $e) {
-        $conn->rollback();
-        $error = "Failed to issue book.";
+    if (!isset($error)) {
+        $conn->begin_transaction();
+        try {
+            $stmt = $conn->prepare("INSERT INTO Issue (Book_ID, Member_ID, Librarian_ID, Issue_Date, Due_Date) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("iiiss", $book_id, $member_id, $librarian_id, $issue_date, $due_date);
+            $stmt->execute();
+
+            $conn->query("UPDATE Book SET Status='Issued' WHERE Book_ID=$book_id");
+            $conn->commit();
+            $message = "Book issued successfully! Due date set to " . date('M d, Y', strtotime($due_date)) . ".";
+        } catch (Exception $e) {
+            $conn->rollback();
+            $error = "Failed to issue book. " . $e->getMessage();
+        }
     }
 }
 ?>
@@ -128,11 +140,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <p class="text-xs text-slate-400 mt-1">Only books with status 'Available' are shown.</p>
                             </div>
 
+                            <!-- Due Date Picker -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-slate-700">
+                                    <i class="fas fa-calendar-alt text-indigo-400 mr-1"></i> Due / Return Date
+                                </label>
+                                <input type="date" name="due_date" id="due_date" required
+                                       min="<?= date('Y-m-d', strtotime('+1 day')) ?>"
+                                       max="<?= date('Y-m-d', strtotime('+365 days')) ?>"
+                                       value="<?= date('Y-m-d', strtotime('+7 days')) ?>"
+                                       class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-slate-700 font-medium">
+                                <p class="text-xs text-slate-400">Default is 7 days from today. You can extend up to 1 year.</p>
+                            </div>
+
                             <div class="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 flex gap-3 text-sm text-indigo-800">
                                 <i class="fas fa-info-circle mt-0.5 text-indigo-500"></i>
                                 <div>
                                     <p class="font-bold text-xs uppercase tracking-wide text-indigo-500 mb-1">Loan Policy</p>
-                                    <p>The book will be issued for <span class="font-bold">7 days</span> starting from today (<?= date('M d, Y') ?>). Please ensure the member has no outstanding fines.</p>
+                                    <p>Set the due date above. Loans issued from today (<strong><?= date('M d, Y') ?></strong>). Please ensure the member has no outstanding fines.</p>
                                 </div>
                             </div>
 
