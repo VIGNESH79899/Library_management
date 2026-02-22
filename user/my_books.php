@@ -269,27 +269,32 @@ function closeReturnModal() {
 function confirmReturn() {
     if (!currentIssueId) return;
 
+    // ⚠️ Save BEFORE closeReturnModal() nullifies currentIssueId
+    const issueIdToReturn = currentIssueId;
+
     const btn = document.getElementById('confirmReturnBtn');
     btn.disabled  = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Returning...';
 
     const fd = new FormData();
-    fd.append('issue_id', currentIssueId);
+    fd.append('issue_id', issueIdToReturn);
 
     fetch('return_book.php', { method: 'POST', body: fd })
-        .then(r => r.json())
+        .then(r => {
+            if (!r.ok) throw new Error('Server returned ' + r.status);
+            return r.json();
+        })
         .then(data => {
             if (data.success) {
                 closeReturnModal();
-                // Remove the card from the list
-                const card = document.getElementById('book-card-' + currentIssueId);
+                // Find and animate-out the card using the SAVED id
+                const card = document.getElementById('book-card-' + issueIdToReturn);
                 if (card) {
                     card.style.transition = 'all 0.4s ease';
                     card.style.opacity    = '0';
                     card.style.transform  = 'scale(0.95)';
                     setTimeout(() => {
                         card.remove();
-                        // If no more cards, show empty state
                         const list = document.getElementById('bookList');
                         if (list && list.children.length === 0) {
                             list.innerHTML = `
@@ -306,15 +311,17 @@ function confirmReturn() {
                         }
                     }, 450);
                 }
-                showToast(data.on_time ? 'success' : 'warning', data.on_time ? 'Returned! 🎉' : 'Returned with Fine', data.message);
+                showToast(data.on_time ? 'success' : 'warning',
+                          data.on_time ? 'Returned! 🎉' : 'Returned with Fine',
+                          data.message);
             } else {
-                showRModalAlert(data.message);
+                showRModalAlert(data.message || 'Return failed. Please try again.');
                 btn.disabled  = false;
                 btn.innerHTML = '<i class="fas fa-undo"></i> Confirm Return';
             }
         })
-        .catch(() => {
-            showRModalAlert('Network error. Please try again.');
+        .catch(err => {
+            showRModalAlert('Request failed: ' + err.message + '. Please try again.');
             btn.disabled  = false;
             btn.innerHTML = '<i class="fas fa-undo"></i> Confirm Return';
         });

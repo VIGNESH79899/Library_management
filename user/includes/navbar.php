@@ -28,17 +28,32 @@
                     <p class="text-sm font-bold text-slate-700 leading-tight"><?= $_SESSION['user_name'] ?? 'Student' ?></p>
                     <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Student</p>
                 </div>
-                <div class="relative group">
-                    <button class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 transition-all">
+
+                <!-- Click-toggle dropdown (replaces broken hover-only) -->
+                <div class="relative" id="userMenuWrapper">
+                    <button id="userMenuBtn"
+                            onclick="toggleUserMenu()"
+                            class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 transition-all">
                         <i class="fas fa-user text-sm"></i>
                     </button>
+
                     <!-- Dropdown -->
-                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 hidden group-hover:block animate-fade-in-up origin-top-right overflow-hidden">
+                    <div id="userDropdown"
+                         class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-2xl shadow-slate-200/60 border border-gray-100 hidden animate-fade-in-up origin-top-right overflow-hidden z-50">
                         <div class="p-2">
-                            <a href="profile.php" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">
-                                <i class="fas fa-user-circle w-4"></i> My Profile
+                            <!-- Name header -->
+                            <div class="px-3 py-2 border-b border-slate-100 mb-1">
+                                <p class="text-xs font-bold text-slate-800"><?= $_SESSION['user_name'] ?? 'Student' ?></p>
+                                <p class="text-[10px] text-slate-400 uppercase tracking-wider">Student Account</p>
+                            </div>
+
+                            <a href="profile.php"
+                               class="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">
+                                <i class="fas fa-user-circle text-slate-400 w-4"></i> My Profile
                             </a>
-                            <a href="../auth/logout_user.php" class="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+
+                            <a href="../auth/logout_user.php"
+                               class="flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium">
                                 <i class="fas fa-sign-out-alt w-4"></i> Sign Out
                             </a>
                         </div>
@@ -49,3 +64,18 @@
     </div>
 </nav>
 <div class="h-16"></div> <!-- Spacer for fixed nav -->
+
+<script>
+function toggleUserMenu() {
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('hidden');
+}
+
+// Close dropdown when clicking anywhere outside it
+document.addEventListener('click', function(e) {
+    const wrapper = document.getElementById('userMenuWrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+        document.getElementById('userDropdown').classList.add('hidden');
+    }
+});
+</script>

@@ -1,15 +1,17 @@
 <?php
 /**
  * borrow_book.php — Student borrow AJAX handler
- * Returns pure JSON. Must NOT output any HTML.
+ * Outputs ONLY clean JSON. No HTML. No stray output.
  */
+ob_start(); // Capture any stray output (notices, whitespace)
 
-// Start session manually (do NOT include header.php — that outputs HTML!)
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+ob_end_clean();
 header('Content-Type: application/json');
+
 $response = ['success' => false, 'message' => ''];
 
 if (!isset($_SESSION['user_id'])) {
