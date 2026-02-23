@@ -10,14 +10,14 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
     
     // Check if book is issued before deleting
-    $check = $conn->query("SELECT Status FROM Book WHERE Book_ID=$id")->fetch_assoc();
+    $check = $conn->query("SELECT Status FROM book WHERE Book_ID=$id")->fetch_assoc();
     
     if ($check['Status'] == 'Issued') {
         echo "<script>alert('Cannot delete an issued book!'); window.location.href='books.php';</script>";
         exit;
     }
 
-    $conn->query("DELETE FROM Book WHERE Book_ID=$id");
+    $conn->query("DELETE FROM book WHERE Book_ID=$id");
 }
 
 header("Location: books.php");

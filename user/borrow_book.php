@@ -63,7 +63,7 @@ if ($return_date > $max_date) {
 }
 
 // Check if book is available
-$check = $conn->prepare("SELECT Status FROM Book WHERE Book_ID = ?");
+$check = $conn->prepare("SELECT Status FROM book WHERE Book_ID = ?");
 if (!$check) {
     $response['message'] = 'Database error: ' . $conn->error;
     echo json_encode($response);
@@ -82,9 +82,9 @@ if (!$checkRes || $checkRes['Status'] !== 'Available') {
 
 // Check if user already has this book currently
 $dup = $conn->prepare("
-    SELECT Issue_ID FROM Issue
+    SELECT Issue_ID FROM issue
     WHERE Book_ID = ? AND Member_ID = ?
-      AND Issue_ID NOT IN (SELECT Issue_ID FROM Return_Book)
+      AND Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
 ");
 $dup->bind_param("ii", $book_id, $user_id);
 $dup->execute();
@@ -100,13 +100,13 @@ $due_date   = $return_date;
 
 $conn->begin_transaction();
 try {
-    $stmt = $conn->prepare("INSERT INTO Issue (Book_ID, Member_ID, Librarian_ID, Issue_Date, Due_Date) VALUES (?, ?, 1, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO issue (Book_ID, Member_ID, Librarian_ID, Issue_Date, Due_Date) VALUES (?, ?, 1, ?, ?)");
     if (!$stmt) throw new Exception($conn->error);
     $stmt->bind_param("iiss", $book_id, $user_id, $issue_date, $due_date);
     $stmt->execute();
     $stmt->close();
 
-    $upd = $conn->prepare("UPDATE Book SET Status='Issued' WHERE Book_ID=?");
+    $upd = $conn->prepare("UPDATE book SET Status='Issued' WHERE Book_ID=?");
     $upd->bind_param("i", $book_id);
     $upd->execute();
     $upd->close();
@@ -129,7 +129,7 @@ try {
         if (empty($student_email)) {
             // Legacy session: fetch from DB
             $memStmt = $conn->prepare(
-                'SELECT Member_Name, Email FROM Member WHERE Member_ID = ? LIMIT 1'
+                'SELECT Member_Name, Email FROM member WHERE Member_ID = ? LIMIT 1'
             );
             if ($memStmt) {
                 $memStmt->bind_param('i', $user_id);
@@ -144,7 +144,7 @@ try {
         if (!empty($student_email)) {
             // Fetch book title
             $bkStmt = $conn->prepare(
-                'SELECT Title FROM Book WHERE Book_ID = ? LIMIT 1'
+                'SELECT Title FROM book WHERE Book_ID = ? LIMIT 1'
             );
             $book_title = 'Your Book';
             if ($bkStmt) {

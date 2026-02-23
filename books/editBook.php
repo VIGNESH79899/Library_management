@@ -12,15 +12,15 @@ if (!isset($_GET['id'])) {
 }
 
 $id = $_GET['id'];
-$book = $conn->query("SELECT * FROM Book WHERE Book_ID=$id")->fetch_assoc();
+$book = $conn->query("SELECT * FROM book WHERE Book_ID=$id")->fetch_assoc();
 
 if (!$book) {
     header("Location: books.php");
     exit;
 }
 
-$categories = $conn->query("SELECT * FROM Category");
-$publishers = $conn->query("SELECT * FROM Publisher");
+$categories = $conn->query("SELECT * FROM category");
+$publishers = $conn->query("SELECT * FROM publisher");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title'];
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $publisher = $_POST['publisher'];
 
     $stmt = $conn->prepare("
-        UPDATE Book 
+        UPDATE book 
         SET Title=?, Author=?, ISBN=?, Category_ID=?, Publisher_ID=?
         WHERE Book_ID=?
     ");

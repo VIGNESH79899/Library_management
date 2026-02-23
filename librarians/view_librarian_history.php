@@ -14,7 +14,7 @@ if (!isset($_GET['id'])) {
 $librarian_id = $_GET['id'];
 
 // Fetch Librarian Details
-$lib_stmt = $conn->prepare("SELECT * FROM Librarian WHERE Librarian_ID = ?");
+$lib_stmt = $conn->prepare("SELECT * FROM librarian WHERE Librarian_ID = ?");
 $lib_stmt->bind_param("i", $librarian_id);
 $lib_stmt->execute();
 $librarian = $lib_stmt->get_result()->fetch_assoc();
@@ -27,9 +27,9 @@ if (!$librarian) {
 // Fetch Issued Books History
 $history = $conn->prepare("
     SELECT I.*, B.Title, B.ISBN, M.Member_Name, M.Email as Member_Email
-    FROM Issue I
-    JOIN Book B ON I.Book_ID = B.Book_ID
-    JOIN Member M ON I.Member_ID = M.Member_ID
+    FROM issue I
+    JOIN book B ON I.Book_ID = B.Book_ID
+    JOIN member M ON I.Member_ID = M.Member_ID
     WHERE I.Librarian_ID = ?
     ORDER BY I.Issue_Date DESC
 ");

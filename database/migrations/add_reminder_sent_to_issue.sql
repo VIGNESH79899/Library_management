@@ -6,10 +6,10 @@
 -- ============================================================
 
 -- Add reminder_sent column (TINYINT(1) = boolean, default 0)
-ALTER TABLE `Issue`
+ALTER TABLE `issue`
     ADD COLUMN IF NOT EXISTS `Reminder_Sent` TINYINT(1) NOT NULL DEFAULT 0
         COMMENT '1 = 2-day reminder email already sent; prevents duplicates';
 
 -- Index lets the cron query run without a full table scan
 CREATE INDEX IF NOT EXISTS `idx_reminder_due`
-    ON `Issue` (`Due_Date`, `Reminder_Sent`);
+    ON `issue` (`Due_Date`, `Reminder_Sent`);

@@ -10,9 +10,9 @@ include "../config/db.php";
 // Fetch Books
 $books = $conn->query("
     SELECT B.Book_ID, B.Title, B.Author, B.ISBN, B.Status, C.Category_Name, P.Publisher_Name
-    FROM Book B
-    LEFT JOIN Category C ON B.Category_ID = C.Category_ID
-    LEFT JOIN Publisher P ON B.Publisher_ID = P.Publisher_ID
+    FROM book B
+    LEFT JOIN category C ON B.Category_ID = C.Category_ID
+    LEFT JOIN publisher P ON B.Publisher_ID = P.Publisher_ID
     ORDER BY B.Book_ID DESC
 ");
 ?>

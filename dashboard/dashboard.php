@@ -8,17 +8,17 @@ if (!isset($_SESSION['admin'])) {
 include "../config/db.php";
 
 // Stats
-$totalBooks = $conn->query("SELECT COUNT(*) AS total FROM Book")->fetch_assoc()['total'];
-$totalMembers = $conn->query("SELECT COUNT(*) AS total FROM Member")->fetch_assoc()['total'];
-$issuedBooks = $conn->query("SELECT COUNT(*) AS total FROM Book WHERE Status='Issued'")->fetch_assoc()['total'];
-$totalFines = $conn->query("SELECT IFNULL(SUM(Fine_Amount),0) AS total FROM Return_Book")->fetch_assoc()['total'];
+$totalBooks = $conn->query("SELECT COUNT(*) AS total FROM book")->fetch_assoc()['total'];
+$totalMembers = $conn->query("SELECT COUNT(*) AS total FROM member")->fetch_assoc()['total'];
+$issuedBooks = $conn->query("SELECT COUNT(*) AS total FROM book WHERE Status='Issued'")->fetch_assoc()['total'];
+$totalFines = $conn->query("SELECT IFNULL(SUM(Fine_Amount),0) AS total FROM return_book")->fetch_assoc()['total'];
 
 // Recent Issues
 $issues = $conn->query("
     SELECT I.Issue_ID, B.Title, M.Member_Name, I.Issue_Date, I.Due_Date
-    FROM Issue I
-    JOIN Book B ON I.Book_ID = B.Book_ID
-    JOIN Member M ON I.Member_ID = M.Member_ID
+    FROM issue I
+    JOIN book B ON I.Book_ID = B.Book_ID
+    JOIN member M ON I.Member_ID = M.Member_ID
     ORDER BY I.Issue_Date DESC
     LIMIT 5
 ");
@@ -26,9 +26,9 @@ $issues = $conn->query("
 // Recent Returns
 $returns = $conn->query("
     SELECT R.Return_ID, B.Title, R.Return_Date, R.Fine_Amount
-    FROM Return_Book R
-    JOIN Issue I ON R.Issue_ID = I.Issue_ID
-    JOIN Book B ON I.Book_ID = B.Book_ID
+    FROM return_book R
+    JOIN issue I ON R.Issue_ID = I.Issue_ID
+    JOIN book B ON I.Book_ID = B.Book_ID
     ORDER BY R.Return_Date DESC
     LIMIT 5
 ");

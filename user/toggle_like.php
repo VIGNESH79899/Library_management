@@ -32,7 +32,7 @@ try {
     }
 
     // Check if already liked
-    $check = $conn->prepare("SELECT Like_ID FROM Book_Likes WHERE Member_ID = ? AND Book_ID = ?");
+    $check = $conn->prepare("SELECT Like_ID FROM book_likes WHERE Member_ID = ? AND Book_ID = ?");
     if (!$check) {
         throw new Exception("Database error: " . $conn->error);
     }
@@ -42,7 +42,7 @@ try {
 
     if ($result->num_rows > 0) {
         // Unlike
-        $delete = $conn->prepare("DELETE FROM Book_Likes WHERE Member_ID = ? AND Book_ID = ?");
+        $delete = $conn->prepare("DELETE FROM book_likes WHERE Member_ID = ? AND Book_ID = ?");
         if (!$delete) {
             throw new Exception("Database prepare error: " . $conn->error);
         }
@@ -54,7 +54,7 @@ try {
         }
     } else {
         // Like
-        $insert = $conn->prepare("INSERT INTO Book_Likes (Member_ID, Book_ID) VALUES (?, ?)");
+        $insert = $conn->prepare("INSERT INTO book_likes (Member_ID, Book_ID) VALUES (?, ?)");
         if (!$insert) {
             throw new Exception("Database prepare error: " . $conn->error);
         }

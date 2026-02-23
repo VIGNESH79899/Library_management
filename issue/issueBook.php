@@ -6,8 +6,8 @@ if (!isset($_SESSION['admin'])) {
 }
 include "../config/db.php";
 
-$members = $conn->query("SELECT * FROM Member");
-$books = $conn->query("SELECT * FROM Book WHERE Status='Available'");
+$members = $conn->query("SELECT * FROM member");
+$books = $conn->query("SELECT * FROM book WHERE Status='Available'");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $book_id      = (int) $_POST['book_id'];
@@ -30,11 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($error)) {
         $conn->begin_transaction();
         try {
-            $stmt = $conn->prepare("INSERT INTO Issue (Book_ID, Member_ID, Librarian_ID, Issue_Date, Due_Date) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO issue (Book_ID, Member_ID, Librarian_ID, Issue_Date, Due_Date) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("iiiss", $book_id, $member_id, $librarian_id, $issue_date, $due_date);
             $stmt->execute();
 
-            $conn->query("UPDATE Book SET Status='Issued' WHERE Book_ID=$book_id");
+            $conn->query("UPDATE book SET Status='Issued' WHERE Book_ID=$book_id");
             $conn->commit();
             $message = "Book issued successfully! Due date set to " . date('M d, Y', strtotime($due_date)) . ".";
         } catch (Exception $e) {

@@ -14,7 +14,7 @@ if (isset($_GET['delete'])) {
     $delete_id = $_GET['delete'];
     
     // Check if librarian has issued books to prevent foreign key errors
-    $check = $conn->prepare("SELECT Count(*) as count FROM Issue WHERE Librarian_ID = ?");
+    $check = $conn->prepare("SELECT Count(*) as count FROM issue WHERE Librarian_ID = ?");
     $check->bind_param("i", $delete_id);
     $check->execute();
     $result = $check->get_result()->fetch_assoc();
@@ -22,7 +22,7 @@ if (isset($_GET['delete'])) {
     if ($result['count'] > 0) {
         $_SESSION['error'] = "Cannot delete librarian. They have issued books history.";
     } else {
-        $stmt = $conn->prepare("DELETE FROM Librarian WHERE Librarian_ID=?");
+        $stmt = $conn->prepare("DELETE FROM librarian WHERE Librarian_ID=?");
         $stmt->bind_param("i", $delete_id);
         if ($stmt->execute()) {
              $_SESSION['message'] = "Librarian deleted successfully!";
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_id']) && !empty($_POST['update_id'])) {
         // Update
         $id = $_POST['update_id'];
-        $stmt = $conn->prepare("UPDATE Librarian SET Librarian_Name=?, Phone_Number=?, Email=? WHERE Librarian_ID=?");
+        $stmt = $conn->prepare("UPDATE librarian SET Librarian_Name=?, Phone_Number=?, Email=? WHERE Librarian_ID=?");
         $stmt->bind_param("sssi", $name, $phone, $email, $id);
         if ($stmt->execute()) {
             $_SESSION['message'] = "Librarian updated successfully!";
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         // Insert
-        $stmt = $conn->prepare("INSERT INTO Librarian (Librarian_Name, Phone_Number, Email) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO librarian (Librarian_Name, Phone_Number, Email) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $name, $phone, $email);
         if ($stmt->execute()) {
             $_SESSION['message'] = "Librarian added successfully!";
@@ -78,7 +78,7 @@ if (isset($_SESSION['error'])) {
 /* Handle Edit Request */
 if (isset($_GET['edit'])) {
     $id = $_GET['edit'];
-    $stmt = $conn->prepare("SELECT * FROM Librarian WHERE Librarian_ID=?");
+    $stmt = $conn->prepare("SELECT * FROM librarian WHERE Librarian_ID=?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $editData = $stmt->get_result()->fetch_assoc();
@@ -88,8 +88,8 @@ if (isset($_GET['edit'])) {
 $librarians = $conn->query("
     SELECT L.Librarian_ID, L.Librarian_Name, L.Phone_Number, L.Email,
            COUNT(I.Issue_ID) AS Issued_Count
-    FROM Librarian L
-    LEFT JOIN Issue I ON L.Librarian_ID = I.Librarian_ID
+    FROM librarian L
+    LEFT JOIN issue I ON L.Librarian_ID = I.Librarian_ID
     GROUP BY L.Librarian_ID
     ORDER BY L.Librarian_ID DESC
 ");

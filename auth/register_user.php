@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Email must end with @aurora.edu.in";
     } else {
         // Check if email already exists
-        $check = $conn->prepare("SELECT Member_ID FROM Member WHERE Email = ?");
+        $check = $conn->prepare("SELECT Member_ID FROM member WHERE Email = ?");
         $check->bind_param("s", $email);
         $check->execute();
         $result = $check->get_result();
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Password needs hashing (using password_hash for security)
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            $stmt = $conn->prepare("INSERT INTO Member (Member_Name, Email, Phone_Number, Address, Password) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO member (Member_Name, Email, Phone_Number, Address, Password) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("sssss", $name, $email, $phone, $address, $hashed_password);
 
             if ($stmt->execute()) {

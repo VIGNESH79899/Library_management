@@ -62,7 +62,7 @@ $stats_sql  = "SELECT
     SUM(email_type = 'BORROW_CONFIRMATION') AS borrow_count,
     SUM(email_type = 'REMINDER')            AS reminder_count,
     SUM(email_type = 'OVERDUE')             AS overdue_count
-FROM Email_Log";
+FROM email_log";
 
 $stats_res  = $conn->query($stats_sql);
 $stats      = $stats_res ? $stats_res->fetch_assoc()
@@ -70,7 +70,7 @@ $stats      = $stats_res ? $stats_res->fetch_assoc()
                              'borrow_count'=>0,'reminder_count'=>0,'overdue_count'=>0];
 
 // ── Total filtered count (for pagination) ───────────────────
-$count_sql  = "SELECT COUNT(*) AS cnt FROM Email_Log el $where_sql";
+$count_sql  = "SELECT COUNT(*) AS cnt FROM email_log el $where_sql";
 $count_stmt = $conn->prepare($count_sql);
 if ($bind_types && $count_stmt) {
     $count_stmt->bind_param($bind_types, ...$bind_values);
@@ -84,7 +84,7 @@ $page = min($page, $total_pages);
 $logs_sql = "
     SELECT el.id, el.member_id, el.email_type, el.recipient_email,
            el.subject, el.status, el.error_message, el.sent_at
-    FROM Email_Log el
+    FROM email_log el
     $where_sql
     ORDER BY el.sent_at DESC
     LIMIT ? OFFSET ?

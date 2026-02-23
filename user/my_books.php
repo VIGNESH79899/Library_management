@@ -7,9 +7,9 @@ $user_id = $_SESSION['user_id'];
 
 // Fetch borrowed books that are NOT returned yet
 $sql = "SELECT I.Issue_ID, I.Book_ID, B.Title, B.Author, I.Issue_Date, I.Due_Date
-        FROM Issue I
-        JOIN Book B ON I.Book_ID = B.Book_ID
-        WHERE I.Member_ID = ? AND I.Issue_ID NOT IN (SELECT Issue_ID FROM Return_Book)
+        FROM issue I
+        JOIN book B ON I.Book_ID = B.Book_ID
+        WHERE I.Member_ID = ? AND I.Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
         ORDER BY I.Due_Date ASC";
 
 $stmt = $conn->prepare($sql);

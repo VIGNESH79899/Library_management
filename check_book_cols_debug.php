@@ -1,6 +1,6 @@
 <?php
 include "config/db.php";
-$result = $conn->query("SHOW COLUMNS FROM Book");
+$result = $conn->query("SHOW COLUMNS FROM book");
 if ($result) {
     while ($row = $result->fetch_assoc()) {
         echo $row['Field'] . "\n";

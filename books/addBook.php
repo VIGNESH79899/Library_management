@@ -6,8 +6,8 @@ if (!isset($_SESSION['admin'])) {
 }
 include "../config/db.php";
 
-$categories = $conn->query("SELECT * FROM Category");
-$publishers = $conn->query("SELECT * FROM Publisher");
+$categories = $conn->query("SELECT * FROM category");
+$publishers = $conn->query("SELECT * FROM publisher");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title'];
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $publisher = $_POST['publisher'];
 
     $stmt = $conn->prepare("
-        INSERT INTO Book (Title, Author, ISBN, Category_ID, Publisher_ID)
+        INSERT INTO book (Title, Author, ISBN, Category_ID, Publisher_ID)
         VALUES (?, ?, ?, ?, ?)
     ");
     $stmt->bind_param("sssii", $title, $author, $isbn, $category, $publisher);

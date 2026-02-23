@@ -14,7 +14,7 @@ if (isset($_GET['delete'])) {
     $delete_id = $_GET['delete'];
     
     // Check if member has issued books (active or past history)
-    $check = $conn->prepare("SELECT Count(*) as count FROM Issue WHERE Member_ID = ?");
+    $check = $conn->prepare("SELECT Count(*) as count FROM issue WHERE Member_ID = ?");
     $check->bind_param("i", $delete_id);
     $check->execute();
     $result = $check->get_result()->fetch_assoc();
@@ -22,7 +22,7 @@ if (isset($_GET['delete'])) {
     if ($result['count'] > 0) {
         $_SESSION['error'] = "Cannot delete member. They have borrowing history.";
     } else {
-        $stmt = $conn->prepare("DELETE FROM Member WHERE Member_ID=?");
+        $stmt = $conn->prepare("DELETE FROM member WHERE Member_ID=?");
         $stmt->bind_param("i", $delete_id);
         if ($stmt->execute()) {
              $_SESSION['message'] = "Member deleted successfully!";
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_id']) && !empty($_POST['update_id'])) {
         // Update Existing Member
         $id = $_POST['update_id'];
-        $stmt = $conn->prepare("UPDATE Member SET Member_Name=?, Phone_Number=?, Email=?, Address=? WHERE Member_ID=?");
+        $stmt = $conn->prepare("UPDATE member SET Member_Name=?, Phone_Number=?, Email=?, Address=? WHERE Member_ID=?");
         $stmt->bind_param("ssssi", $name, $phone, $email, $address, $id);
         if ($stmt->execute()) {
             $_SESSION['message'] = "Member updated successfully!";
@@ -73,7 +73,7 @@ if (isset($_SESSION['error'])) {
 /* Handle Edit Request */
 if (isset($_GET['edit'])) {
     $id = $_GET['edit'];
-    $stmt = $conn->prepare("SELECT * FROM Member WHERE Member_ID=?");
+    $stmt = $conn->prepare("SELECT * FROM member WHERE Member_ID=?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $editData = $stmt->get_result()->fetch_assoc();
@@ -83,8 +83,8 @@ if (isset($_GET['edit'])) {
 $members = $conn->query("
     SELECT M.Member_ID, M.Member_Name, M.Phone_Number, M.Email, M.Address,
            COUNT(I.Issue_ID) AS Issued_Count
-    FROM Member M
-    LEFT JOIN Issue I ON M.Member_ID = I.Member_ID
+    FROM member M
+    LEFT JOIN issue I ON M.Member_ID = I.Member_ID
     GROUP BY M.Member_ID
     ORDER BY M.Member_ID DESC
 ");

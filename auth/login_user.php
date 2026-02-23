@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $sql = "SELECT Member_ID, Member_Name, Email, Password FROM Member WHERE Email = ?";
+    $sql = "SELECT Member_ID, Member_Name, Email, Password FROM member WHERE Email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();

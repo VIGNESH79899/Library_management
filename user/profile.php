@@ -9,62 +9,75 @@ $error = "";
 
 /* Update Profile Handler */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $phone = $_POST['phone'];
-    $address = $_POST['address'];
+    $new_name = trim($_POST['member_name'] ?? '');
+    $phone    = trim($_POST['phone']       ?? '');
+    $address  = trim($_POST['address']     ?? '');
     $current_password = $_POST['current_password'];
-    $new_password = $_POST['new_password'];
+    $new_password     = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Fetch current user data for password verification
-    $stmt = $conn->prepare("SELECT Password FROM Member WHERE Member_ID=?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $current_db_password = $stmt->get_result()->fetch_assoc()['Password'];
-
-    // Basic fields update
-    $update_sql = "UPDATE Member SET Phone_Number=?, Address=?";
-    $types = "ss";
-    $params = [$phone, $address];
-
-    $password_error = false;
-
-    // Password Update Logic
-    if (!empty($new_password)) {
-        if (empty($current_password)) {
-            $error = "Please enter your current password to set a new one.";
-            $password_error = true;
-        } elseif (!password_verify($current_password, $current_db_password)) {
-            $error = "Incorrect current password.";
-            $password_error = true;
-        } elseif ($new_password !== $confirm_password) {
-            $error = "New passwords do not match.";
-            $password_error = true;
-        } else {
-            // All checks passed
-            $update_sql .= ", Password=?";
-            $types .= "s";
-            $params[] = password_hash($new_password, PASSWORD_DEFAULT);
-        }
+    // ── Validate name ────────────────────────────────────────
+    if (empty($new_name)) {
+        $error = 'Full name cannot be empty.';
+    } elseif (strlen($new_name) < 2 || strlen($new_name) > 80) {
+        $error = 'Name must be between 2 and 80 characters.';
+    } elseif (preg_match('/[0-9]/', $new_name)) {
+        $error = 'Name cannot contain numbers.';
     }
 
-    if (!$password_error) {
-        $update_sql .= " WHERE Member_ID=?";
-        $types .= "i";
-        $params[] = $user_id;
+    if (empty($error)) {
+        // Fetch current password hash for verification
+        $stmt = $conn->prepare("SELECT Password FROM member WHERE Member_ID=?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $current_db_password = $stmt->get_result()->fetch_assoc()['Password'];
 
-        $stmt = $conn->prepare($update_sql);
-        $stmt->bind_param($types, ...$params);
+        // Build UPDATE — always include name, phone, address
+        $update_sql = "UPDATE member SET Member_Name=?, Phone_Number=?, Address=?";
+        $types      = "sss";
+        $params     = [$new_name, $phone, $address];
 
-        if ($stmt->execute()) {
-            $success = "Profile updated successfully!";
-        } else {
-            $error = "Failed to update profile.";
+        $password_error = false;
+
+        // Optional password change
+        if (!empty($new_password)) {
+            if (empty($current_password)) {
+                $error = "Please enter your current password to set a new one.";
+                $password_error = true;
+            } elseif (!password_verify($current_password, $current_db_password)) {
+                $error = "Incorrect current password.";
+                $password_error = true;
+            } elseif ($new_password !== $confirm_password) {
+                $error = "New passwords do not match.";
+                $password_error = true;
+            } else {
+                $update_sql .= ", Password=?";
+                $types      .= "s";
+                $params[]    = password_hash($new_password, PASSWORD_DEFAULT);
+            }
+        }
+
+        if (!$password_error) {
+            $update_sql .= " WHERE Member_ID=?";
+            $types      .= "i";
+            $params[]    = $user_id;
+
+            $stmt = $conn->prepare($update_sql);
+            $stmt->bind_param($types, ...$params);
+
+            if ($stmt->execute()) {
+                // ✅ Sync session so navbar reflects new name immediately
+                $_SESSION['user_name'] = $new_name;
+                $success = "Profile updated successfully!";
+            } else {
+                $error = "Failed to update profile.";
+            }
         }
     }
 }
 
 // Fetch current data
-$stmt = $conn->prepare("SELECT * FROM Member WHERE Member_ID=?");
+$stmt = $conn->prepare("SELECT * FROM member WHERE Member_ID=?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $data = $stmt->get_result()->fetch_assoc();
@@ -119,11 +132,17 @@ $data = $stmt->get_result()->fetch_assoc();
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="group">
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Full Name</label>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Full Name</label>
                             <div class="relative">
-                                <input type="text" value="<?= $data['Member_Name'] ?>" readonly class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-500 cursor-not-allowed pl-10">
+                                <input type="text" name="member_name"
+                                       value="<?= htmlspecialchars($data['Member_Name']) ?>"
+                                       maxlength="80"
+                                       placeholder="Your full name"
+                                       class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all pl-10"
+                                       required>
                                 <i class="fas fa-user absolute left-3.5 top-3.5 text-slate-400"></i>
                             </div>
+                            <p class="text-xs text-slate-400 mt-1.5 ml-1">Your display name across AuroraLib.</p>
                         </div>
                         <div class="group">
                             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>

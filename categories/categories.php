@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $shelf = $_POST['shelf'];
 
     $stmt = $conn->prepare("
-        INSERT INTO Category (Category_Name, Description, Shelf_Number)
+        INSERT INTO category (Category_Name, Description, Shelf_Number)
         VALUES (?, ?, ?)
     ");
     $stmt->bind_param("sss", $name, $desc, $shelf);
@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 /* Fetch Categories */
 $categories = $conn->query("
     SELECT C.*, COUNT(B.Book_ID) AS Total_Books
-    FROM Category C
-    LEFT JOIN Book B ON C.Category_ID = B.Category_ID
+    FROM category C
+    LEFT JOIN book B ON C.Category_ID = B.Category_ID
     GROUP BY C.Category_ID
     ORDER BY C.Category_ID DESC
 ");

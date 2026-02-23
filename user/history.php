@@ -15,12 +15,12 @@ $sql = "SELECT B.Book_ID, B.Title, B.Author, C.Category_Name,
         R.Fine_Amount AS Return_Fine,
         F.Fine_ID, F.Days_Late, F.Fine_Rate, F.Fine_Amount AS Fine_Table_Amount,
         CASE WHEN L.Like_ID IS NOT NULL THEN 1 ELSE 0 END as is_liked
-        FROM Return_Book R
-        JOIN Issue I ON R.Issue_ID = I.Issue_ID
-        JOIN Book B ON I.Book_ID = B.Book_ID
-        LEFT JOIN Category C ON B.Category_ID = C.Category_ID
-        LEFT JOIN Book_Likes L ON B.Book_ID = L.Book_ID AND L.Member_ID = ?
-        LEFT JOIN Fine F ON I.Issue_ID = F.Issue_ID
+        FROM return_book R
+        JOIN issue I ON R.Issue_ID = I.Issue_ID
+        JOIN book B ON I.Book_ID = B.Book_ID
+        LEFT JOIN category C ON B.Category_ID = C.Category_ID
+        LEFT JOIN book_likes L ON B.Book_ID = L.Book_ID AND L.Member_ID = ?
+        LEFT JOIN fine F ON I.Issue_ID = F.Issue_ID
         WHERE I.Member_ID = ?
         ORDER BY R.Return_Date DESC";
 

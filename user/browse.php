@@ -5,7 +5,7 @@ include "../config/db.php";
 
 // Search Logic
 $search = $_GET['search'] ?? '';
-$sql = "SELECT B.*, C.Category_Name FROM Book B LEFT JOIN Category C ON B.Category_ID = C.Category_ID WHERE B.Status='Available'";
+$sql = "SELECT B.*, C.Category_Name FROM book B LEFT JOIN category C ON B.Category_ID = C.Category_ID WHERE B.Status='Available'";
 if ($search) {
     $safe = $conn->real_escape_string($search);
     $sql .= " AND (B.Title LIKE '%$safe%' OR B.Author LIKE '%$safe%' OR C.Category_Name LIKE '%$safe%')";

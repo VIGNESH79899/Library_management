@@ -74,7 +74,7 @@ class EmailLogger
     ): void {
         try {
             $sql = "
-                INSERT INTO Email_Log
+                INSERT INTO email_log
                     (member_id, email_type, recipient_email, subject, status, error_message)
                 VALUES
                     (?, ?, ?, ?, ?, ?)
@@ -113,7 +113,7 @@ class EmailLogger
     private function ensureTableExists(): void
     {
         $sql = "
-            CREATE TABLE IF NOT EXISTS `Email_Log` (
+            CREATE TABLE IF NOT EXISTS `email_log` (
                 `id`              INT           NOT NULL AUTO_INCREMENT,
                 `member_id`       INT           NULL,
                 `email_type`      ENUM('BORROW_CONFIRMATION','REMINDER','OVERDUE') NOT NULL,

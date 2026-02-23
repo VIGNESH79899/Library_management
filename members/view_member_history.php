@@ -14,7 +14,7 @@ if (!isset($_GET['id'])) {
 $member_id = $_GET['id'];
 
 // Fetch Member Details
-$mem_stmt = $conn->prepare("SELECT * FROM Member WHERE Member_ID = ?");
+$mem_stmt = $conn->prepare("SELECT * FROM member WHERE Member_ID = ?");
 $mem_stmt->bind_param("i", $member_id);
 $mem_stmt->execute();
 $member = $mem_stmt->get_result()->fetch_assoc();
@@ -25,7 +25,7 @@ if (!$member) {
 }
 
 // Fetch Fine Rate
-$rate_result = $conn->query("SELECT Setting_Value FROM Library_Settings WHERE Setting_Key = 'Fine_Rate_Per_Day'");
+$rate_result = $conn->query("SELECT Setting_Value FROM library_settings WHERE Setting_Key = 'Fine_Rate_Per_Day'");
 $fine_rate   = ($rate_result && $rate_result->num_rows > 0) ? (float)$rate_result->fetch_assoc()['Setting_Value'] : 10.0;
 
 /* Fine rate: ₹10 per day (fixed) */
@@ -43,11 +43,11 @@ $history = $conn->prepare("
            F.Days_Late,
            F.Fine_Rate,
            F.Fine_Amount    AS Fine_Table_Amount
-    FROM Issue I
-    JOIN Book B ON I.Book_ID = B.Book_ID
-    LEFT JOIN Librarian L ON I.Librarian_ID = L.Librarian_ID
-    LEFT JOIN Return_Book R ON I.Issue_ID = R.Issue_ID
-    LEFT JOIN Fine F ON I.Issue_ID = F.Issue_ID
+    FROM issue I
+    JOIN book B ON I.Book_ID = B.Book_ID
+    LEFT JOIN librarian L ON I.Librarian_ID = L.Librarian_ID
+    LEFT JOIN return_book R ON I.Issue_ID = R.Issue_ID
+    LEFT JOIN fine F ON I.Issue_ID = F.Issue_ID
     WHERE I.Member_ID = ?
     ORDER BY I.Issue_Date DESC
 ");

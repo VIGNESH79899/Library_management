@@ -15,9 +15,9 @@ $fine_rate = FINE_RATE_PER_DAY;
 $issues = $conn->query("
     SELECT I.Issue_ID, B.Book_ID, B.Title, I.Issue_Date, I.Due_Date,
            M.Member_Name, M.Member_ID
-    FROM Issue I
-    JOIN Book B ON I.Book_ID = B.Book_ID
-    JOIN Member M ON I.Member_ID = M.Member_ID
+    FROM issue I
+    JOIN book B ON I.Book_ID = B.Book_ID
+    JOIN member M ON I.Member_ID = M.Member_ID
     WHERE B.Status = 'Issued'
     ORDER BY I.Due_Date ASC
 ");
@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                    B.Title,
                    GREATEST(DATEDIFF(?, I.Due_Date), 0)           AS Days_Late,
                    GREATEST(DATEDIFF(?, I.Due_Date), 0) * ?       AS Fine_Amount
-            FROM Issue I
-            JOIN Book B ON I.Book_ID = B.Book_ID
+            FROM issue I
+            JOIN book B ON I.Book_ID = B.Book_ID
             WHERE I.Issue_ID = ?
         ");
         $stmt_check->bind_param("ssdi", $return_date, $return_date, $fine_rate, $issue_id);
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 /* 1. Insert into Return_Book */
                 $stmt1 = $conn->prepare("
-                    INSERT INTO Return_Book (Issue_ID, Return_Date, Fine_Amount)
+                    INSERT INTO return_book (Issue_ID, Return_Date, Fine_Amount)
                     VALUES (?, ?, ?)
                 ");
                 $stmt1->bind_param("isd", $issue_id, $return_date, $fine);
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 /* 2. If overdue → insert into Fine table using DATEDIFF */
                 if ($days_late > 0) {
                     $stmt2 = $conn->prepare("
-                        INSERT INTO Fine
+                        INSERT INTO fine
                             (Issue_ID, Return_ID, Member_ID,
                              Due_Date, Return_Date,
                              Days_Late, Fine_Rate, Fine_Amount)
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 /* 3. Mark book as Available */
-                $stmt3 = $conn->prepare("UPDATE Book SET Status='Available' WHERE Book_ID=?");
+                $stmt3 = $conn->prepare("UPDATE book SET Status='Available' WHERE Book_ID=?");
                 $stmt3->bind_param("i", $book_id);
                 $stmt3->execute();
 
@@ -121,9 +121,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Refresh issued list after return
             $issues = $conn->query("
                 SELECT I.Issue_ID, B.Book_ID, B.Title, I.Issue_Date, I.Due_Date, M.Member_Name
-                FROM Issue I
-                JOIN Book B ON I.Book_ID = B.Book_ID
-                JOIN Member M ON I.Member_ID = M.Member_ID
+                FROM issue I
+                JOIN book B ON I.Book_ID = B.Book_ID
+                JOIN member M ON I.Member_ID = M.Member_ID
                 WHERE B.Status = 'Issued'
                 ORDER BY I.Due_Date ASC
             ");

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $phone = $_POST['phone'] ?? '';
 
-    $stmt = $conn->prepare("INSERT INTO Publisher (Publisher_Name, Email, Phone) VALUES (?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO publisher (Publisher_Name, Email, Phone) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $name, $email, $phone);
     $stmt->execute();
     
@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 /* Fetch Publishers */
 $publishers = $conn->query("
     SELECT P.*, COUNT(B.Book_ID) AS Total_Books
-    FROM Publisher P
-    LEFT JOIN Book B ON P.Publisher_ID = B.Publisher_ID
+    FROM publisher P
+    LEFT JOIN book B ON P.Publisher_ID = B.Publisher_ID
     GROUP BY P.Publisher_ID
     ORDER BY P.Publisher_ID DESC
 ");

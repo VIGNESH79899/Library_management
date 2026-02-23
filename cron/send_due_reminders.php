@@ -78,7 +78,7 @@ cronLog('info', 'Target date: ' . date('Y-m-d', strtotime('+2 days')));
 // ── Step 1: Ensure Reminder_Sent column exists ────────────────
 // Idempotent — safe to run every time, adds column only if missing
 $conn->query("
-    ALTER TABLE `Issue`
+    ALTER TABLE `issue`
     ADD COLUMN IF NOT EXISTS `Reminder_Sent` TINYINT(1) NOT NULL DEFAULT 0
 ");
 
@@ -100,14 +100,14 @@ $fetch_sql = "
         B.Title            AS Book_Title,
         M.Member_Name,
         M.Email            AS Member_Email
-    FROM  Issue I
-    JOIN  Book   B  ON I.Book_ID   = B.Book_ID
-    JOIN  Member M  ON I.Member_ID = M.Member_ID
+    FROM  issue I
+    JOIN  book   B  ON I.Book_ID   = B.Book_ID
+    JOIN  member M  ON I.Member_ID = M.Member_ID
     WHERE I.Due_Date     = DATE_ADD(CURDATE(), INTERVAL 2 DAY)
       AND I.Reminder_Sent = 0
       AND M.Email IS NOT NULL
       AND M.Email != ''
-      AND I.Issue_ID NOT IN (SELECT Issue_ID FROM Return_Book)
+      AND I.Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
     ORDER BY I.Issue_ID ASC
 ";
 
@@ -129,7 +129,7 @@ if ($total === 0) {
 }
 
 // ── Step 3: Prepare the UPDATE statement (reused in loop) ────
-$update_sql  = "UPDATE `Issue` SET `Reminder_Sent` = 1 WHERE `Issue_ID` = ?";
+$update_sql  = "UPDATE `issue` SET `Reminder_Sent` = 1 WHERE `Issue_ID` = ?";
 $update_stmt = $conn->prepare($update_sql);
 if (!$update_stmt) {
     cronLog('error', 'DB update prepare failed: ' . $conn->error);

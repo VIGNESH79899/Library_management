@@ -8,21 +8,21 @@ $user_name = explode(' ', $_SESSION['user_name'])[0];
 
 // Stats Logic
 // 1. Books Currently Borrowed
-$sql_borrowed = "SELECT COUNT(*) as count FROM Issue WHERE Member_ID = ? AND Issue_ID NOT IN (SELECT Issue_ID FROM Return_Book)";
+$sql_borrowed = "SELECT COUNT(*) as count FROM issue WHERE Member_ID = ? AND Issue_ID NOT IN (SELECT Issue_ID FROM return_book)";
 $stmt = $conn->prepare($sql_borrowed);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $borrowed_count = $stmt->get_result()->fetch_assoc()['count'];
 
 // 2. Total Books Returned
-$sql_returned = "SELECT COUNT(*) as count FROM Issue I JOIN Return_Book R ON I.Issue_ID = R.Issue_ID WHERE I.Member_ID = ?";
+$sql_returned = "SELECT COUNT(*) as count FROM issue I JOIN return_book R ON I.Issue_ID = R.Issue_ID WHERE I.Member_ID = ?";
 $stmt = $conn->prepare($sql_returned);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $returned_count = $stmt->get_result()->fetch_assoc()['count'];
 
 // 3. Outstanding Fines (Estimated)
-$sql_issues = "SELECT Due_Date FROM Issue WHERE Member_ID = ? AND Issue_ID NOT IN (SELECT Issue_ID FROM Return_Book)";
+$sql_issues = "SELECT Due_Date FROM issue WHERE Member_ID = ? AND Issue_ID NOT IN (SELECT Issue_ID FROM return_book)";
 $stmt = $conn->prepare($sql_issues);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -183,7 +183,7 @@ if ($hour < 12) {
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <?php
-            $recent_books = $conn->query("SELECT B.*, C.Category_Name as Category FROM Book B LEFT JOIN Category C ON B.Category_ID = C.Category_ID WHERE B.Status='Available' ORDER BY B.Book_ID DESC LIMIT 4");
+            $recent_books = $conn->query("SELECT B.*, C.Category_Name as Category FROM book B LEFT JOIN category C ON B.Category_ID = C.Category_ID WHERE B.Status='Available' ORDER BY B.Book_ID DESC LIMIT 4");
             if ($recent_books->num_rows > 0) {
                 while ($book = $recent_books->fetch_assoc()) {
             ?>
