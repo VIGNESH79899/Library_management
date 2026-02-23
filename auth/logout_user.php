@@ -1,12 +1,9 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-// Clear all student session data
+session_start();
+
 $_SESSION = [];
 session_destroy();
 
-// Redirect to the student login page (absolute path)
-header("Location: /Library-management/auth/login_user.php");
+// 🔥 FIXED REDIRECT
+header("Location: /auth/login_user.php");
 exit;
-?>
