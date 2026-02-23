@@ -91,6 +91,8 @@ function sendBorrowEmail(
     try {
 
         $mail->isSMTP();
+        $mail->Timeout = 15;      // stop waiting after 15 seconds
+$mail->SMTPKeepAlive = false;
         $mail->Host       = $cfg->host;
         $mail->SMTPAuth   = true;
         $mail->Username   = $cfg->user;
