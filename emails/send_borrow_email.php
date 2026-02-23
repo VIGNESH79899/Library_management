@@ -83,6 +83,10 @@ function sendBorrowEmail(
     ========================================================= */
 
     $mail = new PHPMailer(true);
+    $mail->SMTPDebug = 2;
+    $mail->Debugoutput = function($str, $level) {
+        error_log("SMTP DEBUG: $str");
+    };
 
     try {
 
