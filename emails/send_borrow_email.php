@@ -1,25 +1,21 @@
 <?php
 /**
  * ============================================================
- *  ANTIGRAVITY LMS — Send Borrow Confirmation Email
+ *  ANTIGRAVITY LMS — Send Borrow Confirmation Email (SendGrid)
  *  File: emails/send_borrow_email.php
  * ============================================================
  */
 
 declare(strict_types=1);
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
 // ── Resolve project root ─────────────────────────────────────
 $_EMAIL_ROOT = dirname(__DIR__);
 
-require_once $_EMAIL_ROOT . '/vendor/autoload.php';
-require_once $_EMAIL_ROOT . '/config/mail_config.php';
+require_once $_EMAIL_ROOT . '/config/env.php';
 require_once $_EMAIL_ROOT . '/emails/EmailLogger.php';
 
 /**
- * Send Borrow Confirmation Email
+ * Send Borrow Confirmation Email using SendGrid API
  */
 function sendBorrowEmail(
     mysqli  $conn,
@@ -32,22 +28,20 @@ function sendBorrowEmail(
     string  $member_id  = ''
 ): array {
 
-    /* =========================================================
-       1️⃣ Load SMTP Config
-    ========================================================= */
-    try {
-        $cfg = MailConfig::load();
-    } catch (RuntimeException $e) {
-        error_log('[sendBorrowEmail] Config error: ' . $e->getMessage());
+    // Load environment
+    Env::load(dirname(__DIR__) . '/.env');
+
+    $apiKey = getenv('SENDGRID_API_KEY');
+
+    if (!$apiKey) {
+        error_log('[sendBorrowEmail] SENDGRID_API_KEY not set.');
         return [
             'success' => false,
             'message' => 'Mail system misconfigured.'
         ];
     }
 
-    /* =========================================================
-       2️⃣ Validate Recipient Email
-    ========================================================= */
+    // Validate recipient email
     if (!filter_var($student_email, FILTER_VALIDATE_EMAIL)) {
         return [
             'success' => false,
@@ -55,13 +49,14 @@ function sendBorrowEmail(
         ];
     }
 
-    $logger        = new EmailLogger($conn);
-    $contact_email = $cfg->contactEmail;
-    $subject       = "📚 Book Issued – {$book_title} | Antigravity Library";
+    $logger  = new EmailLogger($conn);
+    $subject = "📚 Book Issued – {$book_title} | Antigravity Library";
 
     /* =========================================================
-       3️⃣ Build Email Body
+       Build Email Body (HTML Template)
     ========================================================= */
+
+    $contact_email = "aadhevignesh65@gmail.com"; // Must be verified sender in SendGrid
 
     ob_start();
     include __DIR__ . '/borrow_confirmation.php';
@@ -77,48 +72,58 @@ function sendBorrowEmail(
         "— Antigravity Library\n{$contact_email}";
 
     /* =========================================================
-       4️⃣ Send via PHPMailer
+       Send via SendGrid API (HTTPS - NOT SMTP)
     ========================================================= */
 
-    $mail = new PHPMailer(true);
+    $payload = [
+        "personalizations" => [[
+            "to" => [[
+                "email" => $student_email,
+                "name"  => $student_name
+            ]],
+            "subject" => $subject
+        ]],
+        "from" => [
+            "email" => $contact_email,
+            "name"  => "Antigravity Library"
+        ],
+        "content" => [
+            [
+                "type"  => "text/plain",
+                "value" => $text_body
+            ],
+            [
+                "type"  => "text/html",
+                "value" => $html_body
+            ]
+        ]
+    ];
 
-    try {
+    $ch = curl_init();
 
-        // Enable SMTP
-        $mail->isSMTP();
+    curl_setopt_array($ch, [
+        CURLOPT_URL            => "https://api.sendgrid.com/v3/mail/send",
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => json_encode($payload),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER     => [
+            "Authorization: Bearer {$apiKey}",
+            "Content-Type: application/json"
+        ],
+        CURLOPT_TIMEOUT        => 15
+    ]);
 
-        // 🔥 Prevent long hanging
-        $mail->Timeout = 15;           // 15 second max
-        $mail->SMTPKeepAlive = false;  
-        $mail->SMTPDebug = 2;          // Debug level
-        $mail->Debugoutput = function($str, $level) {
-            error_log("SMTP DEBUG: $str");
-        };
+    $response = curl_exec($ch);
+    $status   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error    = curl_error($ch);
 
-        // SMTP Config
-        $mail->Host       = $cfg->host;
-        $mail->SMTPAuth   = true;
-        $mail->Username   = $cfg->user;
-        $mail->Password   = $cfg->pass;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = $cfg->port;
-        $mail->CharSet    = 'UTF-8';
+    curl_close($ch);
 
-        // Sender
-        $mail->setFrom($cfg->from, $cfg->fromName);
-        $mail->addReplyTo($cfg->from, $cfg->fromName);
+    if ($error) {
+        error_log("[sendBorrowEmail] cURL Error: {$error}");
+    }
 
-        // Recipient
-        $mail->addAddress($student_email, $student_name);
-
-        // Content
-        $mail->Subject = $subject;
-        $mail->isHTML(true);
-        $mail->Body    = $html_body;
-        $mail->AltBody = $text_body;
-
-        // Send
-        $mail->send();
+    if ($status >= 200 && $status < 300) {
 
         // Log success
         $logger->success(
@@ -133,9 +138,7 @@ function sendBorrowEmail(
             'message' => 'Email sent successfully.'
         ];
 
-    } catch (Exception $e) {
-
-        $error = $mail->ErrorInfo;
+    } else {
 
         // Log failure
         $logger->failure(
@@ -143,14 +146,14 @@ function sendBorrowEmail(
             'BORROW_CONFIRMATION',
             $student_email,
             $subject,
-            $error
+            $response ?: $error
         );
 
-        error_log("[sendBorrowEmail] Failed: {$error}");
+        error_log("[sendBorrowEmail] SendGrid failed. Status: {$status} Response: {$response}");
 
         return [
             'success' => false,
-            'message' => 'Email delivery failed: ' . $error
+            'message' => 'Email delivery failed.'
         ];
     }
 }
