@@ -22,6 +22,9 @@ if (!isset($_SESSION['user_id'])) {
 
 include "../config/db.php";
 
+// Email helper — loaded once, never sends until explicitly called
+require_once __DIR__ . '/../emails/send_borrow_email.php';
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $response['message'] = 'Invalid request method.';
     echo json_encode($response);
@@ -110,9 +113,76 @@ try {
 
     $conn->commit();
 
+    // ──────────────────────────────────────────────────────────
+    // ✉  Send borrow confirmation email
+    //    This block is intentionally isolated from the borrow
+    //    transaction — an email failure NEVER rolls back the
+    //    issue record or changes the HTTP success response.
+    // ──────────────────────────────────────────────────────────
+    $emailNote = '';
+    try {
+        // Prefer session-cached email (set at login).
+        // Fall back to a DB query for sessions that pre-date this change.
+        $student_name  = $_SESSION['user_name']  ?? '';
+        $student_email = $_SESSION['user_email'] ?? '';
+
+        if (empty($student_email)) {
+            // Legacy session: fetch from DB
+            $memStmt = $conn->prepare(
+                'SELECT Member_Name, Email FROM Member WHERE Member_ID = ? LIMIT 1'
+            );
+            if ($memStmt) {
+                $memStmt->bind_param('i', $user_id);
+                $memStmt->execute();
+                $memRow = $memStmt->get_result()->fetch_assoc();
+                $memStmt->close();
+                $student_name  = $memRow['Member_Name'] ?? $student_name;
+                $student_email = $memRow['Email']        ?? '';
+            }
+        }
+
+        if (!empty($student_email)) {
+            // Fetch book title
+            $bkStmt = $conn->prepare(
+                'SELECT Title FROM Book WHERE Book_ID = ? LIMIT 1'
+            );
+            $book_title = 'Your Book';
+            if ($bkStmt) {
+                $bkStmt->bind_param('i', $book_id);
+                $bkStmt->execute();
+                $bkRow = $bkStmt->get_result()->fetch_assoc();
+                $bkStmt->close();
+                $book_title = $bkRow['Title'] ?? 'Your Book';
+            }
+
+            $emailResult = sendBorrowEmail(
+                conn:         $conn,
+                member_db_id: $user_id,
+                student_name: $student_name,
+                student_email:$student_email,
+                book_title:   $book_title,
+                due_date:     date('M d, Y', strtotime($due_date)),
+                issue_date:   date('M d, Y'),
+                member_id:    'ARI-' . sprintf('%04d', $user_id)
+            );
+
+            if (!$emailResult['success']) {
+                error_log('[borrow_book] Email failed for user ' . $user_id . ': ' . $emailResult['message']);
+                $emailNote = ' (Email notification could not be sent.)';
+            }
+        }
+    } catch (Throwable $emailEx) {
+        error_log('[borrow_book] Unexpected email error: ' . $emailEx->getMessage());
+    }
+    // ── End email block ───────────────────────────────────────
+
+
     $response['success']  = true;
-    $response['message']  = 'Book borrowed successfully! Please return by ' . date('M d, Y', strtotime($due_date));
+    $response['message']  = 'Book borrowed successfully! Please return by '
+                          . date('M d, Y', strtotime($due_date))
+                          . $emailNote;
     $response['due_date'] = date('M d, Y', strtotime($due_date));
+
 
 } catch (Exception $e) {
     $conn->rollback();

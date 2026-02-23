@@ -1,4 +1,23 @@
-/vendor/
-/node_modules/
-*.log
+# Git ignore rules for ANTIGRAVITY LMS
+# ──────────────────────────────────────
+
+# ⛔ NEVER commit real credentials
 .env
+
+# Composer dependencies
+/vendor/
+
+# Log files
+/logs/
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+# PHP debug
+*.cache

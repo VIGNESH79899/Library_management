@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $sql = "SELECT Member_ID, Member_Name, Password FROM Member WHERE Email = ?";
+    $sql = "SELECT Member_ID, Member_Name, Email, Password FROM Member WHERE Email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -23,10 +23,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
         if (password_verify($password, $row['Password'])) {
-            $_SESSION['user_id'] = $row['Member_ID'];
-            $_SESSION['user_name'] = $row['Member_Name'];
+            $_SESSION['user_id']    = $row['Member_ID'];
+            $_SESSION['user_name']  = $row['Member_Name'];
+            $_SESSION['user_email'] = $row['Email'];       // ← stored for email sends
             header("Location: ../user/dashboard.php");
             exit;
+
         } else {
             $error = "Invalid Password.";
         }

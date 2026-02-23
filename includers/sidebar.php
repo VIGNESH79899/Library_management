@@ -58,15 +58,16 @@
         $currentPage = basename($_SERVER['PHP_SELF']);
         
         $navItems = [
-            'dashboard.php' => ['label' => 'Overview', 'icon' => 'fas fa-chart-pie', 'path' => '/Library-management/dashboard/dashboard.php'],
-            'books.php' => ['label' => 'Books Inventory', 'icon' => 'fas fa-book', 'path' => '/Library-management/books/books.php'],
-            'members.php' => ['label' => 'Members', 'icon' => 'fas fa-users', 'path' => '/Library-management/members/members.php'],
-            'issueBook.php' => ['label' => 'Issue Book', 'icon' => 'fas fa-file-signature', 'path' => '/Library-management/issue/issueBook.php'],
-            'returnBook.php' => ['label' => 'Return Book', 'icon' => 'fas fa-undo-alt', 'path' => '/Library-management/return/returnBook.php'],
-            'librarians.php' => ['label' => 'Librarians', 'icon' => 'fas fa-user-shield', 'path' => '/Library-management/librarians/librarians.php'],
-            'categories.php' => ['label' => 'Categories', 'icon' => 'fas fa-th-list', 'path' => '/Library-management/categories/categories.php'],
-            'publishers.php' => ['label' => 'Publishers', 'icon' => 'fas fa-building', 'path' => '/Library-management/publishers/publishers.php'],
-            'reports.php' => ['label' => 'Analytics', 'icon' => 'fas fa-chart-line', 'path' => '/Library-management/reports/reports.php'],
+            'dashboard.php'  => ['label' => 'Overview',       'icon' => 'fas fa-chart-pie',      'path' => '/Library-management/dashboard/dashboard.php'],
+            'books.php'      => ['label' => 'Books Inventory', 'icon' => 'fas fa-book',            'path' => '/Library-management/books/books.php'],
+            'members.php'    => ['label' => 'Members',         'icon' => 'fas fa-users',           'path' => '/Library-management/members/members.php'],
+            'issueBook.php'  => ['label' => 'Issue Book',      'icon' => 'fas fa-file-signature',  'path' => '/Library-management/issue/issueBook.php'],
+            'returnBook.php' => ['label' => 'Return Book',     'icon' => 'fas fa-undo-alt',        'path' => '/Library-management/return/returnBook.php'],
+            'librarians.php' => ['label' => 'Librarians',      'icon' => 'fas fa-user-shield',     'path' => '/Library-management/librarians/librarians.php'],
+            'categories.php' => ['label' => 'Categories',      'icon' => 'fas fa-th-list',         'path' => '/Library-management/categories/categories.php'],
+            'publishers.php' => ['label' => 'Publishers',      'icon' => 'fas fa-building',        'path' => '/Library-management/publishers/publishers.php'],
+            'reports.php'    => ['label' => 'Analytics',       'icon' => 'fas fa-chart-line',      'path' => '/Library-management/reports/reports.php'],
+            'email_logs.php' => ['label' => 'Email Logs',      'icon' => 'fas fa-envelope-open-text', 'path' => '/Library-management/admin/email_logs.php'],
         ];
 
         foreach ($navItems as $page => $item) {
