@@ -41,12 +41,12 @@ function sendBorrowEmail(
         error_log('[sendBorrowEmail] Config error: ' . $e->getMessage());
         return [
             'success' => false,
-            'message' => 'Mail system misconfigured: ' . $e->getMessage()
+            'message' => 'Mail system misconfigured.'
         ];
     }
 
     /* =========================================================
-       2️⃣ Validate Email
+       2️⃣ Validate Recipient Email
     ========================================================= */
     if (!filter_var($student_email, FILTER_VALIDATE_EMAIL)) {
         return [
@@ -63,8 +63,6 @@ function sendBorrowEmail(
        3️⃣ Build Email Body
     ========================================================= */
 
-    // HTML Template Variables available inside template:
-    // $student_name, $book_title, $due_date, $issue_date, $member_id, $contact_email
     ob_start();
     include __DIR__ . '/borrow_confirmation.php';
     $html_body = ob_get_clean();
@@ -83,16 +81,21 @@ function sendBorrowEmail(
     ========================================================= */
 
     $mail = new PHPMailer(true);
-    $mail->SMTPDebug = 2;
-    $mail->Debugoutput = function($str, $level) {
-        error_log("SMTP DEBUG: $str");
-    };
 
     try {
 
+        // Enable SMTP
         $mail->isSMTP();
-        $mail->Timeout = 15;      // stop waiting after 15 seconds
-$mail->SMTPKeepAlive = false;
+
+        // 🔥 Prevent long hanging
+        $mail->Timeout = 15;           // 15 second max
+        $mail->SMTPKeepAlive = false;  
+        $mail->SMTPDebug = 2;          // Debug level
+        $mail->Debugoutput = function($str, $level) {
+            error_log("SMTP DEBUG: $str");
+        };
+
+        // SMTP Config
         $mail->Host       = $cfg->host;
         $mail->SMTPAuth   = true;
         $mail->Username   = $cfg->user;
@@ -101,15 +104,20 @@ $mail->SMTPKeepAlive = false;
         $mail->Port       = $cfg->port;
         $mail->CharSet    = 'UTF-8';
 
+        // Sender
         $mail->setFrom($cfg->from, $cfg->fromName);
-        $mail->addAddress($student_email, $student_name);
         $mail->addReplyTo($cfg->from, $cfg->fromName);
 
+        // Recipient
+        $mail->addAddress($student_email, $student_name);
+
+        // Content
         $mail->Subject = $subject;
         $mail->isHTML(true);
         $mail->Body    = $html_body;
         $mail->AltBody = $text_body;
 
+        // Send
         $mail->send();
 
         // Log success
@@ -138,7 +146,7 @@ $mail->SMTPKeepAlive = false;
             $error
         );
 
-        error_log("[sendBorrowEmail] Failed for {$student_email}: {$error}");
+        error_log("[sendBorrowEmail] Failed: {$error}");
 
         return [
             'success' => false,
