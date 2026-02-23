@@ -1,3 +1,4 @@
+<?php require_once dirname(dirname(__DIR__)) . "/config/app.php"; ?>
 <nav class="fixed top-0 left-0 right-0 z-50 glass-nav shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
@@ -52,7 +53,7 @@
                                 <i class="fas fa-user-circle text-slate-400 w-4"></i> My Profile
                             </a>
 
-                            <a href="/auth/logout_user.php"
+                            <a href="<?= BASE_URL ?>/auth/logout_user.php"
                                class="flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium">
                                 <i class="fas fa-sign-out-alt w-4"></i> Sign Out
                             </a>

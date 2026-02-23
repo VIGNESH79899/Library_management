@@ -1,12 +1,14 @@
 <?php
+require_once "config/app.php";
+
 session_start();
 // Redirect if already logged in
 if (isset($_SESSION['admin'])) {
-    header("Location: dashboard/dashboard.php");
+    header("Location: " . BASE_URL . "/dashboard/dashboard.php");
     exit;
 }
 if (isset($_SESSION['user_id'])) {
-    header("Location: user/dashboard.php");
+    header("Location: " . BASE_URL . "/user/dashboard.php");
     exit;
 }
 ?>
@@ -43,7 +45,7 @@ if (isset($_SESSION['user_id'])) {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl px-4 animate-fade-in-up" style="animation-delay: 0.1s;">
             
             <!-- Student Portal Card -->
-            <a href="auth/login_user.php" class="group relative bg-white border border-gray-100 rounded-3xl p-8 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2 transition-all duration-300 overflow-hidden">
+            <a href="<?= BASE_URL ?>/auth/login_user.php" class="group relative bg-white border border-gray-100 rounded-3xl p-8 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2 transition-all duration-300 overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
                 <div class="relative z-10 text-center">
                     <div class="w-16 h-16 mx-auto bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
@@ -58,7 +60,7 @@ if (isset($_SESSION['user_id'])) {
             </a>
 
             <!-- Librarian Portal Card -->
-            <a href="auth/login.php" class="group relative bg-white border border-gray-100 rounded-3xl p-8 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-2 transition-all duration-300 overflow-hidden">
+            <a href="<?= BASE_URL ?>/auth/login.php" class="group relative bg-white border border-gray-100 rounded-3xl p-8 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-2 transition-all duration-300 overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
                 <div class="relative z-10 text-center">
                     <div class="w-16 h-16 mx-auto bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">

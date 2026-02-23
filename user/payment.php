@@ -1,16 +1,11 @@
 <?php
-/* ============================================================
-   AURORALIB – Fine Payment Portal
-   payment.php  |  UI-Only Demo (No Gateway Integrated)
-   ============================================================ */
-
-// ── Session & Auth ──────────────────────────────────────────
+require_once dirname(__DIR__) . "/config/app.php";
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../auth/login_user.php");
+    header("Location: " . BASE_URL . "/auth/login_user.php");
     exit;
 }
 

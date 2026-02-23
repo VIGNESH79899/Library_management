@@ -4,9 +4,10 @@
    File: admin/email_logs.php
    ============================================================ */
 
+require_once "../config/app.php";
 session_start();
 if (!isset($_SESSION['admin'])) {
-    header("Location: ../auth/login.php");
+    header("Location: " . BASE_URL . "/auth/login.php");
     exit;
 }
 

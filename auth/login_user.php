@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['user_email'] = $row['Email'];
 
             // ✅ Correct production redirect
-            header("Location: /user/dashboard.php");
+            header("Location: " . BASE_URL . "/user/dashboard.php");
             exit;
 
         } else {
@@ -118,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </button>
 
                 <div class="text-center mt-6 text-sm text-gray-500">
-                    New student? <a href="register_user.php" class="text-blue-600 font-bold hover:underline">Create Account</a>
+                    New student? <a href="<?= BASE_URL ?>/auth/register_user.php" class="text-blue-600 font-bold hover:underline">Create Account</a>
                 </div>
             </form>
         </div>

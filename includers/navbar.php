@@ -10,9 +10,10 @@ if (isset($_SESSION['admin'])) {
     }
 }
 
+require_once dirname(__DIR__) . "/config/app.php";
 // Use absolute paths to ensure links work regardless of current URL or folder name typos
-// This fixes issues where user might be at 'Library%20management' instead of 'Library-management'
-$base_url = "/Library-management";
+// This penetrates through localhost/Library-management and production/ root.
+$base_url = BASE_URL;
 $path_to_dashboard = $base_url . "/dashboard/dashboard.php";
 $path_to_profile = $base_url . "/profile/index.php";
 $path_to_logout = $base_url . "/auth/logout.php";

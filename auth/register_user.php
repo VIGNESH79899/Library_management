@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($stmt->execute()) {
                 $_SESSION['success'] = "Registration successful! Please login.";
-                header("Location: login_user.php");
+                header("Location: " . BASE_URL . "/auth/login_user.php");
                 exit;
             } else {
                 $error = "Registration failed: " . $conn->error;
@@ -129,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </button>
 
                 <div class="text-center mt-6 text-sm text-gray-500">
-                    Already have an account? <a href="login_user.php" class="text-blue-600 font-bold hover:underline">Log In</a>
+                    Already have an account? <a href="<?= BASE_URL ?>/auth/login_user.php" class="text-blue-600 font-bold hover:underline">Log In</a>
                 </div>
             </form>
         </div>

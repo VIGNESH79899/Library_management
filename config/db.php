@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/app.php';
+
 $host = "mainline.proxy.rlwy.net";
 $user = "root";
 $password = "tqwXGAjLuYJOFfXmRudQyqESSRlhRGmu";

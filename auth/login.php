@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows == 1) {
         $_SESSION['admin'] = $username;
-        header("Location: ../dashboard/dashboard.php");
+        header("Location: " . BASE_URL . "/dashboard/dashboard.php");
         exit;
     } else {
         $error = "Invalid Username or Password";

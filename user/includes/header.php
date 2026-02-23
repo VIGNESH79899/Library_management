@@ -2,8 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once dirname(dirname(__DIR__)) . "/config/app.php";
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../auth/login_user.php");
+    header("Location: " . BASE_URL . "/auth/login_user.php");
     exit;
 }
 ?>

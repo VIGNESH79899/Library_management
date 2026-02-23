@@ -58,16 +58,16 @@
         $currentPage = basename($_SERVER['PHP_SELF']);
         
         $navItems = [
-            'dashboard.php'  => ['label' => 'Overview',       'icon' => 'fas fa-chart-pie',      'path' => '/Library-management/dashboard/dashboard.php'],
-            'books.php'      => ['label' => 'Books Inventory', 'icon' => 'fas fa-book',            'path' => '/Library-management/books/books.php'],
-            'members.php'    => ['label' => 'Members',         'icon' => 'fas fa-users',           'path' => '/Library-management/members/members.php'],
-            'issueBook.php'  => ['label' => 'Issue Book',      'icon' => 'fas fa-file-signature',  'path' => '/Library-management/issue/issueBook.php'],
-            'returnBook.php' => ['label' => 'Return Book',     'icon' => 'fas fa-undo-alt',        'path' => '/Library-management/return/returnBook.php'],
-            'librarians.php' => ['label' => 'Librarians',      'icon' => 'fas fa-user-shield',     'path' => '/Library-management/librarians/librarians.php'],
-            'categories.php' => ['label' => 'Categories',      'icon' => 'fas fa-th-list',         'path' => '/Library-management/categories/categories.php'],
-            'publishers.php' => ['label' => 'Publishers',      'icon' => 'fas fa-building',        'path' => '/Library-management/publishers/publishers.php'],
-            'reports.php'    => ['label' => 'Analytics',       'icon' => 'fas fa-chart-line',      'path' => '/Library-management/reports/reports.php'],
-            'email_logs.php' => ['label' => 'Email Logs',      'icon' => 'fas fa-envelope-open-text', 'path' => '/Library-management/admin/email_logs.php'],
+            'dashboard.php'  => ['label' => 'Overview',       'icon' => 'fas fa-chart-pie',      'path' => BASE_URL . '/dashboard/dashboard.php'],
+            'books.php'      => ['label' => 'Books Inventory', 'icon' => 'fas fa-book',            'path' => BASE_URL . '/books/books.php'],
+            'members.php'    => ['label' => 'Members',         'icon' => 'fas fa-users',           'path' => BASE_URL . '/members/members.php'],
+            'issueBook.php'  => ['label' => 'Issue Book',      'icon' => 'fas fa-file-signature',  'path' => BASE_URL . '/issue/issueBook.php'],
+            'returnBook.php' => ['label' => 'Return Book',     'icon' => 'fas fa-undo-alt',        'path' => BASE_URL . '/return/returnBook.php'],
+            'librarians.php' => ['label' => 'Librarians',      'icon' => 'fas fa-user-shield',     'path' => BASE_URL . '/librarians/librarians.php'],
+            'categories.php' => ['label' => 'Categories',      'icon' => 'fas fa-th-list',         'path' => BASE_URL . '/categories/categories.php'],
+            'publishers.php' => ['label' => 'Publishers',      'icon' => 'fas fa-building',        'path' => BASE_URL . '/publishers/publishers.php'],
+            'reports.php'    => ['label' => 'Analytics',       'icon' => 'fas fa-chart-line',      'path' => BASE_URL . '/reports/reports.php'],
+            'email_logs.php' => ['label' => 'Email Logs',      'icon' => 'fas fa-envelope-open-text', 'path' => BASE_URL . '/admin/email_logs.php'],
         ];
 
         foreach ($navItems as $page => $item) {
@@ -105,7 +105,7 @@
     
     <!-- Footer -->
     <div class="p-4 border-t border-slate-700/50 bg-[#0f172a] relative z-20">
-        <a href="/Library-management/auth/logout.php" 
+        <a href="<?= BASE_URL ?>/auth/logout.php" 
            class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all text-slate-400 hover:text-red-400 group overflow-hidden">
             <div class="w-6 h-6 flex items-center justify-center flex-shrink-0">
                 <i class="fas fa-power-off text-lg group-hover:scale-110 transition-transform"></i>
