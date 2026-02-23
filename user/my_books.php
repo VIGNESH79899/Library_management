@@ -194,6 +194,14 @@ $result = $stmt->get_result();
                         <i class="fas fa-undo-alt"></i>
                         Return Early
                     </button>
+                    <?php if ($is_late && $fine > 0): ?>
+                    <a href="payment.php?issue_id=<?= $row['Issue_ID'] ?>"
+                       class="w-full mt-2 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all active:scale-95
+                              bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white shadow-md hover:shadow-cyan-500/30 hover:-translate-y-0.5">
+                        <i class="fas fa-receipt"></i>
+                        Pay Fine ₹<?= $fine ?>
+                    </a>
+                    <?php endif; ?>
                 </div>
             </div>
             <?php endwhile; ?>

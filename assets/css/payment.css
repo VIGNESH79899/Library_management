@@ -1,0 +1,502 @@
+/* ============================================================
+   AURORALIB — Fine Payment Portal
+   Matches the AuroraLib design system (light, clean, SaaS)
+   ============================================================ */
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position:  200% center; }
+}
+
+@keyframes lineGlow {
+  from { width: 40%; opacity: 0.5; }
+  to   { width: 70%; opacity: 1;   }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes successPulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(16,185,129,0.30); }
+  50%       { box-shadow: 0 0 0 10px rgba(16,185,129,0.06); }
+}
+
+@keyframes failShake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-5px); }
+  40%     { transform: translateX(5px);  }
+  60%     { transform: translateX(-3px); }
+  80%     { transform: translateX(3px);  }
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.92) translateY(16px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);     }
+}
+
+/* ── Card entry stagger ──────────────────────────────────── */
+.anim-card { animation: fadeInUp 0.55s cubic-bezier(0.16,1,0.3,1) both; }
+.anim-d1   { animation-delay: 0.05s; }
+.anim-d2   { animation-delay: 0.15s; }
+.anim-d3   { animation-delay: 0.25s; }
+.anim-d4   { animation-delay: 0.35s; }
+.anim-d5   { animation-delay: 0.42s; }
+
+/* ── Page layout ─────────────────────────────────────────── */
+.pay-page {
+  min-height: calc(100vh - 64px);
+  background: #f1f5f9; /* matches AuroraLib bg-slate-50 */
+  padding: 40px 16px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pay-container {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Page Header ─────────────────────────────────────────── */
+.pay-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.pay-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.pay-logo-icon {
+  width: 36px;
+  height: 36px;
+  background: #2563eb;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.30);
+}
+
+.pay-logo-text {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #1e293b;
+}
+
+.pay-logo-text span { color: #2563eb; }
+
+.pay-subtitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 12px;
+}
+
+.pay-subtitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #2563eb, transparent);
+  animation: lineGlow 2.2s ease-in-out infinite alternate;
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.pay-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 26px 26px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.pay-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
+}
+
+/* ── Section title ───────────────────────────────────────── */
+.pay-section-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #2563eb;
+  margin-bottom: 20px;
+}
+
+/* ── Detail grid ─────────────────────────────────────────── */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+.detail-item   { display: flex; flex-direction: column; gap: 3px; }
+
+.detail-label  {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.detail-value  {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.detail-value.overdue { color: #f97316; }
+
+/* ── Fine amount hero ────────────────────────────────────── */
+.fine-hero {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+  text-align: center;
+}
+
+.fine-hero-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.fine-hero-amount {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(2.6rem, 8vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #2563eb;
+  line-height: 1;
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #0ea5e9 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+.fine-hero-note {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.fine-hero-note i { color: #2563eb; }
+
+/* ── Method cards ────────────────────────────────────────── */
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.method-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px 10px 14px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+  user-select: none;
+}
+
+.method-card:hover {
+  border-color: #93c5fd;
+  background: #eff6ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37,99,235,0.10);
+}
+
+.method-card.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12), 0 4px 12px rgba(37,99,235,0.10);
+  transform: translateY(-2px);
+}
+
+.method-check {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 17px; height: 17px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-size: 0.55rem;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.method-card.active .method-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.method-icon {
+  display: block;
+  font-size: 1.4rem;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  transition: color 0.2s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.method-card.active .method-icon,
+.method-card:hover  .method-icon { color: #2563eb; transform: scale(1.12); }
+
+.method-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.04em;
+  transition: color 0.2s ease;
+}
+
+.method-card.active .method-name,
+.method-card:hover  .method-name { color: #1d4ed8; }
+
+/* ── Validation alert ────────────────────────────────────── */
+.alert-no-method {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 500;
+  animation: fadeInUp 0.3s ease;
+}
+.alert-no-method.show { display: flex; }
+
+/* ── Pay button ──────────────────────────────────────────── */
+.btn-pay {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 16px 28px;
+  border-radius: 14px;
+  border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.97rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 60%, #0284c7 100%);
+  background-size: 200% auto;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  box-shadow:
+    0 4px 14px rgba(37,99,235,0.35),
+    0 1px 3px rgba(37,99,235,0.25);
+}
+
+.btn-pay::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transition: left 0.45s ease;
+}
+
+.btn-pay:hover {
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 22px rgba(37,99,235,0.40),
+    0 2px 6px rgba(37,99,235,0.20);
+}
+
+.btn-pay:hover::after { left: 100%; }
+.btn-pay:active { transform: translateY(0); }
+.btn-pay:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+.btn-pay .btn-arrow { font-size: 0.8rem; transition: transform 0.25s ease; }
+.btn-pay:hover .btn-arrow { transform: translateX(3px); }
+
+/* ── Security badge ──────────────────────────────────────── */
+.security-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 0.69rem;
+  color: #94a3b8;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.security-badge i { color: #2563eb; }
+
+/* ── Spinner ─────────────────────────────────────────────── */
+.spinner {
+  width: 17px; height: 17px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── Modal overlay ───────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.50);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-overlay.show {
+  display: flex;
+  animation: fadeOverlay 0.25s ease forwards;
+}
+
+@keyframes fadeOverlay {
+  from { opacity: 0; } to { opacity: 1; }
+}
+
+.modal-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 44px 36px;
+  width: 100%; max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.08);
+  animation: modalPop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+
+.modal-icon-wrap {
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 22px;
+  font-size: 1.9rem;
+  transition: all 0.35s ease;
+}
+
+/* Processing */
+.modal-box.state-processing .modal-icon-wrap {
+  background: #eff6ff;
+  border: 2px solid #bfdbfe;
+  color: #2563eb;
+}
+
+/* Success */
+.modal-box.state-success .modal-icon-wrap {
+  background: #f0fdf4;
+  border: 2px solid #bbf7d0;
+  color: #10b981;
+  animation: successPulse 1.8s ease-in-out infinite;
+}
+
+/* Failed */
+.modal-box.state-failed .modal-icon-wrap {
+  background: #fef2f2;
+  border: 2px solid #fecaca;
+  color: #ef4444;
+  animation: failShake 0.5s ease;
+}
+
+.modal-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 9px;
+}
+
+.modal-msg {
+  font-size: 0.86rem;
+  color: #64748b;
+  line-height: 1.65;
+  margin-bottom: 26px;
+}
+
+/* Spinner inside modal */
+.modal-spinner {
+  width: 34px; height: 34px;
+  border: 3px solid #bfdbfe;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+.modal-close-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 24px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #2563eb;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .pay-card { padding: 20px 16px; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .method-grid { gap: 8px; }
+  .method-card { padding: 14px 6px 12px; }
+  .method-icon { font-size: 1.2rem; }
+  .method-name { font-size: 0.65rem; }
+  .modal-box   { padding: 32px 20px; }
+}
