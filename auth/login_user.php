@@ -1,37 +1,48 @@
 <?php
 session_start();
-include "../config/db.php";
+require_once "../config/db.php";
 
 $error = "";
 $success = "";
 
+// Show success message if redirected
 if (isset($_SESSION['success'])) {
     $success = $_SESSION['success'];
     unset($_SESSION['success']);
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    $sql = "SELECT Member_ID, Member_Name, Email, Password FROM member WHERE Email = ?";
+    $sql = "SELECT Member_ID, Member_Name, Email, Password 
+            FROM member 
+            WHERE Email = ? LIMIT 1";
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows == 1) {
+    if ($result && $result->num_rows === 1) {
+
         $row = $result->fetch_assoc();
+
         if (password_verify($password, $row['Password'])) {
+
             $_SESSION['user_id']    = $row['Member_ID'];
             $_SESSION['user_name']  = $row['Member_Name'];
-            $_SESSION['user_email'] = $row['Email'];       // ← stored for email sends
-            header("Location: ../user/dashboard.php");
+            $_SESSION['user_email'] = $row['Email'];
+
+            // ✅ Correct production redirect
+            header("Location: /user/dashboard.php");
             exit;
 
         } else {
             $error = "Invalid Password.";
         }
+
     } else {
         $error = "Email not found.";
     }
