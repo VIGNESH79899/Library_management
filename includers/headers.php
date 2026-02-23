@@ -6,4 +6,5 @@
 <!-- FontAwesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <?php require_once dirname(__DIR__) . "/config/app.php"; ?>
+<link rel="icon" type="image/png" href="<?= BASE_URL ?>/assets/images/favicon.png">
 <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/custom.css">
