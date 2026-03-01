@@ -5,12 +5,21 @@ include "../config/db.php";
 
 // Search Logic
 $search = $_GET['search'] ?? '';
+$category_filter = $_GET['category'] ?? '';
+
 $sql = "SELECT B.*, C.Category_Name FROM book B LEFT JOIN category C ON B.Category_ID = C.Category_ID WHERE B.Status='Available'";
 if ($search) {
     $safe = $conn->real_escape_string($search);
     $sql .= " AND (B.Title LIKE '%$safe%' OR B.Author LIKE '%$safe%' OR C.Category_Name LIKE '%$safe%')";
 }
+if ($category_filter) {
+    $safe_cat = $conn->real_escape_string($category_filter);
+    $sql .= " AND B.Category_ID = '$safe_cat'";
+}
 $books = $conn->query($sql);
+
+$categories_sql = "SELECT * FROM category ORDER BY Category_Name";
+$categories_result = $conn->query($categories_sql);
 ?>
 
 <!-- ─── Borrow Modal ─────────────────────────────────────────── -->
@@ -105,54 +114,68 @@ $books = $conn->query($sql);
 
     <!-- Header & Search -->
     <div class="text-center mb-12">
-        <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-700 to-slate-900 tracking-tight mb-4">Discover Your Next Read</h1>
-        <p class="text-slate-500 max-w-2xl mx-auto text-lg mb-8">Search through our vast collection of books and borrow them instantly.</p>
+        <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#5f2eea] to-[#8e2de2] tracking-tight mb-4 font-['Inter']">Discover Your Next Read</h1>
+        <p class="text-slate-500 max-w-2xl mx-auto text-lg mb-8 font-['Inter']">Search through our vast collection of books and borrow them instantly.</p>
 
-        <form class="max-w-xl mx-auto relative group">
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i class="fas fa-search text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
+        <form class="max-w-xl mx-auto relative group mb-8">
+            <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                <i class="fas fa-search text-slate-400 group-focus-within:text-[#5f2eea] transition-colors"></i>
             </div>
             <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search by title, author, or category..."
-                   class="w-full pl-12 pr-4 py-4 rounded-full border-2 border-slate-100 hover:border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all shadow-xl shadow-slate-200/50 text-slate-600 font-medium">
-            <?php if ($search): ?>
-                <a href="browse.php" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
-                    <i class="fas fa-times-circle"></i>
+                   class="w-full pl-14 pr-4 py-4 rounded-full border-2 border-slate-100/80 hover:border-slate-200 focus:border-[#5f2eea] focus:ring-4 focus:ring-[#5f2eea]/20 outline-none transition-all shadow-[0_8px_30px_rgba(0,0,0,0.04)] text-slate-600 font-medium font-['Inter'] backdrop-blur-md bg-white/90">
+            <?php if ($search || $category_filter): ?>
+                <a href="browse.php" class="absolute inset-y-0 right-0 pr-6 flex items-center text-slate-400 hover:text-[#5f2eea] cursor-pointer transition-colors">
+                    <i class="fas fa-times-circle text-lg"></i>
                 </a>
             <?php endif; ?>
         </form>
+
+        <!-- Category filter chips -->
+        <div class="flex flex-wrap justify-center gap-3">
+            <a href="browse.php<?= $search ? '?search='.urlencode($search) : '' ?>" class="<?= !$category_filter ? 'bg-gradient-to-r from-[#5f2eea] to-[#8e2de2] text-white shadow-[0_4px_15px_rgba(95,46,234,0.3)]' : 'backdrop-blur-md bg-white/70 text-slate-600 hover:bg-white border border-slate-200' ?> px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 hover:-translate-y-0.5 font-['Inter']">All</a>
+            <?php while($cat = $categories_result->fetch_assoc()): ?>
+                <a href="browse.php?category=<?= urlencode($cat['Category_ID']) ?><?= $search ? '&search='.urlencode($search) : '' ?>" class="<?= $category_filter == $cat['Category_ID'] ? 'bg-gradient-to-r from-[#5f2eea] to-[#8e2de2] text-white shadow-[0_4px_15px_rgba(95,46,234,0.3)]' : 'backdrop-blur-md bg-white/70 text-slate-600 hover:bg-white border border-slate-200' ?> px-6 py-2 rounded-full font-bold text-sm transition-all duration-300 hover:-translate-y-0.5 font-['Inter']"><?= htmlspecialchars($cat['Category_Name']) ?></a>
+            <?php endwhile; ?>
+        </div>
     </div>
 
     <!-- Books Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         <?php if ($books->num_rows > 0): ?>
             <?php while ($book = $books->fetch_assoc()): ?>
-                <div class="group bg-white rounded-3xl border border-slate-100 overflow-hidden hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300 hover:-translate-y-2 flex flex-col h-full relative">
+                <div class="group backdrop-blur-md bg-white/80 rounded-[18px] border border-slate-100/50 overflow-hidden hover:shadow-[0_8px_30px_rgba(95,46,234,0.15)] transition-all duration-300 hover:-translate-y-2 flex flex-col h-full relative" data-book-id="<?= $book['Book_ID'] ?>">
 
                     <!-- Cover -->
-                    <div class="h-64 bg-slate-50 relative overflow-hidden flex items-center justify-center p-8 group-hover:bg-indigo-50/30 transition-colors">
-                        <div class="absolute w-48 h-48 bg-white rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                        <i class="fas fa-book text-7xl text-slate-200 group-hover:text-indigo-300 drop-shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:-rotate-3 relative z-10"></i>
+                    <div class="h-64 relative overflow-hidden flex items-center justify-center bg-slate-100">
+                        <img src="https://picsum.photos/seed/<?= $book['Book_ID'] ?>/400/600" alt="Book Cover" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
 
-                        <div class="absolute top-4 right-4 z-20">
-                            <span class="bg-white/80 backdrop-blur-md text-[10px] uppercase font-extrabold px-3 py-1 rounded-full shadow-sm border border-slate-100 text-indigo-600 tracking-wider">
+                        <div class="absolute top-4 left-4 z-20">
+                            <span class="bg-white/95 backdrop-blur-md text-[10px] uppercase font-bold px-3 py-1.5 rounded-full shadow-sm text-[#5f2eea] tracking-wider font-['Inter']">
                                 <?= $book['Category_Name'] ?? 'General' ?>
+                            </span>
+                        </div>
+                        
+                        <div class="absolute top-4 right-4 z-20">
+                            <span class="bg-emerald-500/90 backdrop-blur-md text-white text-[10px] uppercase font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wider flex items-center gap-1.5 font-['Inter']">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Available
                             </span>
                         </div>
                     </div>
 
                     <!-- Content -->
-                    <div class="p-6 flex-1 flex flex-col relative z-20 bg-white">
-                        <h3 class="font-bold text-xl text-slate-800 mb-1 leading-tight line-clamp-2 group-hover:text-indigo-600 transition-colors"
+                    <div class="p-6 flex-1 flex flex-col relative z-20 bg-white/50 backdrop-blur-sm">
+                        <h3 class="font-bold text-lg text-slate-800 mb-1 leading-tight line-clamp-2 group-hover:text-[#5f2eea] transition-colors font-['Inter']"
                             title="<?= htmlspecialchars($book['Title']) ?>">
                             <?= htmlspecialchars($book['Title']) ?>
                         </h3>
-                        <p class="text-slate-400 text-sm font-medium mb-6">by <span class="text-slate-600"><?= htmlspecialchars($book['Author']) ?></span></p>
+                        <p class="text-slate-500 text-sm font-medium mb-6 font-['Inter']">by <span class="text-slate-700"><?= htmlspecialchars($book['Author']) ?></span></p>
 
                         <div class="mt-auto">
                             <button
                                 onclick="openBorrowModal(<?= $book['Book_ID'] ?>, '<?= addslashes(htmlspecialchars($book['Title'])) ?>')"
-                                class="block w-full text-center bg-slate-50 hover:bg-indigo-600 text-slate-700 hover:text-white font-bold py-3.5 rounded-2xl transition-all shadow-sm hover:shadow-lg hover:shadow-indigo-500/30 active:scale-95 group/btn cursor-pointer">
-                                <span class="group-hover/btn:hidden">Borrow</span>
+                                class="block w-full text-center bg-[#5f2eea]/10 hover:bg-gradient-to-r hover:from-[#5f2eea] hover:to-[#8e2de2] text-[#5f2eea] hover:text-white font-bold py-3.5 rounded-xl transition-all duration-300 shadow-sm hover:shadow-[0_8px_20px_rgba(95,46,234,0.3)] active:scale-95 group/btn cursor-pointer font-['Inter']">
+                                <span class="group-hover/btn:hidden">Borrow Book</span>
                                 <span class="hidden group-hover/btn:inline-flex items-center gap-2"><i class="fas fa-calendar-check"></i> Set Return Date</span>
                             </button>
                         </div>
