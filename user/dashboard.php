@@ -188,15 +188,32 @@ if ($hour < 12) {
                 while ($book = $recent_books->fetch_assoc()) {
             ?>
             <div class="group backdrop-blur-md bg-white/80 rounded-[18px] border border-slate-100/50 overflow-hidden hover:shadow-[0_8px_30px_rgba(95,46,234,0.15)] transition-all duration-300 hover:-translate-y-2 h-full flex flex-col relative" data-book-id="<?= $book['Book_ID'] ?>">
-                <div class="h-48 relative overflow-hidden flex items-center justify-center bg-slate-100">
-                    <img src="https://picsum.photos/seed/<?= $book['Book_ID'] ?>/400/600" alt="Book Cover" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
+                <div class="h-48 relative overflow-hidden flex items-center justify-center bg-gradient-to-br transition-all duration-700 group-hover:scale-105
+                    <?php
+                        $gradi = [
+                            'from-indigo-500 to-purple-600',
+                            'from-emerald-400 to-cyan-500',
+                            'from-rose-400 to-red-500',
+                            'from-amber-400 to-orange-500',
+                            'from-blue-500 to-indigo-600',
+                            'from-fuchsia-500 to-pink-600',
+                            'from-teal-400 to-emerald-500',
+                            'from-violet-500 to-fuchsia-500'
+                        ];
+                        echo $gradi[$book['Book_ID'] % count($gradi)]; 
+                    ?>">
+                    
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-2 backdrop-blur-sm shadow-sm ring-2 ring-white/10 z-10 transition-transform group-hover:-translate-y-2">
+                        <i class="fas fa-book-open text-white text-2xl drop-shadow-md"></i>
+                    </div>
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-300 pointer-events-none z-0"></div>
                     
                     <div class="absolute top-3 left-3 z-20">
                          <span class="bg-white/95 backdrop-blur-md text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm text-[#5f2eea] uppercase tracking-widest font-['Inter'] flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[#5f2eea] animate-pulse"></span> New</span>
                     </div>
 
-                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm z-30 bg-black/20">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm z-30 bg-black/30">
                         <a href="browse.php?take=<?= $book['Book_ID'] ?>" class="bg-gradient-to-r from-[#5f2eea] to-[#8e2de2] text-white font-bold px-6 py-2.5 rounded-full shadow-[0_4px_15px_rgba(95,46,234,0.3)] transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:scale-105 font-['Inter']">
                             Borrow Now
                         </a>

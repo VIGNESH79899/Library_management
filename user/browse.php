@@ -146,13 +146,29 @@ $categories_result = $conn->query($categories_sql);
                 <div class="group backdrop-blur-md bg-white/80 rounded-[18px] border border-slate-100/50 overflow-hidden hover:shadow-[0_8px_30px_rgba(95,46,234,0.15)] transition-all duration-300 hover:-translate-y-2 flex flex-col h-full relative" data-book-id="<?= $book['Book_ID'] ?>">
 
                     <!-- Cover -->
-                    <div class="h-64 relative overflow-hidden flex items-center justify-center bg-slate-100">
-                        <img src="https://picsum.photos/seed/<?= $book['Book_ID'] ?>/400/600" alt="Book Cover" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300"></div>
+                    <?php
+                        $gradients = [
+                            'from-indigo-500 to-purple-600',
+                            'from-emerald-400 to-cyan-500',
+                            'from-rose-400 to-red-500',
+                            'from-amber-400 to-orange-500',
+                            'from-blue-500 to-indigo-600',
+                            'from-fuchsia-500 to-pink-600',
+                            'from-teal-400 to-emerald-500',
+                            'from-violet-500 to-fuchsia-500'
+                        ];
+                        $gradient = $gradients[$book['Book_ID'] % count($gradients)];
+                    ?>
+                    <div class="h-64 relative overflow-hidden flex items-center justify-center bg-gradient-to-br <?= $gradient ?> group-hover:scale-105 transition-transform duration-700">
+                        
+                        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mb-4 backdrop-blur-sm shadow-sm ring-4 ring-white/10 z-10 transition-transform group-hover:-translate-y-2">
+                            <i class="fas fa-book-open text-white text-3xl drop-shadow-md"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none z-0"></div>
 
                         <div class="absolute top-4 left-4 z-20">
                             <span class="bg-white/95 backdrop-blur-md text-[10px] uppercase font-bold px-3 py-1.5 rounded-full shadow-sm text-[#5f2eea] tracking-wider font-['Inter']">
-                                <?= $book['Category_Name'] ?? 'General' ?>
+                                <?= htmlspecialchars($book['Category_Name'] ?? 'General') ?>
                             </span>
                         </div>
                         

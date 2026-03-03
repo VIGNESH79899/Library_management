@@ -107,7 +107,7 @@ try {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
             if (!$s2) throw new Exception("s2: " . $conn->error);
-            $s2->bind_param("iiiisidd",
+            $s2->bind_param("iiissidd",
                 $issue_id, $return_id, $member_id,
                 $due_date, $return_date,
                 $days_late, $fine_rate, $fine

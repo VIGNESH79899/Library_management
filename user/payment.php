@@ -27,12 +27,12 @@ if ($issue_id > 0) {
     $sql = "
         SELECT I.Issue_ID, I.Due_Date,
                B.Title,
-               U.Name AS member_name,
-               U.Member_ID,
+               M.Member_Name AS member_name,
+               M.Member_ID,
                DATEDIFF(CURDATE(), I.Due_Date) AS days_late
         FROM issue I
         JOIN book B         ON I.Book_ID   = B.Book_ID
-        JOIN useraccounts U ON I.Member_ID = U.Member_ID
+        JOIN member M       ON I.Member_ID = M.Member_ID
         WHERE I.Issue_ID = ?
           AND I.Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
     ";
