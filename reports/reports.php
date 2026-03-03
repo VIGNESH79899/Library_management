@@ -98,7 +98,7 @@ $recentFines = $conn->query("
             <!-- Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                 <div>
-                    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">System Reports</h1>
+                    <h1 class="page-title">System Reports</h1>
                     <p class="text-slate-500 mt-1">Overview of library activity and fine collections.</p>
                 </div>
                 <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm transition-all">
@@ -192,7 +192,7 @@ $recentFines = $conn->query("
 
             <!-- Recent Fine Transactions -->
             <?php if ($recentFines && $recentFines->num_rows > 0): ?>
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up">
+            <div class="premium-card overflow-hidden animate-fade-in-up">
                 <div class="p-5 border-b border-gray-100 bg-gray-50/50">
                     <h2 class="font-bold text-slate-700 flex items-center gap-2">
                         <i class="fas fa-receipt text-red-400"></i> Recent Fine Transactions
@@ -200,7 +200,7 @@ $recentFines = $conn->query("
                     <p class="text-xs text-slate-400 mt-0.5">Last 10 returns with fines collected</p>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-gray-600">
+                        <table class="w-full text-left text-base text-gray-600 table-modern">
                         <thead>
                             <tr class="bg-gray-50 border-b border-gray-100">
                                 <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">Book</th>
@@ -213,7 +213,7 @@ $recentFines = $conn->query("
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             <?php while ($fr = $recentFines->fetch_assoc()): ?>
-                            <tr class="hover:bg-slate-50 transition-colors">
+                            <tr class="table-row-modern group cursor-default">
                                 <td class="p-4">
                                     <span class="font-medium text-slate-800"><?= htmlspecialchars($fr['Title']) ?></span>
                                 </td>
@@ -240,7 +240,7 @@ $recentFines = $conn->query("
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
                 <!-- Popular Books -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="premium-card p-6">
                     <h2 class="text-base font-bold mb-4 border-b pb-2 text-gray-700 flex items-center gap-2">
                         <i class="fas fa-fire text-orange-400"></i> Top 5 Most Popular Books
                     </h2>
@@ -260,7 +260,7 @@ $recentFines = $conn->query("
                 </div>
 
                 <!-- Active Members -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="premium-card p-6">
                     <h2 class="text-base font-bold mb-4 border-b pb-2 text-gray-700 flex items-center gap-2">
                         <i class="fas fa-users text-indigo-400"></i> Top 5 Most Active Members
                     </h2>

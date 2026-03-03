@@ -112,7 +112,7 @@ $members = $conn->query("
             <!-- Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                 <div>
-                    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Members Management</h1>
+                    <h1 class="page-title">Members Management</h1>
                     <p class="text-slate-500 mt-1">Manage registered library members.</p>
                 </div>
             </div>
@@ -141,7 +141,7 @@ $members = $conn->query("
                 
                 <?php if ($editData): ?>
                 <!-- Form Card (Only visible when editing) -->
-                <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden animate-fade-in-up md:sticky md:top-24">
+                <div class="premium-card overflow-hidden animate-fade-in-up md:sticky md:top-24">
                     <div class="px-6 py-4 bg-gray-50/50 border-b border-gray-100 flex justify-between items-center">
                         <h2 class="font-bold text-slate-700">Edit Member</h2>
                         <a href="members.php" class="text-xs text-red-500 hover:text-red-700 font-medium">Cancel Edit</a>
@@ -202,12 +202,12 @@ $members = $conn->query("
                 <?php endif; ?>
 
                 <!-- List Card -->
-                <div class="<?= $editData ? 'lg:col-span-2' : 'lg:col-span-3' ?> bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s;">
+                <div class="<?= $editData ? 'lg:col-span-2' : 'lg:col-span-3' ?> premium-card overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s;">
                     <div class="px-6 py-4 bg-gray-50/50 border-b border-gray-100">
                         <h2 class="font-bold text-slate-700 text-lg">Registered Members</h2>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-base text-gray-600">
+                        <table class="w-full text-left text-base text-gray-600 table-modern">
                             <thead class="bg-gray-50 border-b border-gray-100">
                                 <tr>
                                     <th class="p-4 font-semibold text-sm text-gray-500 uppercase tracking-wider">ID</th>
@@ -219,7 +219,7 @@ $members = $conn->query("
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 <?php $cnt = 1; while ($row = $members->fetch_assoc()) { ?>
-                                <tr class="hover:bg-indigo-50/30 transition-colors group">
+                                <tr class="table-row-modern group cursor-default">
                                     <td class="p-4 font-mono text-sm text-slate-400" title="Database ID: <?= $row['Member_ID'] ?>">#<?= $cnt++ ?></td>
                                     <td class="p-4">
                                         <div class="font-bold text-slate-800 text-lg"><?= $row['Member_Name'] ?></div>

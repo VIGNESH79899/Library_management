@@ -41,7 +41,7 @@ $books = $conn->query("
             <!-- Page Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                 <div>
-                    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Books Management</h1>
+                    <h1 class="page-title">Books Management</h1>
                     <!-- Breadcrumbs -->
                     <nav class="flex text-sm text-slate-500 mt-1">
                         <a href="../dashboard/dashboard.php" class="hover:text-indigo-600 transition-colors">Dashboard</a>
@@ -57,7 +57,7 @@ $books = $conn->query("
             </div>
 
             <!-- Content Card -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in-up">
+            <div class="premium-card overflow-hidden animate-fade-in-up">
                 
                 <!-- Filters or Search (Optional placeholder) -->
                 <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
@@ -69,7 +69,7 @@ $books = $conn->query("
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-gray-600">
+                    <table class="w-full text-left text-base text-gray-600 table-modern">
                         <thead>
                             <tr class="bg-gray-50 border-b border-gray-100">
                                 <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">ID</th>
@@ -82,7 +82,7 @@ $books = $conn->query("
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             <?php while ($row = $books->fetch_assoc()) { ?>
-                            <tr class="hover:bg-slate-50 transition-colors group">
+                            <tr class="table-row-modern group cursor-default">
                                 <td class="p-4 font-mono text-xs text-slate-400">#<?= str_pad($row['Book_ID'], 4, '0', STR_PAD_LEFT) ?></td>
                                 <td class="p-4">
                                     <div class="flex items-center gap-3">

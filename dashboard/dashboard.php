@@ -69,7 +69,7 @@ $returns = $conn->query("
             <!-- Welcome Section -->
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-enter">
                 <div>
-                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight font-inter">Dashboard</h1>
+                    <h1 class="page-title">Dashboard</h1>
                     <p class="text-slate-500 mt-2 font-medium">Overview of library performance and activities.</p>
                 </div>
                 <div class="flex items-center gap-3">
@@ -86,7 +86,7 @@ $returns = $conn->query("
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Total Books -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/60 shadow-sm hover-card group animate-enter delay-100">
+                <div class="premium-card p-6 rounded-xl border border-slate-200/60 shadow-sm hover-card group animate-enter delay-100">
                     <div class="flex justify-between items-start mb-4">
                         <div class="h-12 w-12 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
                             <i class="fas fa-book text-lg"></i>
@@ -102,7 +102,7 @@ $returns = $conn->query("
                 </div>
 
                 <!-- Total Members -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/60 shadow-sm hover-card group animate-enter delay-200">
+                <div class="premium-card p-6 rounded-xl border border-slate-200/60 shadow-sm hover-card group animate-enter delay-200">
                     <div class="flex justify-between items-start mb-4">
                         <div class="h-12 w-12 rounded-lg bg-pink-50 border border-pink-100 flex items-center justify-center text-pink-600 group-hover:bg-pink-600 group-hover:text-white transition-colors duration-300">
                             <i class="fas fa-users text-lg"></i>
@@ -118,7 +118,7 @@ $returns = $conn->query("
                 </div>
 
                 <!-- Issued Books -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/60 shadow-sm hover-card group animate-enter delay-300">
+                <div class="premium-card p-6 rounded-xl border border-slate-200/60 shadow-sm hover-card group animate-enter delay-300">
                     <div class="flex justify-between items-start mb-4">
                         <div class="h-12 w-12 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
                             <i class="fas fa-hand-holding text-lg"></i>
@@ -132,7 +132,7 @@ $returns = $conn->query("
                 </div>
 
                 <!-- Fines -->
-                <div class="bg-white p-6 rounded-xl border border-slate-200/60 shadow-sm hover-card group animate-enter delay-400">
+                <div class="premium-card p-6 rounded-xl border border-slate-200/60 shadow-sm hover-card group animate-enter delay-400">
                     <div class="flex justify-between items-start mb-4">
                         <div class="h-12 w-12 rounded-lg bg-red-50 border border-red-100 flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-colors duration-300">
                             <i class="fas fa-rupee-sign text-lg"></i>

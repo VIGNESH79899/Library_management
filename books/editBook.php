@@ -1,7 +1,8 @@
 <?php
+require_once "../config/app.php";
 session_start();
 if (!isset($_SESSION['admin'])) {
-    header("Location: ../auth/login.php");
+    header("Location: " . BASE_URL . "/auth/login.php");
     exit;
 }
 include "../config/db.php";
@@ -21,6 +22,7 @@ if (!$book) {
 
 $categories = $conn->query("SELECT * FROM category");
 $publishers = $conn->query("SELECT * FROM publisher");
+$error = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title'];
@@ -46,78 +48,129 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>LMS | Edit Book</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 flex text-sm">
-
-<?php include "../includers/sidebar.php"; ?>
-
-<div class="flex-1 flex flex-col min-h-screen ml-64">
     <?php include "../includers/headers.php"; ?>
+</head>
+<body class="bg-gray-50 text-slate-800 font-sans antialiased">
 
-    <main class="p-8">
-        <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
-            <h1 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Edit Book Details</h1>
-            
-            <form method="POST" class="space-y-4">
+<div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <?php include "../includers/sidebar.php"; ?>
+
+    <!-- Main Content -->
+    <div class="flex-1 ml-64 flex flex-col relative z-0">
+        <!-- Top Navigation -->
+        <?php include "../includers/navbar.php"; ?>
+        
+        <main class="p-8 space-y-8 flex items-center justify-center min-h-[calc(100vh-80px)]">
+            <div class="w-full max-w-2xl animate-fade-in-up">
                 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Book Title</label>
-                    <input type="text" name="title" required value="<?= $book['Title'] ?>"
-                           class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                <?php if ($error): ?>
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 flex items-start gap-3" role="alert">
+                        <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
+                        <div>
+                            <p class="font-bold text-sm">Update Failed</p>
+                            <p class="text-sm"><?= htmlspecialchars($error) ?></p>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <div class="premium-card p-8">
+                    <div class="mb-8 border-b border-gray-100 pb-5">
+                        <!-- Breadcrumbs -->
+                        <nav class="flex text-xs text-slate-400 mb-2" aria-label="Breadcrumb">
+                            <ol class="inline-flex items-center space-x-1">
+                                <li class="inline-flex items-center">
+                                    <a href="books.php" class="hover:text-indigo-600 transition-colors">Books</a>
+                                </li>
+                                <li>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-chevron-right text-[10px] mx-2 content-center"></i>
+                                        <span class="text-slate-600 font-medium">Edit Book</span>
+                                    </div>
+                                </li>
+                            </ol>
+                        </nav>
+                        <h1 class="page-title">Edit Book Details</h1>
+                    </div>
+
+                    <form method="POST" class="space-y-6">
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1">Book Title <span class="text-red-500">*</span></label>
+                            <input type="text" name="title" required value="<?= htmlspecialchars($book['Title']) ?>"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-sm outline-none placeholder-gray-400"
+                                   placeholder="Enter book title">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">Author <span class="text-red-500">*</span></label>
+                                <input type="text" name="author" required value="<?= htmlspecialchars($book['Author']) ?>"
+                                       class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-sm outline-none placeholder-gray-400"
+                                       placeholder="Author name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">ISBN Number <span class="text-red-500">*</span></label>
+                                <input type="text" name="isbn" required value="<?= htmlspecialchars($book['ISBN']) ?>"
+                                       class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-sm outline-none placeholder-gray-400 font-mono"
+                                       placeholder="e.g. 978-3-16-148410-0">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">Category <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <select name="category" required 
+                                            class="w-full pl-4 pr-10 py-2.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-sm outline-none appearance-none cursor-pointer">
+                                        <option value="" disabled>Select category</option>
+                                        <?php while ($c = $categories->fetch_assoc()) { ?>
+                                            <option value="<?= $c['Category_ID'] ?>" <?= ($c['Category_ID'] == $book['Category_ID']) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($c['Category_Name']) ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">Publisher <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <select name="publisher" required 
+                                            class="w-full pl-4 pr-10 py-2.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-sm outline-none appearance-none cursor-pointer">
+                                        <option value="" disabled>Select publisher</option>
+                                        <?php while ($p = $publishers->fetch_assoc()) { ?>
+                                            <option value="<?= $p['Publisher_ID'] ?>" <?= ($p['Publisher_ID'] == $book['Publisher_ID']) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($p['Publisher_Name']) ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                                        <i class="fas fa-chevron-down text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex items-center justify-end gap-3 mt-8 border-t border-gray-100">
+                            <a href="books.php" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-800 transition-colors">
+                                Cancel
+                            </a>
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/30 transition-all transform active:scale-95 flex items-center gap-2">
+                                <i class="fas fa-save"></i> Update Book
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Author</label>
-                        <input type="text" name="author" required value="<?= $book['Author'] ?>"
-                               class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">ISBN</label>
-                        <input type="text" name="isbn" required value="<?= $book['ISBN'] ?>"
-                               class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Category</label>
-                        <select name="category" required 
-                                class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none bg-white">
-                            <?php while ($c = $categories->fetch_assoc()) { ?>
-                                <option value="<?= $c['Category_ID'] ?>" <?= ($c['Category_ID'] == $book['Category_ID']) ? 'selected' : '' ?>>
-                                    <?= $c['Category_Name'] ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-1">Publisher</label>
-                        <select name="publisher" required 
-                                class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:outline-none bg-white">
-                            <?php while ($p = $publishers->fetch_assoc()) { ?>
-                                <option value="<?= $p['Publisher_ID'] ?>" <?= ($p['Publisher_ID'] == $book['Publisher_ID']) ? 'selected' : '' ?>>
-                                    <?= $p['Publisher_Name'] ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="pt-4 flex justify-end gap-3">
-                    <a href="books.php" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">Cancel</a>
-                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 shadow transition font-medium">
-                        Update Book
-                    </button>
-                </div>
-
-            </form>
-        </div>
-    </main>
+            </div>
+        </main>
+    </div>
 </div>
 
 </body>

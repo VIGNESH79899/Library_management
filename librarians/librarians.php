@@ -117,7 +117,7 @@ $librarians = $conn->query("
             <!-- Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                 <div>
-                    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Librarians Management</h1>
+                    <h1 class="page-title">Librarians Management</h1>
                     <p class="text-slate-500 mt-1">Manage staff and librarians who issue books.</p>
                 </div>
             </div>
@@ -145,7 +145,7 @@ $librarians = $conn->query("
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                 
                 <!-- Form Card -->
-                <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden animate-fade-in-up md:sticky md:top-24">
+                <div class="premium-card overflow-hidden animate-fade-in-up md:sticky md:top-24">
                     <div class="px-6 py-4 bg-gray-50/50 border-b border-gray-100 flex justify-between items-center">
                         <h2 class="font-bold text-slate-700">
                             <?= $editData ? 'Edit Librarian' : 'Add New Librarian' ?>
@@ -199,12 +199,12 @@ $librarians = $conn->query("
                 </div>
 
                 <!-- List Card -->
-                <div class="lg:col-span-2 bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s;">
+                <div class="lg:col-span-2 premium-card overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s;">
                     <div class="px-6 py-4 bg-gray-50/50 border-b border-gray-100">
                         <h2 class="font-bold text-slate-700">Staff List</h2>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-gray-600">
+                        <table class="w-full text-left text-base text-gray-600 table-modern">
                             <thead class="bg-gray-50 border-b border-gray-100">
                                 <tr>
                                     <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">ID</th>
@@ -216,7 +216,7 @@ $librarians = $conn->query("
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 <?php while ($row = $librarians->fetch_assoc()) { ?>
-                                <tr class="hover:bg-purple-50/30 transition-colors group">
+                                <tr class="table-row-modern group cursor-default">
                                     <td class="p-4 font-mono text-xs text-slate-400">#<?= $row['Librarian_ID'] ?></td>
                                     <td class="p-4">
                                         <div class="font-bold text-slate-800"><?= $row['Librarian_Name'] ?></div>

@@ -147,7 +147,7 @@ function paginationUrl(int $p, array $get): string {
             <!-- ── Page Header ──────────────────────────────── -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Email Logs</h1>
+                    <h1 class="page-title">Email Logs</h1>
                     <p class="text-slate-500 mt-1 text-sm">
                         Audit trail for all outbound emails — sorted by latest first.
                     </p>
@@ -199,7 +199,7 @@ function paginationUrl(int $p, array $get): string {
                 $fail_pct = round(($stats['failed_count'] / $stats['total']) * 100, 1);
                 $bar_cls  = $fail_pct > 10 ? 'bg-red-500' : ($fail_pct > 0 ? 'bg-amber-400' : 'bg-emerald-400');
             ?>
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex items-center gap-5">
+            <div class="premium-card p-5 flex items-center gap-5">
                 <div class="flex-shrink-0">
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Failure Rate</p>
                     <p class="text-2xl font-extrabold <?= $fail_pct > 10 ? 'text-red-600' : 'text-emerald-600' ?>">
@@ -219,7 +219,7 @@ function paginationUrl(int $p, array $get): string {
             <?php endif; ?>
 
             <!-- ── Filters + Search ───────────────────────────── -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <div class="premium-card p-5">
                 <form method="GET" action="email_logs.php"
                       class="flex flex-wrap items-end gap-3">
 
@@ -284,7 +284,7 @@ function paginationUrl(int $p, array $get): string {
             </div>
 
             <!-- ── Log Table ───────────────────────────────────── -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="premium-card overflow-hidden">
 
                 <!-- Table header bar -->
                 <div class="p-5 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">

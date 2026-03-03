@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_password'])) {
             <!-- Page Header -->
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-enter">
                 <div>
-                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight font-inter">My Profile</h1>
+                    <h1 class="page-title font-inter">My Profile</h1>
                     <p class="text-slate-500 mt-2 font-medium">Manage your account settings and preferences.</p>
                 </div>
             </div>
@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_password'])) {
                 
                 <!-- Profile Card -->
                 <div class="lg:col-span-1 space-y-6">
-                    <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 text-center relative overflow-hidden group hover-card animate-enter delay-100">
+                    <div class="premium-card p-6 text-center relative overflow-hidden group hover-card animate-enter delay-100">
                         <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
                         <div class="relative mt-12 mb-4">
                             <div class="w-24 h-24 mx-auto rounded-2xl bg-white p-1 shadow-lg transform group-hover:scale-105 transition-transform duration-300">
@@ -175,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_password'])) {
                 <div class="lg:col-span-2 space-y-8">
                     
                     <!-- Edit Details Form -->
-                    <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 animate-enter delay-200">
+                    <div class="premium-card p-8 animate-enter delay-200">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
                                 <i class="fas fa-user-edit text-xl"></i>
@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_password'])) {
                     </div>
 
                     <!-- Change Password Form -->
-                    <div class="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-8 animate-enter delay-300">
+                    <div class="premium-card p-8 animate-enter delay-300">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="p-2 bg-amber-50 text-amber-600 rounded-lg">
                                 <i class="fas fa-key text-xl"></i>

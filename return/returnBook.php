@@ -186,7 +186,7 @@ if ($issues && $issues->num_rows > 0) {
         <main class="p-8 space-y-8 flex items-center justify-center min-h-[calc(100vh-80px)]">
              <div class="w-full max-w-2xl animate-fade-in-up">
                 <!-- Wrapper -->
-                <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden">
+                <div class="premium-card overflow-hidden">
                     
                     <div class="px-8 py-6 bg-gradient-to-r from-emerald-500 to-teal-600 text-white relative overflow-hidden">
                         <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>

@@ -53,14 +53,14 @@ $publishers = $conn->query("
             <!-- Page Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                 <div>
-                    <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Publishers Management</h1>
+                    <h1 class="page-title">Publishers Management</h1>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in-up">
                 
                 <!-- Add Publisher Form -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-fit sticky top-8">
+                <div class="premium-card p-6 h-fit sticky top-8">
                     <h2 class="text-lg font-bold text-slate-700 mb-4 pb-2 border-b border-gray-100">Add New Publisher</h2>
                     <form method="POST" class="space-y-4">
                         <div>
@@ -92,7 +92,7 @@ $publishers = $conn->query("
                 </div>
 
                 <!-- Publishers List -->
-                <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="lg:col-span-2 premium-card overflow-hidden">
                     <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
                         <h2 class="font-bold text-slate-700">Existing Publishers</h2>
                         <div class="text-xs text-slate-400">
@@ -101,7 +101,7 @@ $publishers = $conn->query("
                     </div>
                     
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-gray-600">
+                        <table class="w-full text-left text-base text-gray-600 table-modern">
                             <thead>
                                 <tr class="bg-gray-50 border-b border-gray-100">
                                     <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">ID</th>
@@ -116,7 +116,7 @@ $publishers = $conn->query("
                                     $email = isset($row['Email']) ? htmlspecialchars($row['Email']) : 'N/A';
                                     $phone = isset($row['Phone']) && !empty($row['Phone']) ? htmlspecialchars($row['Phone']) : '';
                                 ?>
-                                <tr class="hover:bg-slate-50 transition-colors group">
+                                <tr class="table-row-modern group cursor-default">
                                     <td class="p-4 font-mono text-xs text-slate-400">#<?= str_pad($row['Publisher_ID'], 3, '0', STR_PAD_LEFT) ?></td>
                                     <td class="p-4 font-medium text-slate-700">
                                         <?= htmlspecialchars($row['Publisher_Name']) ?>

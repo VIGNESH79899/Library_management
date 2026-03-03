@@ -65,13 +65,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <div class="w-full max-w-2xl animate-fade-in-up">
                 <!-- Wrapper -->
-                <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-gray-100 overflow-hidden">
+                <div class="premium-card overflow-hidden">
                     
                     <div class="px-8 py-6 bg-gradient-brand text-white relative overflow-hidden">
                         <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
                         <div class="relative z-10">
-                            <h1 class="text-2xl font-bold tracking-tight text-indigo-700">Issue New Book</h1>
-                            <p class="text-indigo-500 text-sm mt-1">Select a member and a book to process a new loan.</p>
+                            <h1 class="text-2xl font-bold tracking-tight text-white">Issue New Book</h1>
+                            <p class="text-indigo-100 text-sm mt-1">Select a member and a book to process a new loan.</p>
                         </div>
                     </div>
 
