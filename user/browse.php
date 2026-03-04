@@ -166,14 +166,12 @@ $categories_result = $conn->query($categories_sql);
                         </div>
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none z-0"></div>
 
-                        <div class="absolute top-4 left-4 z-20">
-                            <span class="bg-white/95 backdrop-blur-md text-[10px] uppercase font-bold px-3 py-1.5 rounded-full shadow-sm text-[#5f2eea] tracking-wider font-['Inter']">
+                        <div class="absolute top-4 inset-x-4 z-20 flex justify-between items-start gap-2">
+                            <span class="bg-white/95 backdrop-blur-md text-[10px] uppercase font-bold px-3 py-1.5 rounded-full shadow-sm text-[#5f2eea] tracking-wider font-['Inter'] truncate max-w-[55%]">
                                 <?= htmlspecialchars($book['Category_Name'] ?? 'General') ?>
                             </span>
-                        </div>
-                        
-                        <div class="absolute top-4 right-4 z-20">
-                            <span class="bg-emerald-500/90 backdrop-blur-md text-white text-[10px] uppercase font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wider flex items-center gap-1.5 font-['Inter']">
+                            
+                            <span class="bg-emerald-500/90 backdrop-blur-md text-white text-[10px] uppercase font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wider flex items-center gap-1.5 font-['Inter'] shrink-0">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Available (<?= $book['Available_Quantity'] ?>)
                             </span>
                         </div>
