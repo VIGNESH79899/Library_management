@@ -11,7 +11,7 @@ include "../config/db.php";
 // Stats
 $totalBooks = $conn->query("SELECT IFNULL(SUM(Quantity),0) AS total FROM book")->fetch_assoc()['total'];
 $totalMembers = $conn->query("SELECT COUNT(*) AS total FROM member")->fetch_assoc()['total'];
-$issuedBooks = $conn->query("SELECT IFNULL(SUM(Quantity - Available_Quantity),0) AS total FROM book")->fetch_assoc()['total'];
+$issuedBooks = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
 $totalFines = $conn->query("SELECT IFNULL(SUM(Fine_Amount),0) AS total FROM return_book")->fetch_assoc()['total'];
 
 // Recent Issues

@@ -15,7 +15,7 @@ $rate_msg  = "";
 // ── Core stats ────────────────────────────────────────────────
 $totalBooks    = $conn->query("SELECT COUNT(*) AS total FROM book")->fetch_assoc()['total'];
 $totalMembers  = $conn->query("SELECT COUNT(*) AS total FROM member")->fetch_assoc()['total'];
-$totalIssued   = $conn->query("SELECT IFNULL(SUM(Quantity - Available_Quantity),0) AS total FROM book")->fetch_assoc()['total'];
+$totalIssued   = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
 $totalReturned = $conn->query("SELECT COUNT(*) AS total FROM return_book")->fetch_assoc()['total'];
 $totalOverdue  = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Due_Date < CURDATE() AND Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
 
