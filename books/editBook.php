@@ -31,12 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $category = $_POST['category'];
     $publisher = $_POST['publisher'];
 
+    $new_quantity = (int)$_POST['quantity'];
+    $diff = $new_quantity - $book['Quantity'];
+    $new_available = $book['Available_Quantity'] + $diff;
+    if ($new_available < 0) $new_available = 0; // prevent negative availability
+
+    // If new_available is 0, we can also update Status to 'Unavailable', but Status logic will be handled manually or by Available_Quantity > 0 check everywhere.
+    $status = ($new_available > 0) ? 'Available' : 'Unavailable';
+
     $stmt = $conn->prepare("
         UPDATE book 
-        SET Title=?, Author=?, ISBN=?, Category_ID=?, Publisher_ID=?
+        SET Title=?, Author=?, ISBN=?, Category_ID=?, Publisher_ID=?, Quantity=?, Available_Quantity=?, Status=?
         WHERE Book_ID=?
     ");
-    $stmt->bind_param("sssiii", $title, $author, $isbn, $category, $publisher, $id);
+    $stmt->bind_param("sssiiiisi", $title, $author, $isbn, $category, $publisher, $new_quantity, $new_available, $status, $id);
     
     if ($stmt->execute()) {
         header("Location: books.php");
@@ -117,6 +125,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <input type="text" name="isbn" required value="<?= htmlspecialchars($book['ISBN']) ?>"
                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-sm outline-none placeholder-gray-400 font-mono"
                                        placeholder="e.g. 978-3-16-148410-0">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">Total Copies (Quantity) <span class="text-red-500">*</span></label>
+                                <input type="number" name="quantity" required min="1" value="<?= htmlspecialchars($book['Quantity']) ?>"
+                                       class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-sm outline-none placeholder-gray-400 font-mono">
                             </div>
                         </div>
 

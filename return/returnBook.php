@@ -19,7 +19,7 @@ $issues = $conn->query("
     FROM issue I
     JOIN book B ON I.Book_ID = B.Book_ID
     JOIN member M ON I.Member_ID = M.Member_ID
-    WHERE B.Status = 'Issued'
+    WHERE I.Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
     ORDER BY I.Due_Date ASC
 ");
 
@@ -106,8 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt2->execute();
                 }
 
-                /* 3. Mark book as Available */
-                $stmt3 = $conn->prepare("UPDATE book SET Status='Available' WHERE Book_ID=?");
+                /* 3. Mark book as Available and Increase Quantity */
+                $stmt3 = $conn->prepare("UPDATE book SET Available_Quantity = Available_Quantity + 1, Status='Available' WHERE Book_ID=?");
                 $stmt3->bind_param("i", $book_id);
                 $stmt3->execute();
 
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 FROM issue I
                 JOIN book B ON I.Book_ID = B.Book_ID
                 JOIN member M ON I.Member_ID = M.Member_ID
-                WHERE B.Status = 'Issued'
+                WHERE I.Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
                 ORDER BY I.Due_Date ASC
             ");
 

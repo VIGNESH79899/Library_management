@@ -106,10 +106,15 @@ try {
     $stmt->execute();
     $stmt->close();
 
-    $upd = $conn->prepare("UPDATE book SET Status='Issued' WHERE Book_ID=?");
+    $upd = $conn->prepare("UPDATE book SET Available_Quantity = Available_Quantity - 1 WHERE Book_ID=?");
     $upd->bind_param("i", $book_id);
     $upd->execute();
     $upd->close();
+
+    $upd_status = $conn->prepare("UPDATE book SET Status='Unavailable' WHERE Book_ID=? AND Available_Quantity <= 0");
+    $upd_status->bind_param("i", $book_id);
+    $upd_status->execute();
+    $upd_status->close();
 
     $conn->commit();
 

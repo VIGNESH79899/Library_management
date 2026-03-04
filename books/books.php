@@ -10,7 +10,7 @@ include "../config/db.php";
 
 // Fetch Books
 $books = $conn->query("
-    SELECT B.Book_ID, B.Title, B.Author, B.ISBN, B.Status, C.Category_Name, P.Publisher_Name
+    SELECT B.Book_ID, B.Title, B.Author, B.ISBN, B.Status, B.Quantity, B.Available_Quantity, C.Category_Name, P.Publisher_Name
     FROM book B
     LEFT JOIN category C ON B.Category_ID = C.Category_ID
     LEFT JOIN publisher P ON B.Publisher_ID = P.Publisher_ID
@@ -76,6 +76,7 @@ $books = $conn->query("
                                 <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">Book Details</th>
                                 <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">Category</th>
                                 <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">Publisher</th>
+                                <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">Copies</th>
                                 <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider">Status</th>
                                 <th class="p-4 font-semibold text-xs text-gray-500 uppercase tracking-wider text-right">Actions</th>
                             </tr>
@@ -101,16 +102,17 @@ $books = $conn->query("
                                     </span>
                                 </td>
                                 <td class="p-4 text-slate-600 text-xs font-medium"><?= $row['Publisher_Name'] ?></td>
+                                <td class="p-4 text-slate-600 text-xs font-medium"><?= $row['Available_Quantity'] ?> / <?= $row['Quantity'] ?></td>
                                 <td class="p-4">
-                                    <?php if ($row['Status'] == 'Available') { ?>
+                                    <?php if ($row['Available_Quantity'] > 0) { ?>
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-600 border border-green-100">
                                             <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
                                             Available
                                         </span>
                                     <?php } else { ?>
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-100">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
-                                            Issued
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-100">
+                                            <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                                            Unavailable
                                         </span>
                                     <?php } ?>
                                 </td>

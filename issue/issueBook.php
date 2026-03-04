@@ -35,7 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("iiiss", $book_id, $member_id, $librarian_id, $issue_date, $due_date);
             $stmt->execute();
 
-            $conn->query("UPDATE book SET Status='Issued' WHERE Book_ID=$book_id");
+            $conn->query("UPDATE book SET Available_Quantity = Available_Quantity - 1 WHERE Book_ID=$book_id");
+            $conn->query("UPDATE book SET Status='Unavailable' WHERE Book_ID=$book_id AND Available_Quantity <= 0");
             $conn->commit();
             $message = "Book issued successfully! Due date set to " . date('M d, Y', strtotime($due_date)) . ".";
         } catch (Exception $e) {

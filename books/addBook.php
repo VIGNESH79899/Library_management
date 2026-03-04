@@ -16,11 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $category = $_POST['category'];
     $publisher = $_POST['publisher'];
 
+    $quantity = (int)$_POST['quantity'];
+
     $stmt = $conn->prepare("
-        INSERT INTO book (Title, Author, ISBN, Category_ID, Publisher_ID)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO book (Title, Author, ISBN, Category_ID, Publisher_ID, Quantity, Available_Quantity)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     ");
-    $stmt->bind_param("sssii", $title, $author, $isbn, $category, $publisher);
+    $stmt->bind_param("sssiiii", $title, $author, $isbn, $category, $publisher, $quantity, $quantity);
     if ($stmt->execute()) {
         header("Location: books.php");
         exit;
@@ -90,7 +92,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <label class="block font-semibold text-slate-700 mb-2">ISBN</label>
                                 <input type="text" name="isbn" required 
                                        class="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all outline-none"
-                                       placeholder="ISBN Number">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-2">Total Copies (Quantity)</label>
+                                <input type="number" name="quantity" required min="1" value="1"
+                                       class="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all outline-none"
+                                       placeholder="Number of copies">
                             </div>
                         </div>
 

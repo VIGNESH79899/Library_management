@@ -15,9 +15,9 @@ $rate_msg  = "";
 // ── Core stats ────────────────────────────────────────────────
 $totalBooks    = $conn->query("SELECT COUNT(*) AS total FROM book")->fetch_assoc()['total'];
 $totalMembers  = $conn->query("SELECT COUNT(*) AS total FROM member")->fetch_assoc()['total'];
-$totalIssued   = $conn->query("SELECT COUNT(*) AS total FROM book WHERE Status='Issued'")->fetch_assoc()['total'];
+$totalIssued   = $conn->query("SELECT IFNULL(SUM(Quantity - Available_Quantity),0) AS total FROM book")->fetch_assoc()['total'];
 $totalReturned = $conn->query("SELECT COUNT(*) AS total FROM return_book")->fetch_assoc()['total'];
-$totalOverdue  = $conn->query("SELECT COUNT(*) AS total FROM issue I JOIN book B ON I.Book_ID = B.Book_ID WHERE B.Status='Issued' AND I.Due_Date < CURDATE()")->fetch_assoc()['total'];
+$totalOverdue  = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Due_Date < CURDATE() AND Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
 
 // ── Fines from dedicated Fine table ───────────────────────────
 // Total collected (only rows that exist in Fine table = actual late returns)
@@ -36,7 +36,7 @@ $pendingFineRes = $conn->query("
         IFNULL(SUM(DATEDIFF(CURDATE(), I.Due_Date) * " . FINE_RATE_PER_DAY . "), 0) AS pending_amount
     FROM issue I
     JOIN book B ON I.Book_ID = B.Book_ID
-    WHERE B.Status = 'Issued'
+    WHERE I.Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
       AND I.Due_Date < CURDATE()
 ");
 $pendingStats  = $pendingFineRes ? $pendingFineRes->fetch_assoc() : ['overdue_count'=>0,'total_days_pending'=>0,'pending_amount'=>0];

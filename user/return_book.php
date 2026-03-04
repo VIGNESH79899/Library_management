@@ -54,7 +54,6 @@ $chk = $conn->prepare("
     JOIN book B ON I.Book_ID = B.Book_ID
     WHERE I.Issue_ID = ?
       AND I.Member_ID = ?
-      AND B.Status = 'Issued'
       AND I.Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
 ");
 
@@ -130,8 +129,8 @@ try {
         $s2->close();
     }
 
-    // 3. Mark book as Available
-    $s3 = $conn->prepare("UPDATE book SET Status='Available' WHERE Book_ID=?");
+    // 3. Update Available quantity and status
+    $s3 = $conn->prepare("UPDATE book SET Available_Quantity = Available_Quantity + 1, Status='Available' WHERE Book_ID=?");
     if (!$s3) throw new Exception("s3: " . $conn->error);
     $s3->bind_param("i", $book_id);
     $s3->execute();

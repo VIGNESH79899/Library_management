@@ -174,7 +174,7 @@ $categories_result = $conn->query($categories_sql);
                         
                         <div class="absolute top-4 right-4 z-20">
                             <span class="bg-emerald-500/90 backdrop-blur-md text-white text-[10px] uppercase font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wider flex items-center gap-1.5 font-['Inter']">
-                                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Available
+                                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Available (<?= $book['Available_Quantity'] ?>)
                             </span>
                         </div>
                     </div>
