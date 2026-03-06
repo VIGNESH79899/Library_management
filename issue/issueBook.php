@@ -60,9 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include "../includers/sidebar.php"; ?>
 
     <!-- Main Content -->
-    <div class="flex-1 ml-64 flex flex-col relative z-0">
+    <div class="main-content flex-1 ml-0 md:ml-64 flex flex-col relative z-0">
         
-        <main class="p-8 space-y-8 flex items-center justify-center min-h-[calc(100vh-80px)]">
+        <main class="p-4 md:p-8 space-y-8 flex items-center justify-center min-h-[calc(100vh-80px)]">
             
             <div class="w-full max-w-2xl animate-fade-in-up">
                 <!-- Wrapper -->
@@ -181,3 +181,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </body>
 </html>
+
+
+

@@ -45,11 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php include "../includers/sidebar.php"; ?>
 
     <!-- Main Content -->
-    <div class="flex-1 ml-64 flex flex-col relative z-0">
+    <div class="main-content flex-1 ml-0 md:ml-64 flex flex-col relative z-0">
         <!-- Top Navigation -->
         <?php include "../includers/navbar.php"; ?>
         
-        <main class="p-8 space-y-8 flex items-center justify-center min-h-[calc(100vh-80px)]">
+        <main class="p-4 md:p-8 space-y-8 flex items-center justify-center min-h-[calc(100vh-80px)]">
             <div class="w-full max-w-2xl animate-fade-in-up">
                 
                 <div class="flex flex-col mb-6">
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                    placeholder="Enter book title">
                         </div>
 
-                        <div class="grid grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block font-semibold text-slate-700 mb-2">Author</label>
                                 <input type="text" name="author" required 
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                        class="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all outline-none"
                         </div>
 
-                        <div class="grid grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block font-semibold text-slate-700 mb-2">Total Copies (Quantity)</label>
                                 <input type="number" name="quantity" required min="1" value="1"
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block font-semibold text-slate-700 mb-2">Category</label>
                                 <div class="relative">
@@ -157,3 +157,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 </body>
 </html>
+
+

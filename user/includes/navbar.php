@@ -23,8 +23,11 @@
                 </a>
             </div>
 
-            <!-- User Menu -->
-            <div class="flex items-center gap-4">
+            <!-- Mobile Menu Toggle Button & User Menu -->
+            <div class="flex items-center gap-2 md:gap-4">
+                <button id="mobileNavMenuBtn" onclick="toggleMobileNav()" class="md:hidden w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-all mr-1">
+                    <i class="fas fa-bars text-sm"></i>
+                </button>
                 <div class="hidden md:flex flex-col items-end mr-2">
                     <p class="text-sm font-bold text-slate-700 leading-tight"><?= $_SESSION['user_name'] ?? 'Student' ?></p>
                     <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Student</p>
@@ -63,6 +66,15 @@
             </div>
         </div>
     </div>
+    
+    <!-- Mobile Links Dropdown -->
+    <div id="mobileNavDropdown" class="md:hidden bg-white border-t border-slate-100 shadow-lg hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <a href="dashboard.php" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600 <?= basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'text-brand-600 bg-brand-50' : '' ?>">Dashboard</a>
+            <a href="browse.php" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600 <?= basename($_SERVER['PHP_SELF']) == 'browse.php' ? 'text-brand-600 bg-brand-50' : '' ?>">Browse Books</a>
+            <a href="my_books.php" class="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600 <?= basename($_SERVER['PHP_SELF']) == 'my_books.php' ? 'text-brand-600 bg-brand-50' : '' ?>">My Borrowed Books</a>
+        </div>
+    </div>
 </nav>
 <div class="h-16"></div> <!-- Spacer for fixed nav -->
 
@@ -70,13 +82,31 @@
 function toggleUserMenu() {
     const dropdown = document.getElementById('userDropdown');
     dropdown.classList.toggle('hidden');
+    // Hide mobile nav if open
+    document.getElementById('mobileNavDropdown').classList.add('hidden');
 }
 
-// Close dropdown when clicking anywhere outside it
+function toggleMobileNav() {
+    const mobileNav = document.getElementById('mobileNavDropdown');
+    mobileNav.classList.toggle('hidden');
+    // Hide user menu if open
+    document.getElementById('userDropdown').classList.add('hidden');
+}
+
+// Close dropdowns when clicking anywhere outside
 document.addEventListener('click', function(e) {
-    const wrapper = document.getElementById('userMenuWrapper');
-    if (wrapper && !wrapper.contains(e.target)) {
+    const userWrapper = document.getElementById('userMenuWrapper');
+    const mobileNavBtn = document.getElementById('mobileNavMenuBtn');
+    
+    if (userWrapper && !userWrapper.contains(e.target) && (!mobileNavBtn || !mobileNavBtn.contains(e.target))) {
         document.getElementById('userDropdown').classList.add('hidden');
+    }
+    
+    if (mobileNavBtn && !mobileNavBtn.contains(e.target)) {
+        document.getElementById('mobileNavDropdown').classList.add('hidden');
     }
 });
 </script>
+
+
+

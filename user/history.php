@@ -62,7 +62,7 @@ while ($row = $result->fetch_assoc()) {
 
     <!-- Summary Bar -->
     <?php if (!empty($history_rows)): ?>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         <div class="bg-white border border-slate-100 rounded-2xl p-4 flex items-center gap-3 shadow-sm">
             <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500">
                 <i class="fas fa-book"></i>
@@ -238,3 +238,6 @@ async function toggleLike(btn, bookId) {
 
 </body>
 </html>
+
+
+

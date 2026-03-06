@@ -57,14 +57,14 @@ $returns = $conn->query("
     <?php include "../includers/sidebar.php"; ?>
 
     <!-- Main Content -->
-    <div class="flex-1 ml-64 flex flex-col relative z-0">
+    <div class="main-content flex-1 ml-0 md:ml-64 flex flex-col relative z-0">
         <!-- Top Navigation -->
         <?php include "../includers/navbar.php"; ?>
         
         <!-- Dashboard Content -->
         
         <!-- Dashboard Content -->
-        <main class="p-8 space-y-8">
+        <main class="p-4 md:p-8 space-y-8">
             
             <!-- Welcome Section -->
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-enter">
@@ -251,3 +251,6 @@ $returns = $conn->query("
 
 </body>
 </html>
+
+
+

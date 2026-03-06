@@ -9,3 +9,6 @@ if ($stmt) {
     echo "Column Full_Name missing!";
 }
 ?>
+
+
+

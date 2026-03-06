@@ -4,3 +4,6 @@ $conn->query("ALTER TABLE book ADD Quantity INT NOT NULL DEFAULT 1, ADD Availabl
 echo $conn->error;
 echo "Done";
 ?>
+
+
+

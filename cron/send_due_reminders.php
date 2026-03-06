@@ -229,3 +229,6 @@ cronLog('info', "Job complete. Sent: {$sent_count} | Failed: {$failed_count} | T
 cronLog('info', '════════════════════════════════════════');
 
 exit($failed_count > 0 ? 1 : 0); // Non-zero exit code on any failure
+
+
+

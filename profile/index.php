@@ -96,11 +96,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_password'])) {
     <?php include "../includers/sidebar.php"; ?>
 
     <!-- Main Content -->
-    <div class="flex-1 ml-64 flex flex-col relative z-0">
+    <div class="main-content flex-1 ml-0 md:ml-64 flex flex-col relative z-0">
         <!-- Top Navigation -->
         <?php include "../includers/navbar.php"; ?>
         
-        <main class="p-8 space-y-8 max-w-7xl mx-auto w-full">
+        <main class="p-4 md:p-8 space-y-8 max-w-7xl mx-auto w-full">
             
             <!-- Page Header -->
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 animate-enter">
@@ -261,3 +261,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_password'])) {
 
 </body>
 </html>
+
+
+

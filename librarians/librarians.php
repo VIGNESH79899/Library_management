@@ -109,11 +109,11 @@ $librarians = $conn->query("
     <?php include "../includers/sidebar.php"; ?>
 
     <!-- Main Content -->
-    <div class="flex-1 ml-64 flex flex-col relative z-0 transition-all duration-300">
+    <div class="main-content flex-1 ml-0 md:ml-64 flex flex-col relative z-0 transition-all duration-300">
         <!-- Top Navigation -->
         <?php include "../includers/navbar.php"; ?>
         
-        <main class="p-8 space-y-8">
+        <main class="p-4 md:p-8 space-y-8">
             <!-- Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                 <div>
@@ -272,3 +272,6 @@ $librarians = $conn->query("
 
 </body>
 </html>
+
+
+

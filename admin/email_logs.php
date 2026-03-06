@@ -139,10 +139,10 @@ function paginationUrl(int $p, array $get): string {
 <div class="flex min-h-screen">
     <?php include "../includers/sidebar.php"; ?>
 
-    <div class="flex-1 ml-64 flex flex-col">
+    <div class="main-content flex-1 ml-0 md:ml-64 flex flex-col">
         <?php include "../includers/navbar.php"; ?>
 
-        <main class="p-8 space-y-6">
+        <main class="p-4 md:p-8 space-y-6">
 
             <!-- ── Page Header ──────────────────────────────── -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -161,7 +161,7 @@ function paginationUrl(int $p, array $get): string {
             </div>
 
             <!-- ── Summary Cards ─────────────────────────────── -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <!-- Total -->
                 <div class="bg-white rounded-2xl p-5 shadow-sm border-l-4 border-indigo-500">
                     <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Total Sent</p>
@@ -457,3 +457,6 @@ function toggleError(id) {
 
 </body>
 </html>
+
+
+

@@ -134,3 +134,6 @@ class EmailLogger
         $this->conn->query($sql);
     }
 }
+
+
+

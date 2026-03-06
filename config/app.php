@@ -9,3 +9,6 @@ if (isset($_SERVER['HTTP_HOST']) && ($_SERVER['HTTP_HOST'] === 'localhost' || $_
 } else {
     define('BASE_URL', '');
 }
+
+
+

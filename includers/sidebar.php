@@ -33,7 +33,7 @@
     }
 </style>
 
-<aside id="sidebar" class="w-64 h-screen fixed top-0 left-0 flex flex-col z-50 bg-[#0f172a] border-r border-slate-700/50 shadow-2xl sidebar-transition group/sidebar">
+<aside id="sidebar" class="w-64 h-screen fixed top-0 left-0 flex flex-col z-50 bg-[#0f172a] border-r border-slate-700/50 shadow-2xl sidebar-transition group/sidebar -translate-x-full md:translate-x-0">
     <!-- Brand -->
     <div id="brand-header" class="h-20 flex items-center px-6 border-b border-slate-700/50 bg-[#0f172a] relative z-10 transition-all duration-300">
         <div class="flex items-center gap-3 overflow-hidden">
@@ -47,7 +47,7 @@
     </div>
 
     <!-- Floating Toggle Button -->
-    <button id="sidebarToggle" class="absolute -right-3 top-8 z-50 h-6 w-6 rounded-full bg-indigo-600 text-white shadow-md border-2 border-[#0f172a] hover:bg-indigo-500 transition-all flex items-center justify-center focus:outline-none cursor-pointer">
+    <button id="sidebarToggle" class="absolute -right-3 top-8 z-50 h-6 w-6 rounded-full bg-indigo-600 text-white shadow-md border-2 border-[#0f172a] hover:bg-indigo-500 transition-all hidden md:flex items-center justify-center focus:outline-none cursor-pointer">
         <i class="fas fa-chevron-left text-[10px] transition-transform duration-300"></i>
     </button>
     
@@ -123,19 +123,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleIcon = toggleBtn.querySelector('i');
     const sidebarTexts = document.querySelectorAll('.sidebar-text');
     
-    // Select the main content div based on its margin classes
-    const mainContent = document.querySelector('.ml-64, .ml-20');
+    // Select the main content div based on its class
+    const mainContent = document.querySelector('.main-content');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn'); // from navbar
 
     // Retrieve state
     let isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
 
     // Apply initial state
-    applyState(false); 
+    if (window.innerWidth >= 768) {
+        applyState(false); 
+    }
 
-    toggleBtn.addEventListener('click', (e) => {
-        isCollapsed = !isCollapsed;
-        localStorage.setItem('sidebarCollapsed', isCollapsed);
-        applyState(true);
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', (e) => {
+            isCollapsed = !isCollapsed;
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+            applyState(true);
+        });
+    }
+
+    // Mobile menu toggle
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', () => {
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+    }
+    
+    // Close sidebar on mobile when clicking outside
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth < 768) { // md breakpoint
+            if (!sidebar.contains(e.target) && mobileMenuBtn && !mobileMenuBtn.contains(e.target)) {
+                sidebar.classList.add('-translate-x-full');
+            }
+        }
     });
 
     function applyState(animate) {
@@ -155,8 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
             sidebar.classList.add('w-20');
             
             if (mainContent) {
-                mainContent.classList.remove('ml-64');
-                mainContent.classList.add('ml-20');
+                mainContent.classList.remove('md:ml-64');
+                mainContent.classList.add('md:ml-20');
             }
 
             // Adjust Brand Header
@@ -179,8 +204,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Adjust Toggle Button (Just rotate icon)
-            toggleIcon.classList.remove('fa-chevron-left');
-            toggleIcon.classList.add('fa-chevron-right');
+            if (toggleIcon) {
+                toggleIcon.classList.remove('fa-chevron-left');
+                toggleIcon.classList.add('fa-chevron-right');
+            }
 
         } else {
             // --- EXPANDED ---
@@ -188,8 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
             sidebar.classList.add('w-64');
 
             if (mainContent) {
-                mainContent.classList.remove('ml-20');
-                mainContent.classList.add('ml-64');
+                mainContent.classList.remove('md:ml-20');
+                mainContent.classList.add('md:ml-64');
             }
 
             // Reset Brand Header
@@ -211,9 +238,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Reset Toggle Button (Just rotate icon)
-            toggleIcon.classList.remove('fa-chevron-right');
-            toggleIcon.classList.add('fa-chevron-left');
+            if (toggleIcon) {
+                toggleIcon.classList.remove('fa-chevron-right');
+                toggleIcon.classList.add('fa-chevron-left');
+            }
         }
     }
 });
 </script>
+
+
+

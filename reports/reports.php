@@ -91,10 +91,10 @@ $recentFines = $conn->query("
 <div class="flex min-h-screen">
     <?php include "../includers/sidebar.php"; ?>
 
-    <div class="flex-1 ml-64 flex flex-col">
+    <div class="main-content flex-1 ml-0 md:ml-64 flex flex-col">
         <?php include "../includers/navbar.php"; ?>
 
-        <main class="p-8 space-y-8">
+        <main class="p-4 md:p-8 space-y-8">
             <!-- Header -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                 <div>
@@ -114,7 +114,7 @@ $recentFines = $conn->query("
             <?php endif; ?>
 
             <!-- Stats Overview -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-blue-500 col-span-1">
                     <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Books</p>
                     <h2 class="text-3xl font-bold text-gray-800 mt-1"><?= $totalBooks ?></h2>
@@ -294,3 +294,5 @@ $recentFines = $conn->query("
 
 </body>
 </html>
+
+
