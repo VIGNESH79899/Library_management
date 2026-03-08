@@ -8,6 +8,12 @@
 .nav-link-pill:hover {
     transform: translateY(-1px);
 }
+.theme-toggle-btn {
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.theme-toggle-btn:hover {
+    transform: translateY(-1px);
+}
 </style>
 
 <nav class="fixed top-0 left-0 right-0 z-50 glass-nav shadow-sm border-b border-slate-100/70">
@@ -36,6 +42,13 @@
             </div>
 
             <div class="flex items-center gap-2 md:gap-4">
+                <button id="themeToggleBtnDesktop"
+                        onclick="toggleTheme()"
+                        class="hidden md:flex theme-toggle-btn w-9 h-9 rounded-full bg-slate-100 border border-slate-200 items-center justify-center text-slate-600 hover:bg-brand-50 hover:text-brand-600"
+                        title="Toggle dark mode">
+                    <i class="fas fa-moon text-sm"></i>
+                </button>
+
                 <button id="mobileNavMenuBtn" onclick="toggleMobileNav()" class="md:hidden w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-brand-50 hover:text-brand-600 transition-all duration-200 mr-1">
                     <i class="fas fa-bars text-sm"></i>
                 </button>
@@ -89,6 +102,9 @@
             <a href="profile.php" class="flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium <?= $current_page === 'profile.php' ? 'text-brand-600 bg-brand-50' : 'text-slate-700 hover:bg-slate-50 hover:text-brand-600' ?>">
                 <i class="fas fa-user w-5 text-sm"></i> Profile
             </a>
+            <button onclick="toggleTheme()" class="w-full flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600">
+                <i id="themeToggleIconMobile" class="fas fa-moon w-5 text-sm"></i> <span id="themeToggleLabelMobile">Dark Mode</span>
+            </button>
             <a href="<?= BASE_URL ?>/auth/logout_user.php" class="flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50">
                 <i class="fas fa-sign-out-alt w-5 text-sm"></i> Sign Out
             </a>
@@ -98,6 +114,43 @@
 <div class="h-16"></div>
 
 <script>
+function setTheme(mode) {
+    const root = document.documentElement;
+    if (mode === 'dark') {
+        root.classList.add('dark');
+        localStorage.setItem('aurora_theme', 'dark');
+    } else {
+        root.classList.remove('dark');
+        localStorage.setItem('aurora_theme', 'light');
+    }
+    updateThemeToggleUI();
+}
+
+function toggleTheme() {
+    const isDark = document.documentElement.classList.contains('dark');
+    setTheme(isDark ? 'light' : 'dark');
+}
+
+function updateThemeToggleUI() {
+    const isDark = document.documentElement.classList.contains('dark');
+    const desktopBtn = document.getElementById('themeToggleBtnDesktop');
+    const mobileIcon = document.getElementById('themeToggleIconMobile');
+    const mobileLabel = document.getElementById('themeToggleLabelMobile');
+
+    if (desktopBtn) {
+        desktopBtn.innerHTML = isDark
+            ? '<i class="fas fa-sun text-sm"></i>'
+            : '<i class="fas fa-moon text-sm"></i>';
+        desktopBtn.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+    }
+    if (mobileIcon) {
+        mobileIcon.className = isDark ? 'fas fa-sun w-5 text-sm' : 'fas fa-moon w-5 text-sm';
+    }
+    if (mobileLabel) {
+        mobileLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+    }
+}
+
 function toggleUserMenu() {
     const dropdown = document.getElementById('userDropdown');
     dropdown.classList.toggle('hidden');
@@ -122,5 +175,7 @@ document.addEventListener('click', function(e) {
         document.getElementById('mobileNavDropdown').classList.add('hidden');
     }
 });
+
+updateThemeToggleUI();
 </script>
 

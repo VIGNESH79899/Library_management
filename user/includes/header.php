@@ -14,6 +14,17 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aurora Library | Student Portal</title>
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('aurora_theme');
+                var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (saved === 'dark' || (!saved && prefersDark)) {
+                    document.documentElement.classList.add('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -50,11 +61,72 @@ if (!isset($_SESSION['user_id'])) {
         }
     </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
         .glass-nav {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .theme-card {
+            background: #ffffff;
+            border-color: #e2e8f0;
+            color: #0f172a;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+        .theme-input {
+            background: #ffffff;
+            border-color: #e2e8f0;
+            color: #0f172a;
+        }
+        .theme-soft {
+            background: #f8fafc;
+            color: #334155;
+        }
+        html.dark body {
+            background: #0b1220 !important;
+            color: #e2e8f0 !important;
+        }
+        html.dark .glass-nav {
+            background: rgba(15, 23, 42, 0.88);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.9);
+        }
+        html.dark .theme-card,
+        html.dark .bg-white,
+        html.dark .bg-white\/90,
+        html.dark .bg-white\/80,
+        html.dark .bg-slate-50 {
+            background-color: #111827 !important;
+            color: #e2e8f0 !important;
+        }
+        html.dark .theme-input {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        html.dark .theme-soft {
+            background: #1e293b !important;
+            color: #cbd5e1 !important;
+        }
+        html.dark .border-slate-50,
+        html.dark .border-slate-100,
+        html.dark .border-slate-200,
+        html.dark .border-slate-300,
+        html.dark .border-gray-100 {
+            border-color: #334155 !important;
+        }
+        html.dark .text-slate-900,
+        html.dark .text-slate-800,
+        html.dark .text-slate-700,
+        html.dark .text-slate-600 {
+            color: #e2e8f0 !important;
+        }
+        html.dark .text-slate-500,
+        html.dark .text-slate-400,
+        html.dark .text-slate-300 {
+            color: #94a3b8 !important;
         }
     </style>
 </head>
