@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include "includes/header.php";
 include "includes/navbar.php";
 include "../config/db.php";

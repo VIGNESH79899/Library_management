@@ -1,4 +1,4 @@
-﻿<?php require_once dirname(dirname(__DIR__)) . "/config/app.php"; ?>
+<?php require_once dirname(dirname(__DIR__)) . "/config/app.php"; ?>
 <?php $current_page = basename($_SERVER['PHP_SELF']); ?>
 
 <style>
