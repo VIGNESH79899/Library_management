@@ -89,9 +89,10 @@ if ($hour < 12) {
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in-up">
     <!-- Hero Section -->
-    <div class="relative bg-gradient-to-br from-[#5f2eea] to-[#8e2de2] rounded-[24px] p-8 md:p-10 mb-10 overflow-hidden shadow-[0_8px_30px_rgba(95,46,234,0.3)]">
-        <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-        <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+    <div class="relative bg-gradient-to-br from-[#5f2eea] via-[#7a2ce8] to-[#9d2be0] rounded-[32px] p-8 sm:p-10 lg:p-12 mb-10 overflow-hidden shadow-[0_12px_40px_-10px_rgba(95,46,234,0.5)] transition-all duration-500 hover:shadow-[0_16px_50px_-10px_rgba(95,46,234,0.6)]">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-300/20 rounded-full blur-[60px] translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
+        <div class="absolute top-1/2 right-1/4 w-32 h-32 bg-purple-300/30 rounded-full blur-[40px] -translate-y-1/2 pointer-events-none"></div>
 
         <div class="relative z-10 flex flex-col lg:flex-row gap-8 lg:items-center lg:justify-between">
             <div class="text-white">
@@ -108,18 +109,18 @@ if ($hour < 12) {
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:max-w-xl">
-                <div class="bg-white/10 border border-white/15 backdrop-blur-md rounded-2xl p-4">
-                    <p class="text-white/70 text-xs uppercase tracking-wider">Total Books</p>
-                    <p class="text-white text-2xl font-extrabold mt-1"><?= $total_books_count ?></p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full lg:max-w-xl">
+                <div class="bg-white/10 border border-white/20 backdrop-blur-xl rounded-[20px] p-5 shadow-lg shadow-black/5 hover:bg-white/15 transition-all duration-300">
+                    <p class="text-white/80 text-[11px] font-semibold uppercase tracking-widest mb-1">Total Books</p>
+                    <p class="text-white text-3xl font-extrabold"><?= $total_books_count ?></p>
                 </div>
-                <div class="bg-white/10 border border-white/15 backdrop-blur-md rounded-2xl p-4">
-                    <p class="text-white/70 text-xs uppercase tracking-wider">Borrowed By You</p>
-                    <p class="text-white text-2xl font-extrabold mt-1"><?= $user_borrowed_total ?></p>
+                <div class="bg-white/10 border border-white/20 backdrop-blur-xl rounded-[20px] p-5 shadow-lg shadow-black/5 hover:bg-white/15 transition-all duration-300">
+                    <p class="text-white/80 text-[11px] font-semibold uppercase tracking-widest mb-1">Borrowed By You</p>
+                    <p class="text-white text-3xl font-extrabold"><?= $user_borrowed_total ?></p>
                 </div>
-                <div class="bg-white/10 border border-white/15 backdrop-blur-md rounded-2xl p-4">
-                    <p class="text-white/70 text-xs uppercase tracking-wider">Recommended</p>
-                    <p class="text-white text-2xl font-extrabold mt-1"><?= $recommended_count ?></p>
+                <div class="bg-white/10 border border-white/20 backdrop-blur-xl rounded-[20px] p-5 shadow-lg shadow-black/5 hover:bg-white/15 transition-all duration-300">
+                    <p class="text-white/80 text-[11px] font-semibold uppercase tracking-widest mb-1">Recommended</p>
+                    <p class="text-white text-3xl font-extrabold"><?= $recommended_count ?></p>
                 </div>
             </div>
         </div>
@@ -127,85 +128,108 @@ if ($hour < 12) {
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-[22px] p-6 sm:p-7 border border-slate-100 shadow-sm">
-                <div class="flex items-center justify-between gap-3 mb-5">
+            <div class="premium-card p-6 sm:p-8">
+                <div class="flex items-center justify-between gap-3 mb-6">
                     <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
-                        <i class="fas fa-chart-line text-indigo-500"></i> Learning Summary
+                        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        Learning Summary
                     </h2>
-                    <span class="text-xs font-bold px-3 py-1 rounded-full <?= $progress_percent >= 60 ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' ?>">
+                    <span class="text-xs font-bold px-4 py-1.5 rounded-full <?= $progress_percent >= 60 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-amber-50 text-amber-600 border border-amber-100' ?>">
                         <?= $progress_percent ?>% Complete
                     </span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                    <div class="rounded-2xl p-4 bg-gradient-to-br from-indigo-50 to-indigo-100/60 border border-indigo-100">
-                        <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Books Borrowed</p>
-                        <p class="text-3xl font-extrabold text-slate-800 mt-1"><?= $borrowed_count ?></p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+                    <div class="rounded-2xl p-5 bg-white border border-indigo-100 shadow-[0_4px_20px_-4px_rgba(99,102,241,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_-4px_rgba(99,102,241,0.15)] relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 p-4 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                            <i class="fas fa-book-reader text-7xl text-indigo-500"></i>
+                        </div>
+                        <p class="text-[11px] font-bold text-indigo-600 uppercase tracking-widest mb-1.5 relative z-10">Books Borrowed</p>
+                        <p class="text-4xl font-extrabold text-slate-800 relative z-10"><?= $borrowed_count ?></p>
                     </div>
-                    <div class="rounded-2xl p-4 bg-gradient-to-br from-emerald-50 to-emerald-100/60 border border-emerald-100">
-                        <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Books Returned</p>
-                        <p class="text-3xl font-extrabold text-slate-800 mt-1"><?= $returned_count ?></p>
+                    <div class="rounded-2xl p-5 bg-white border border-emerald-100 shadow-[0_4px_20px_-4px_rgba(16,185,129,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_-4px_rgba(16,185,129,0.15)] relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 p-4 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                            <i class="fas fa-check-circle text-7xl text-emerald-500"></i>
+                        </div>
+                        <p class="text-[11px] font-bold text-emerald-600 uppercase tracking-widest mb-1.5 relative z-10">Books Returned</p>
+                        <p class="text-4xl font-extrabold text-slate-800 relative z-10"><?= $returned_count ?></p>
                     </div>
-                    <div class="rounded-2xl p-4 bg-gradient-to-br <?= $total_fine > 0 ? 'from-red-50 to-orange-100/60 border-red-100' : 'from-teal-50 to-teal-100/60 border-teal-100' ?> border">
-                        <p class="text-xs font-semibold <?= $total_fine > 0 ? 'text-red-600' : 'text-teal-600' ?> uppercase tracking-wider">Estimated Fines</p>
-                        <p class="text-3xl font-extrabold <?= $total_fine > 0 ? 'text-red-600' : 'text-slate-800' ?> mt-1">&#8377;<?= $total_fine ?></p>
+                    <div class="rounded-2xl p-5 bg-white border <?= $total_fine > 0 ? 'border-red-100 shadow-[0_4px_20px_-4px_rgba(239,68,68,0.1)] hover:shadow-[0_8px_24px_-4px_rgba(239,68,68,0.15)]' : 'border-teal-100 shadow-[0_4px_20px_-4px_rgba(20,184,166,0.1)] hover:shadow-[0_8px_24px_-4px_rgba(20,184,166,0.15)]' ?> transition-all duration-300 hover:-translate-y-1 relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 p-4 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                            <i class="fas <?= $total_fine > 0 ? 'fa-exclamation-circle text-red-500' : 'fa-shield-alt text-teal-500' ?> text-7xl"></i>
+                        </div>
+                        <p class="text-[11px] font-bold <?= $total_fine > 0 ? 'text-red-500' : 'text-teal-600' ?> uppercase tracking-widest mb-1.5 relative z-10">Estimated Fines</p>
+                        <p class="text-4xl font-extrabold <?= $total_fine > 0 ? 'text-red-500' : 'text-slate-800' ?> relative z-10">&#8377;<?= $total_fine ?></p>
                     </div>
                 </div>
 
                 <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <p class="text-sm font-semibold text-slate-700">Reading Progress (Borrowed vs Returned)</p>
-                        <p class="text-sm font-bold text-slate-700"><?= $returned_count ?> / <?= max(1, $total_activity) ?></p>
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="text-sm font-bold text-slate-700">Reading Progress <span class="text-slate-400 font-medium ml-1">(Borrowed vs Returned)</span></p>
+                        <p class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100"><?= $returned_count ?> / <?= max(1, $total_activity) ?></p>
                     </div>
-                    <div class="h-3 rounded-full bg-slate-100 overflow-hidden">
-                        <div class="h-full rounded-full bg-gradient-to-r from-[#5f2eea] to-[#8e2de2] transition-all duration-500" style="width: <?= $progress_percent ?>%;"></div>
+                    <div class="h-3.5 rounded-full bg-slate-100 overflow-hidden shadow-inner border border-slate-200/50">
+                        <div class="h-full rounded-full bg-gradient-to-r from-[#5f2eea] via-[#7d2ae8] to-[#9d2be0] transition-all duration-1000 relative" style="width: <?= $progress_percent ?>%;">
+                            <div class="absolute inset-0 bg-white/20" style="background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent); background-size: 1rem 1rem;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="space-y-6">
-            <div class="bg-white rounded-[22px] p-5 border border-slate-100 shadow-sm">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
-                    <i class="fas fa-eye text-indigo-500"></i> Recently Viewed Books
+        <div class="space-y-8">
+            <div class="premium-card p-6">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-5">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    Recently Viewed
                 </h3>
                 <div id="recentlyViewedBooks" class="space-y-3"></div>
             </div>
 
             <div>
                 <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2 mb-4">
-                    <i class="fas fa-bolt text-yellow-500"></i> Quick Actions
+                    <i class="fas fa-bolt text-amber-400"></i> Quick Actions
                 </h2>
-                <div class="bg-white rounded-[22px] shadow-sm border border-slate-100 p-3">
-                    <a href="browse.php" class="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-xl transition-all duration-200 group">
-                        <div class="w-11 h-11 rounded-xl bg-[#5f2eea]/10 text-[#5f2eea] flex items-center justify-center transition-all duration-200 group-hover:bg-[#5f2eea] group-hover:text-white">
+                <div class="premium-card p-3">
+                    <a href="browse.php" class="flex items-center gap-4 p-3 hover:bg-indigo-50/50 rounded-xl transition-all duration-300 border border-transparent hover:border-indigo-100 group">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center transition-all duration-300 group-hover:bg-indigo-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-indigo-200">
                             <i class="fas fa-search"></i>
                         </div>
                         <div>
-                            <p class="font-bold text-slate-700 text-sm">Find a Book</p>
-                            <p class="text-xs text-slate-500">Search the catalog</p>
+                            <p class="font-bold text-slate-800 text-sm group-hover:text-indigo-700 transition-colors">Find a Book</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Search the catalog</p>
                         </div>
-                        <i class="fas fa-chevron-right ml-auto text-slate-300 text-xs group-hover:text-[#5f2eea] transition-colors"></i>
+                        <div class="ml-auto w-8 h-8 rounded-full flex items-center justify-center bg-white border border-slate-100 group-hover:border-indigo-200 group-hover:bg-indigo-50 transition-all">
+                            <i class="fas fa-chevron-right text-slate-400 text-xs group-hover:text-indigo-600"></i>
+                        </div>
                     </a>
-                    <a href="profile.php" class="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-xl transition-all duration-200 group">
-                        <div class="w-11 h-11 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center transition-all duration-200 group-hover:bg-pink-600 group-hover:text-white">
+                    <a href="profile.php" class="flex items-center gap-4 p-3 hover:bg-pink-50/50 rounded-xl transition-all duration-300 border border-transparent hover:border-pink-100 group">
+                        <div class="w-12 h-12 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center transition-all duration-300 group-hover:bg-pink-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-pink-200">
                             <i class="fas fa-user-edit"></i>
                         </div>
                         <div>
-                            <p class="font-bold text-slate-700 text-sm">Update Profile</p>
-                            <p class="text-xs text-slate-500">Manage your account</p>
+                            <p class="font-bold text-slate-800 text-sm group-hover:text-pink-700 transition-colors">Update Profile</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Manage your account</p>
                         </div>
-                        <i class="fas fa-chevron-right ml-auto text-slate-300 text-xs group-hover:text-pink-500 transition-colors"></i>
+                        <div class="ml-auto w-8 h-8 rounded-full flex items-center justify-center bg-white border border-slate-100 group-hover:border-pink-200 group-hover:bg-pink-50 transition-all">
+                            <i class="fas fa-chevron-right text-slate-400 text-xs group-hover:text-pink-600"></i>
+                        </div>
                     </a>
-                    <a href="my_books.php" class="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-xl transition-all duration-200 group">
-                        <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center transition-all duration-200 group-hover:bg-emerald-600 group-hover:text-white">
+                    <a href="my_books.php" class="flex items-center gap-4 p-3 hover:bg-emerald-50/50 rounded-xl transition-all duration-300 border border-transparent hover:border-emerald-100 group">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center transition-all duration-300 group-hover:bg-emerald-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-emerald-200">
                             <i class="fas fa-book"></i>
                         </div>
                         <div>
-                            <p class="font-bold text-slate-700 text-sm">My Borrowed Books</p>
-                            <p class="text-xs text-slate-500">Return or renew books</p>
+                            <p class="font-bold text-slate-800 text-sm group-hover:text-emerald-700 transition-colors">My Borrowed Books</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Return or renew books</p>
                         </div>
-                        <i class="fas fa-chevron-right ml-auto text-slate-300 text-xs group-hover:text-emerald-500 transition-colors"></i>
+                        <div class="ml-auto w-8 h-8 rounded-full flex items-center justify-center bg-white border border-slate-100 group-hover:border-emerald-200 group-hover:bg-emerald-50 transition-all">
+                            <i class="fas fa-chevron-right text-slate-400 text-xs group-hover:text-emerald-600"></i>
+                        </div>
                     </a>
                 </div>
             </div>
@@ -243,7 +267,7 @@ if ($hour < 12) {
                     ];
                     $gradient = $gradients[$book['Book_ID'] % count($gradients)];
             ?>
-            <div class="group bg-white/80 rounded-[18px] border border-slate-100/60 overflow-hidden hover:shadow-[0_12px_25px_rgba(0,0,0,0.12)] transition-all duration-200 hover:-translate-y-1.5 h-full flex flex-col relative">
+            <div class="group bg-white rounded-[20px] border border-slate-100 shadow-sm hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 h-full flex flex-col relative">
                 <div class="h-44 relative overflow-hidden flex items-center justify-center bg-gradient-to-br <?= $gradient ?>">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent"></div>
                     <span class="relative z-10 bg-white/95 text-[10px] font-bold px-3 py-1.5 rounded-full text-[#5f2eea] uppercase tracking-widest flex items-center gap-1.5">
@@ -295,10 +319,13 @@ function renderRecentlyViewed() {
     }
 
     recentContainer.innerHTML = books.slice(0, 3).map((book) => `
-        <a href="browse.php?search=${encodeURIComponent(book.title || '')}" class="block p-3.5 rounded-xl border border-slate-100 bg-slate-50/80 hover:bg-slate-100 transition-all duration-200">
-            <p class="text-xs font-bold text-[#5f2eea] uppercase tracking-wider">${escapeHtml(book.category || 'General')}</p>
-            <p class="text-sm font-bold text-slate-800 mt-1 line-clamp-1">${escapeHtml(book.title || '')}</p>
-            <p class="text-xs text-slate-500 mt-1">by <span class="text-slate-700">${escapeHtml(book.author || 'Unknown')}</span></p>
+        <a href="browse.php?search=${encodeURIComponent(book.title || '')}" class="block p-4 rounded-[16px] border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-indigo-100 hover:shadow-md hover:shadow-indigo-100/50 transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-1">
+                <p class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">${escapeHtml(book.category || 'General')}</p>
+                <i class="fas fa-arrow-right text-slate-300 text-xs opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-indigo-500 transition-all"></i>
+            </div>
+            <p class="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-indigo-700 transition-colors">${escapeHtml(book.title || '')}</p>
+            <p class="text-xs text-slate-500 mt-1">by <span class="text-slate-700 font-medium">${escapeHtml(book.author || 'Unknown')}</span></p>
         </a>
     `).join('');
 }
