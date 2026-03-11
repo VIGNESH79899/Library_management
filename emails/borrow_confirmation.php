@@ -30,7 +30,7 @@ $contact_email = $contact_email ?? "library@aurora.edu.in";
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Book Borrowed – Antigravity Library</title>
+  <title>Book Borrowed – AuroraLib Library</title>
   <!--[if mso]>
   <noscript>
     <xml>
@@ -60,7 +60,7 @@ $contact_email = $contact_email ?? "library@aurora.edu.in";
 
 <!--
   ╔══════════════════════════════════════════════════╗
-  ║      ANTIGRAVITY  —  Book Borrow Confirmation    ║
+  ║      AuroraLib  —  Book Borrow Confirmation    ║
   ╚══════════════════════════════════════════════════╝
 -->
 <body style="margin:0;padding:0;background-color:#eef2f7;font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
@@ -255,7 +255,7 @@ $contact_email = $contact_email ?? "library@aurora.edu.in";
                      cellpadding="0" cellspacing="0" width="100%">
                 <tr>
                   <td align="center" style="padding:4px 0 32px;">
-                    <a href="#" target="_blank"
+                    <a href="https://library-management-6km7.onrender.com/user/my_books.php" target="_blank"
                        style="display:inline-block;background:linear-gradient(135deg,#1d4ed8,#2563eb);
                               color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;
                               padding:14px 36px;border-radius:10px;letter-spacing:0.3px;
