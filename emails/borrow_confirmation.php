@@ -1,6 +1,6 @@
 <?php
 /**
- * ANTIGRAVITY — Book Borrow Email Template
+ * AuroraLib — Book Borrow Email Template
  * File: emails/borrow_confirmation.php
  *
  * Usage with PHPMailer:
@@ -131,7 +131,7 @@ $contact_email = $contact_email ?? "library@aurora.edu.in";
               <p style="margin:0 0 28px;font-size:15px;color:#475569;line-height:1.7;
                          font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
                 Your book has been successfully issued from the
-                <strong style="color:#1e293b;">Antigravity Library</strong>.
+                <strong style="color:#1e293b;">AuroraLib</strong>.
                 Here are your borrowing details:
               </p>
 
@@ -306,7 +306,7 @@ $contact_email = $contact_email ?? "library@aurora.edu.in";
 
               <p style="margin:0;font-size:11px;color:#334155;
                          font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
-                &copy; <?php echo date('Y'); ?> Antigravity Library. All rights reserved.
+                &copy; <?php echo date('Y'); ?> AuroraLib. All rights reserved.
               </p>
 
             </td>
