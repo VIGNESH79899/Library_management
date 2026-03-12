@@ -19,7 +19,7 @@ $path_to_profile = $base_url . "/profile/index.php";
 $path_to_logout = $base_url . "/auth/logout.php";
 $path_to_settings = "#"; // Placeholder
 ?>
-<div class="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-4 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 transition-all duration-300">
+<div class="sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 py-4 bg-white/85 backdrop-blur-2xl border-b border-slate-200/70 shadow-sm shadow-indigo-100/30 transition-all duration-300">
     <div class="flex items-center gap-3 md:gap-4">
         <!-- Mobile Menu Toggle -->
         <button id="mobileMenuBtn" class="md:hidden text-slate-600 hover:text-indigo-600 focus:outline-none transition-colors p-1.5 -ml-1 rounded-lg hover:bg-slate-100 animate-enter inline-flex items-center justify-center">

@@ -33,15 +33,15 @@
     }
 </style>
 
-<aside id="sidebar" class="w-64 h-screen fixed top-0 left-0 flex flex-col z-50 bg-[#0f172a] border-r border-slate-700/50 shadow-2xl sidebar-transition group/sidebar -translate-x-full md:translate-x-0">
+<aside id="sidebar" class="w-64 h-screen fixed top-0 left-0 flex flex-col z-50 bg-gradient-to-b from-[#0f172a] via-[#0b1120] to-[#020617] border-r border-slate-800 shadow-2xl shadow-black/50 sidebar-transition group/sidebar -translate-x-full md:translate-x-0">
     <!-- Brand -->
-    <div id="brand-header" class="h-20 flex items-center px-6 border-b border-slate-700/50 bg-[#0f172a] relative z-10 transition-all duration-300">
+    <div id="brand-header" class="h-20 flex items-center px-6 border-b border-white/5 relative z-10 transition-all duration-300">
         <div class="flex items-center gap-3 overflow-hidden">
-            <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 flex-shrink-0">
+            <div class="h-10 w-10 rounded-xl bg-gradient-brand flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 flex-shrink-0 border border-white/10">
                 <i class="fas fa-layer-group text-lg"></i>
             </div>
             <div class="sidebar-text fade-text">
-                <h2 class="text-base font-bold text-white tracking-wide font-inter">LMS <span class="text-indigo-400">ADMIN</span></h2>
+                <h2 class="text-base font-extrabold text-white tracking-wider font-inter">LMS <span class="text-indigo-400">ADMIN</span></h2>
             </div>
         </div>
     </div>
@@ -104,7 +104,7 @@
     </nav>
     
     <!-- Footer -->
-    <div class="p-4 border-t border-slate-700/50 bg-[#0f172a] relative z-20">
+    <div class="p-4 border-t border-white/5 relative z-20">
         <a href="<?= BASE_URL ?>/auth/logout.php" 
            class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all text-slate-400 hover:text-red-400 group overflow-hidden">
             <div class="w-6 h-6 flex items-center justify-center flex-shrink-0">
