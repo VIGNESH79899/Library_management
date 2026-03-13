@@ -120,7 +120,7 @@ $returns = $conn->query("
                         </div>
                         <div>
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Total Books</p>
-                            <h3 class="text-3xl font-extrabold text-slate-800 mt-1 font-inter tracking-tight"><?= number_format($totalBooks) ?></h3>
+                            <h3 class="text-3xl font-extrabold text-slate-800 mt-1 font-inter tracking-tight count-up" data-target="<?= htmlspecialchars($totalBooks) ?>">0</h3>
                         </div>
                     </div>
                 </div>
@@ -139,7 +139,7 @@ $returns = $conn->query("
                         </div>
                         <div>
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Members</p>
-                            <h3 class="text-3xl font-extrabold text-slate-800 mt-1 font-inter tracking-tight"><?= number_format($totalMembers) ?></h3>
+                            <h3 class="text-3xl font-extrabold text-slate-800 mt-1 font-inter tracking-tight count-up" data-target="<?= htmlspecialchars($totalMembers) ?>">0</h3>
                         </div>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ $returns = $conn->query("
                         </div>
                         <div>
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Result Issued</p>
-                            <h3 class="text-3xl font-extrabold text-slate-800 mt-1 font-inter tracking-tight"><?= number_format($issuedBooks) ?></h3>
+                            <h3 class="text-3xl font-extrabold text-slate-800 mt-1 font-inter tracking-tight count-up" data-target="<?= htmlspecialchars($issuedBooks) ?>">0</h3>
                         </div>
                     </div>
                 </div>
@@ -173,7 +173,7 @@ $returns = $conn->query("
                         </div>
                         <div>
                             <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Unpaid Fines</p>
-                            <h3 class="text-3xl font-extrabold text-slate-800 mt-1 font-inter tracking-tight">₹<?= number_format($totalFines) ?></h3>
+                            <h3 class="text-3xl font-extrabold text-slate-800 mt-1 font-inter tracking-tight">₹<span class="count-up" data-target="<?= htmlspecialchars($totalFines) ?>">0</span></h3>
                         </div>
                     </div>
                 </div>
@@ -281,6 +281,29 @@ $returns = $conn->query("
         </main>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const counters = document.querySelectorAll('.count-up');
+    counters.forEach(counter => {
+        const updateCount = () => {
+            const target = +counter.getAttribute('data-target');
+            // Remove commas for parsing, but not strict since our data-target is raw number
+            const count = +counter.innerText.replace(/,/g, '');
+            const speed = 250; 
+            const inc = target / speed;
+
+            if (count < target) {
+                counter.innerText = Math.ceil(count + inc).toLocaleString();
+                setTimeout(updateCount, 15);
+            } else {
+                counter.innerText = target.toLocaleString();
+            }
+        };
+        updateCount();
+    });
+});
+</script>
 
 </body>
 </html>
