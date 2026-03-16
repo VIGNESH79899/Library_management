@@ -31,6 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// TEMPORARILY DISABLED: Student self-borrowing
+// Borrowing will be handled by librarian panel only
+$response['message'] = 'Borrowing from the student portal is currently disabled. Please contact the librarian.';
+echo json_encode($response);
+exit;
+
+/*
 $book_id     = (int)($_POST['book_id'] ?? 0);
 $user_id     = (int)$_SESSION['user_id'];
 $return_date = trim($_POST['return_date'] ?? '');
@@ -196,6 +203,7 @@ try {
 
 echo json_encode($response);
 exit;
+*/
 ?>
 
 

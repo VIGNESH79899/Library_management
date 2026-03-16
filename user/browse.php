@@ -195,11 +195,16 @@ $gradients = [
                         <p class="relative z-10 text-xs text-white/80 mb-5">Borrowed <?= (int) $popular['borrow_count'] ?> times</p>
 
                         <div class="mt-auto relative z-10">
+                            <!-- TEMPORARILY DISABLED: Student self-borrowing 
                             <button
                                 <?= $is_available ? '' : 'disabled' ?>
                                 onclick='event.stopPropagation(); trackViewedBook(<?= (int) $popular['Book_ID'] ?>, <?= json_encode($popular['Title']) ?>, <?= json_encode($popular['Author']) ?>, <?= json_encode($popular['Category_Name'] ?? 'General') ?>); <?= $is_available ? "openBorrowModal(" . (int) $popular['Book_ID'] . ", " . json_encode($popular['Title']) . ")" : "" ?>'
                                 class="borrow-btn w-full text-center py-3 rounded-xl font-bold <?= $is_available ? 'bg-white text-[#5f2eea] hover:bg-white/95 shadow-lg shadow-black/15' : 'bg-white/30 text-white/80 cursor-not-allowed' ?>">
                                 <?= $is_available ? 'Borrow Book' : 'Unavailable' ?>
+                            </button>
+                            -->
+                            <button class="borrow-btn-disabled w-full text-center py-3 rounded-xl font-bold bg-slate-200 text-slate-500 cursor-not-allowed" disabled>
+                                Borrow via Librarian
                             </button>
                         </div>
                     </div>
@@ -244,10 +249,15 @@ $gradients = [
                         <p class="relative z-10 text-sm text-white/90 mb-6">by <?= htmlspecialchars($book['Author']) ?></p>
 
                         <div class="mt-auto relative z-10">
+                            <!-- TEMPORARILY DISABLED: Student self-borrowing
                             <button
                                 onclick='event.stopPropagation(); trackViewedBook(<?= (int) $book['Book_ID'] ?>, <?= json_encode($book['Title']) ?>, <?= json_encode($book['Author']) ?>, <?= json_encode($book['Category_Name'] ?? 'General') ?>); openBorrowModal(<?= (int) $book['Book_ID'] ?>, <?= json_encode($book['Title']) ?>)'
                                 class="borrow-btn w-full text-center bg-white text-[#5f2eea] font-bold py-3 rounded-xl shadow-lg shadow-black/15 hover:bg-white/95">
                                 Borrow Book
+                            </button>
+                            -->
+                            <button class="borrow-btn-disabled w-full text-center py-3 rounded-xl font-bold bg-slate-200 text-slate-500 cursor-not-allowed" disabled>
+                                Borrow via Librarian
                             </button>
                         </div>
                     </div>
