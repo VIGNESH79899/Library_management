@@ -12,72 +12,154 @@ define('FINE_RATE_PER_DAY', 10.00);
 $fine_rate = FINE_RATE_PER_DAY;
 $rate_msg  = "";
 
+$adminRole = $_SESSION['admin_role'] ?? 'admin';
+$isStaff = ($adminRole === 'staff');
+$staffLibrarianId = null;
+
+if ($isStaff) {
+    // Find the librarian ID mapping to this staff user
+    $staffEmail = '';
+    $stmt_email = $conn->prepare("SELECT Email FROM admin WHERE username=?");
+    $stmt_email->bind_param("s", $_SESSION['admin']);
+    $stmt_email->execute();
+    $res = $stmt_email->get_result()->fetch_assoc();
+    if ($res) {
+        $staffEmail = $res['Email'];
+        $stmt_lib = $conn->prepare("SELECT Librarian_ID FROM librarian WHERE Email=?");
+        $stmt_lib->bind_param("s", $staffEmail);
+        $stmt_lib->execute();
+        $lib_res = $stmt_lib->get_result()->fetch_assoc();
+        if ($lib_res) $staffLibrarianId = $lib_res['Librarian_ID'];
+    }
+}
+
 // ── Core stats ────────────────────────────────────────────────
 $totalBooks    = $conn->query("SELECT COUNT(*) AS total FROM book")->fetch_assoc()['total'];
 $totalMembers  = $conn->query("SELECT COUNT(*) AS total FROM member")->fetch_assoc()['total'];
-$totalIssued   = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
-$totalReturned = $conn->query("SELECT COUNT(*) AS total FROM return_book")->fetch_assoc()['total'];
-$totalOverdue  = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Due_Date < CURDATE() AND Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
 
-// ── Fines from dedicated Fine table ───────────────────────────
-// Total collected (only rows that exist in Fine table = actual late returns)
-$totalFinesRes = $conn->query("SELECT IFNULL(SUM(Fine_Amount),0) AS total, COUNT(*) AS count, IFNULL(SUM(Days_Late),0) AS total_days FROM fine");
-$fineStats     = $totalFinesRes ? $totalFinesRes->fetch_assoc() : ['total'=>0,'count'=>0,'total_days'=>0];
-$totalFines    = $fineStats['total'];
-$fineCount     = $fineStats['count'];
-$totalDaysLate = $fineStats['total_days'];
+if ($isStaff && $staffLibrarianId) {
+    $totalIssued   = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Librarian_ID = $staffLibrarianId AND Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
+    $totalReturned = $conn->query("SELECT COUNT(*) AS total FROM return_book R JOIN issue I ON R.Issue_ID = I.Issue_ID WHERE I.Librarian_ID = $staffLibrarianId")->fetch_assoc()['total'];
+    $totalOverdue  = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Librarian_ID = $staffLibrarianId AND Due_Date < CURDATE() AND Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
 
-// ── Pending fines for currently overdue (not yet returned) books
-// Uses DATEDIFF(CURDATE(), Due_Date) × ₹10 to estimate
-$pendingFineRes = $conn->query("
-    SELECT
-        COUNT(*)                                                      AS overdue_count,
-        IFNULL(SUM(DATEDIFF(CURDATE(), I.Due_Date)), 0)               AS total_days_pending,
-        IFNULL(SUM(DATEDIFF(CURDATE(), I.Due_Date) * " . FINE_RATE_PER_DAY . "), 0) AS pending_amount
-    FROM issue I
-    JOIN book B ON I.Book_ID = B.Book_ID
-    WHERE I.Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
-      AND I.Due_Date < CURDATE()
-");
-$pendingStats  = $pendingFineRes ? $pendingFineRes->fetch_assoc() : ['overdue_count'=>0,'total_days_pending'=>0,'pending_amount'=>0];
-$pendingFines  = $pendingStats['pending_amount'];
+    // ── Fines from dedicated Fine table ───────────────────────────
+    $totalFinesRes = $conn->query("SELECT IFNULL(SUM(F.Fine_Amount),0) AS total, COUNT(*) AS count, IFNULL(SUM(F.Days_Late),0) AS total_days FROM fine F JOIN issue I ON F.Issue_ID = I.Issue_ID WHERE I.Librarian_ID = $staffLibrarianId");
+    $fineStats     = $totalFinesRes ? $totalFinesRes->fetch_assoc() : ['total'=>0,'count'=>0,'total_days'=>0];
+    $totalFines    = $fineStats['total'];
+    $fineCount     = $fineStats['count'];
+    $totalDaysLate = $fineStats['total_days'];
 
-// Most Popular Books (Most Issued)
-$popularBooks = $conn->query("
-    SELECT B.Title, COUNT(I.Issue_ID) as Issue_Count
-    FROM issue I
-    JOIN book B ON I.Book_ID = B.Book_ID
-    GROUP BY I.Book_ID
-    ORDER BY Issue_Count DESC
-    LIMIT 5
-");
+    // ── Pending fines
+    $pendingFineRes = $conn->query("
+        SELECT
+            COUNT(*)                                                      AS overdue_count,
+            IFNULL(SUM(DATEDIFF(CURDATE(), I.Due_Date)), 0)               AS total_days_pending,
+            IFNULL(SUM(DATEDIFF(CURDATE(), I.Due_Date) * " . FINE_RATE_PER_DAY . "), 0) AS pending_amount
+        FROM issue I
+        JOIN book B ON I.Book_ID = B.Book_ID
+        WHERE I.Librarian_ID = $staffLibrarianId AND I.Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
+          AND I.Due_Date < CURDATE()
+    ");
+    $pendingStats  = $pendingFineRes ? $pendingFineRes->fetch_assoc() : ['overdue_count'=>0,'total_days_pending'=>0,'pending_amount'=>0];
+    $pendingFines  = $pendingStats['pending_amount'];
 
-// Member Activity – join Fine table for accurate totals
-$activeMembers = $conn->query("
-    SELECT M.Member_Name, COUNT(I.Issue_ID) as Issue_Count,
-           IFNULL(SUM(F.Fine_Amount), 0) AS Total_Fines,
-           IFNULL(SUM(F.Days_Late), 0)   AS Total_Days_Late
-    FROM issue I
-    JOIN member M ON I.Member_ID = M.Member_ID
-    LEFT JOIN fine F ON I.Issue_ID = F.Issue_ID
-    GROUP BY I.Member_ID
-    ORDER BY Issue_Count DESC
-    LIMIT 5
-");
+    // Most Popular Books (Most Issued)
+    $popularBooks = $conn->query("
+        SELECT B.Title, COUNT(I.Issue_ID) as Issue_Count
+        FROM issue I
+        JOIN book B ON I.Book_ID = B.Book_ID
+        WHERE I.Librarian_ID = $staffLibrarianId
+        GROUP BY I.Book_ID
+        ORDER BY Issue_Count DESC
+        LIMIT 5
+    ");
 
-// Recent fine transactions — from the Fine table
-$recentFines = $conn->query("
-    SELECT F.Fine_ID, F.Days_Late, F.Fine_Rate, F.Fine_Amount,
-           F.Due_Date, F.Return_Date, F.Created_At,
-           B.Title,
-           M.Member_Name
-    FROM fine F
-    JOIN issue I ON F.Issue_ID = I.Issue_ID
-    JOIN book  B ON I.Book_ID  = B.Book_ID
-    JOIN member M ON F.Member_ID = M.Member_ID
-    ORDER BY F.Created_At DESC
-    LIMIT 10
-");
+    // Member Activity
+    $activeMembers = $conn->query("
+        SELECT M.Member_Name, COUNT(I.Issue_ID) as Issue_Count,
+               IFNULL(SUM(F.Fine_Amount), 0) AS Total_Fines,
+               IFNULL(SUM(F.Days_Late), 0)   AS Total_Days_Late
+        FROM issue I
+        JOIN member M ON I.Member_ID = M.Member_ID
+        LEFT JOIN fine F ON I.Issue_ID = F.Issue_ID
+        WHERE I.Librarian_ID = $staffLibrarianId
+        GROUP BY I.Member_ID
+        ORDER BY Issue_Count DESC
+        LIMIT 5
+    ");
+
+    $recentFines = $conn->query("
+        SELECT F.Fine_ID, F.Days_Late, F.Fine_Rate, F.Fine_Amount,
+               F.Due_Date, F.Return_Date, F.Created_At,
+               B.Title,
+               M.Member_Name
+        FROM fine F
+        JOIN issue I ON F.Issue_ID = I.Issue_ID
+        JOIN book  B ON I.Book_ID  = B.Book_ID
+        JOIN member M ON F.Member_ID = M.Member_ID
+        WHERE I.Librarian_ID = $staffLibrarianId
+        ORDER BY F.Created_At DESC
+        LIMIT 10
+    ");
+} else {
+    // Admin View (Original queries)
+    $totalIssued   = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
+    $totalReturned = $conn->query("SELECT COUNT(*) AS total FROM return_book")->fetch_assoc()['total'];
+    $totalOverdue  = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Due_Date < CURDATE() AND Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
+
+    $totalFinesRes = $conn->query("SELECT IFNULL(SUM(Fine_Amount),0) AS total, COUNT(*) AS count, IFNULL(SUM(Days_Late),0) AS total_days FROM fine");
+    $fineStats     = $totalFinesRes ? $totalFinesRes->fetch_assoc() : ['total'=>0,'count'=>0,'total_days'=>0];
+    $totalFines    = $fineStats['total'];
+    $fineCount     = $fineStats['count'];
+    $totalDaysLate = $fineStats['total_days'];
+
+    $pendingFineRes = $conn->query("
+        SELECT
+            COUNT(*)                                                      AS overdue_count,
+            IFNULL(SUM(DATEDIFF(CURDATE(), I.Due_Date)), 0)               AS total_days_pending,
+            IFNULL(SUM(DATEDIFF(CURDATE(), I.Due_Date) * " . FINE_RATE_PER_DAY . "), 0) AS pending_amount
+        FROM issue I
+        JOIN book B ON I.Book_ID = B.Book_ID
+        WHERE I.Issue_ID NOT IN (SELECT Issue_ID FROM return_book)
+          AND I.Due_Date < CURDATE()
+    ");
+    $pendingStats  = $pendingFineRes ? $pendingFineRes->fetch_assoc() : ['overdue_count'=>0,'total_days_pending'=>0,'pending_amount'=>0];
+    $pendingFines  = $pendingStats['pending_amount'];
+
+    $popularBooks = $conn->query("
+        SELECT B.Title, COUNT(I.Issue_ID) as Issue_Count
+        FROM issue I
+        JOIN book B ON I.Book_ID = B.Book_ID
+        GROUP BY I.Book_ID
+        ORDER BY Issue_Count DESC
+        LIMIT 5
+    ");
+
+    $activeMembers = $conn->query("
+        SELECT M.Member_Name, COUNT(I.Issue_ID) as Issue_Count,
+               IFNULL(SUM(F.Fine_Amount), 0) AS Total_Fines,
+               IFNULL(SUM(F.Days_Late), 0)   AS Total_Days_Late
+        FROM issue I
+        JOIN member M ON I.Member_ID = M.Member_ID
+        LEFT JOIN fine F ON I.Issue_ID = F.Issue_ID
+        GROUP BY I.Member_ID
+        ORDER BY Issue_Count DESC
+        LIMIT 5
+    ");
+
+    $recentFines = $conn->query("
+        SELECT F.Fine_ID, F.Days_Late, F.Fine_Rate, F.Fine_Amount,
+               F.Due_Date, F.Return_Date, F.Created_At,
+               B.Title,
+               M.Member_Name
+        FROM fine F
+        JOIN issue I ON F.Issue_ID = I.Issue_ID
+        JOIN book  B ON I.Book_ID  = B.Book_ID
+        JOIN member M ON F.Member_ID = M.Member_ID
+        ORDER BY F.Created_At DESC
+        LIMIT 10
+    ");
+}
 ?>
 
 <!DOCTYPE html>

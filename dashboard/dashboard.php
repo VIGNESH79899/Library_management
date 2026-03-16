@@ -8,31 +8,80 @@ if (!isset($_SESSION['admin'])) {
 
 include "../config/db.php";
 
+$adminRole = $_SESSION['admin_role'] ?? 'admin';
+$isStaff = ($adminRole === 'staff');
+$staffLibrarianId = null;
+
+if ($isStaff) {
+    // Find the librarian ID mapping to this staff user
+    $staffEmail = '';
+    $stmt_email = $conn->prepare("SELECT Email FROM admin WHERE username=?");
+    $stmt_email->bind_param("s", $_SESSION['admin']);
+    $stmt_email->execute();
+    $res = $stmt_email->get_result()->fetch_assoc();
+    if ($res) {
+        $staffEmail = $res['Email'];
+        $stmt_lib = $conn->prepare("SELECT Librarian_ID FROM librarian WHERE Email=?");
+        $stmt_lib->bind_param("s", $staffEmail);
+        $stmt_lib->execute();
+        $lib_res = $stmt_lib->get_result()->fetch_assoc();
+        if ($lib_res) $staffLibrarianId = $lib_res['Librarian_ID'];
+    }
+}
+
 // Stats
 $totalBooks = $conn->query("SELECT IFNULL(SUM(Quantity),0) AS total FROM book")->fetch_assoc()['total'];
 $totalMembers = $conn->query("SELECT COUNT(*) AS total FROM member")->fetch_assoc()['total'];
-$issuedBooks = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
-$totalFines = $conn->query("SELECT IFNULL(SUM(Fine_Amount),0) AS total FROM return_book")->fetch_assoc()['total'];
 
-// Recent Issues
-$issues = $conn->query("
-    SELECT I.Issue_ID, B.Title, M.Member_Name, I.Issue_Date, I.Due_Date
-    FROM issue I
-    JOIN book B ON I.Book_ID = B.Book_ID
-    JOIN member M ON I.Member_ID = M.Member_ID
-    ORDER BY I.Issue_Date DESC
-    LIMIT 5
-");
+if ($isStaff && $staffLibrarianId) {
+    $issuedBooks = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Librarian_ID = $staffLibrarianId AND Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
+    $totalFines = $conn->query("SELECT IFNULL(SUM(R.Fine_Amount),0) AS total FROM return_book R JOIN issue I ON R.Issue_ID = I.Issue_ID WHERE I.Librarian_ID = $staffLibrarianId")->fetch_assoc()['total'];
 
-// Recent Returns
-$returns = $conn->query("
-    SELECT R.Return_ID, B.Title, R.Return_Date, R.Fine_Amount
-    FROM return_book R
-    JOIN issue I ON R.Issue_ID = I.Issue_ID
-    JOIN book B ON I.Book_ID = B.Book_ID
-    ORDER BY R.Return_Date DESC
-    LIMIT 5
-");
+    // Recent Issues
+    $issues = $conn->query("
+        SELECT I.Issue_ID, B.Title, M.Member_Name, I.Issue_Date, I.Due_Date
+        FROM issue I
+        JOIN book B ON I.Book_ID = B.Book_ID
+        JOIN member M ON I.Member_ID = M.Member_ID
+        WHERE I.Librarian_ID = $staffLibrarianId
+        ORDER BY I.Issue_Date DESC
+        LIMIT 5
+    ");
+
+    // Recent Returns
+    $returns = $conn->query("
+        SELECT R.Return_ID, B.Title, R.Return_Date, R.Fine_Amount
+        FROM return_book R
+        JOIN issue I ON R.Issue_ID = I.Issue_ID
+        JOIN book B ON I.Book_ID = B.Book_ID
+        WHERE I.Librarian_ID = $staffLibrarianId
+        ORDER BY R.Return_Date DESC
+        LIMIT 5
+    ");
+} else {
+    $issuedBooks = $conn->query("SELECT COUNT(*) AS total FROM issue WHERE Issue_ID NOT IN (SELECT Issue_ID FROM return_book)")->fetch_assoc()['total'];
+    $totalFines = $conn->query("SELECT IFNULL(SUM(Fine_Amount),0) AS total FROM return_book")->fetch_assoc()['total'];
+
+    // Recent Issues
+    $issues = $conn->query("
+        SELECT I.Issue_ID, B.Title, M.Member_Name, I.Issue_Date, I.Due_Date
+        FROM issue I
+        JOIN book B ON I.Book_ID = B.Book_ID
+        JOIN member M ON I.Member_ID = M.Member_ID
+        ORDER BY I.Issue_Date DESC
+        LIMIT 5
+    ");
+
+    // Recent Returns
+    $returns = $conn->query("
+        SELECT R.Return_ID, B.Title, R.Return_Date, R.Fine_Amount
+        FROM return_book R
+        JOIN issue I ON R.Issue_ID = I.Issue_ID
+        JOIN book B ON I.Book_ID = B.Book_ID
+        ORDER BY R.Return_Date DESC
+        LIMIT 5
+    ");
+}
 ?>
 
 <!DOCTYPE html>
