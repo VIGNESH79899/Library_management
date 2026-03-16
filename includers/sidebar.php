@@ -70,6 +70,15 @@
             'email_logs.php' => ['label' => 'Email Logs',      'icon' => 'fas fa-envelope-open-text', 'path' => BASE_URL . '/admin/email_logs.php'],
         ];
 
+        // Filter items for staff role
+        $adminRole = $_SESSION['admin_role'] ?? 'admin';
+        if ($adminRole === 'staff') {
+            $allowedForStaff = ['dashboard.php', 'issueBook.php', 'returnBook.php', 'reports.php'];
+            $navItems = array_filter($navItems, function($key) use ($allowedForStaff) {
+                return in_array($key, $allowedForStaff);
+            }, ARRAY_FILTER_USE_KEY);
+        }
+
         foreach ($navItems as $page => $item) {
             $isActive = $currentPage === $page;
             

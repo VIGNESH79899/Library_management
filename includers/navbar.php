@@ -51,7 +51,9 @@ $path_to_settings = "#"; // Placeholder
                 <p class="text-sm font-semibold text-slate-700 leading-tight">
                     <?= $admin_details ? htmlspecialchars($admin_details['Full_Name'] ?? 'Admin User') : 'Admin User' ?>
                 </p>
-                <p class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider bg-indigo-50 inline-block px-1.5 py-0.5 rounded mt-0.5">System Admin</p>
+                <p class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider bg-indigo-50 inline-block px-1.5 py-0.5 rounded mt-0.5">
+                    <?= (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'staff') ? 'Staff Member' : 'System Admin' ?>
+                </p>
             </div>
             <div class="h-10 w-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shadow-lg shadow-slate-200 transition-transform transform group-hover:scale-105 group-active:scale-95">
                 <span class="text-sm">

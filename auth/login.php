@@ -15,7 +15,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
 
     if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
         $_SESSION['admin'] = $username;
+        $_SESSION['admin_role'] = $user['role'] ?? 'admin';
         header("Location: " . BASE_URL . "/dashboard/dashboard.php");
         exit;
     } else {

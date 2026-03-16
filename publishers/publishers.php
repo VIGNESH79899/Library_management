@@ -5,6 +5,13 @@ if (!isset($_SESSION['admin'])) {
     header("Location: " . BASE_URL . "/auth/login.php");
     exit;
 }
+
+// Staff Role Restriction
+if (isset($_SESSION['admin_role']) && $_SESSION['admin_role'] === 'staff') {
+    header("Location: " . BASE_URL . "/dashboard/dashboard.php");
+    exit;
+}
+
 include "../config/db.php";
 
 /* Add Publisher */
