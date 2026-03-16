@@ -30,9 +30,19 @@ if (isset($_GET['delete'])) {
     if ($result['count'] > 0) {
         $_SESSION['error'] = "Cannot delete librarian. They have issued books history.";
     } else {
+        $stmt_email = $conn->prepare("SELECT Email FROM librarian WHERE Librarian_ID=?");
+        $stmt_email->bind_param("i", $delete_id);
+        $stmt_email->execute();
+        $email_to_delete = $stmt_email->get_result()->fetch_assoc()['Email'] ?? '';
+
         $stmt = $conn->prepare("DELETE FROM librarian WHERE Librarian_ID=?");
         $stmt->bind_param("i", $delete_id);
         if ($stmt->execute()) {
+             if (!empty($email_to_delete)) {
+                 $del_admin = $conn->prepare("DELETE FROM admin WHERE Email=? AND role='staff'");
+                 $del_admin->bind_param("s", $email_to_delete);
+                 $del_admin->execute();
+             }
              $_SESSION['message'] = "Librarian deleted successfully!";
         } else {
              $_SESSION['error'] = "Failed to delete librarian.";
@@ -51,9 +61,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_id']) && !empty($_POST['update_id'])) {
         // Update
         $id = $_POST['update_id'];
+
+        $get_old = $conn->prepare("SELECT Email FROM librarian WHERE Librarian_ID=?");
+        $get_old->bind_param("i", $id);
+        $get_old->execute();
+        $old_email = $get_old->get_result()->fetch_assoc()['Email'] ?? '';
+
         $stmt = $conn->prepare("UPDATE librarian SET Librarian_Name=?, Phone_Number=?, Email=? WHERE Librarian_ID=?");
         $stmt->bind_param("sssi", $name, $phone, $email, $id);
         if ($stmt->execute()) {
+            if (!empty($old_email)) {
+                $username = explode('@', $email)[0];
+                $upd_admin = $conn->prepare("UPDATE admin SET username=?, Full_Name=?, Email=? WHERE Email=? AND role='staff'");
+                $upd_admin->bind_param("ssss", $username, $name, $email, $old_email);
+                $upd_admin->execute();
+            }
             $_SESSION['message'] = "Librarian updated successfully!";
         } else {
             $_SESSION['error'] = "Failed to update librarian.";
@@ -63,7 +85,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("INSERT INTO librarian (Librarian_Name, Phone_Number, Email) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $name, $phone, $email);
         if ($stmt->execute()) {
-            $_SESSION['message'] = "Librarian added successfully!";
+            $username = explode('@', $email)[0];
+            $pwd = md5("staff123");
+            $role = "staff";
+            
+            // Generate basic unique username if needed (for safety, though email prefix is usually distinct)
+            $check_usr = $conn->prepare("SELECT admin_id FROM admin WHERE username=?");
+            $check_usr->bind_param("s", $username);
+            $check_usr->execute();
+            if ($check_usr->get_result()->num_rows > 0) {
+                $username = $username . rand(10,99);
+            }
+            
+            $ins_admin = $conn->prepare("INSERT INTO admin (username, Full_Name, Email, password, role) VALUES (?, ?, ?, ?, ?)");
+            $ins_admin->bind_param("sssss", $username, $name, $email, $pwd, $role);
+            $ins_admin->execute();
+
+            $_SESSION['message'] = "Librarian added! Login with username '$username' and password 'staff123'.";
         } else {
             $_SESSION['error'] = "Failed to add librarian.";
         }
