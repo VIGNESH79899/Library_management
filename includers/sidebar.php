@@ -3,13 +3,16 @@
     .custom-scrollbar::-webkit-scrollbar {
         width: 5px;
     }
+
     .custom-scrollbar::-webkit-scrollbar-track {
         background: rgba(255, 255, 255, 0.02);
     }
+
     .custom-scrollbar::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.1);
         border-radius: 10px;
     }
+
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: rgba(255, 255, 255, 0.2);
     }
@@ -20,7 +23,7 @@
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         transition-duration: 300ms;
     }
-    
+
     .content-transition {
         transition-property: margin-left;
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -44,7 +47,7 @@
             </div>
             <div class="sidebar-text fade-text flex flex-col">
                 <h2 class="text-[1.35rem] leading-none font-black text-white tracking-widest font-inter">LMS</h2>
-                <span class="text-[0.65rem] font-bold text-indigo-400 tracking-[0.25em] uppercase mt-1">Admin Pro</span>
+                <span class="text-[0.65rem] font-bold text-indigo-400 tracking-[0.25em] uppercase mt-1">Admin Portal</span>
             </div>
         </div>
     </div>
@@ -53,13 +56,13 @@
     <button id="sidebarToggle" class="absolute -right-3.5 top-10 z-50 h-7 w-7 rounded-full bg-indigo-600 text-white shadow-[0_0_15px_rgba(99,102,241,0.5)] border-2 border-slate-900 hover:bg-indigo-500 hover:scale-110 transition-all hidden md:flex items-center justify-center focus:outline-none cursor-pointer">
         <i class="fas fa-chevron-left text-[10px] transition-transform duration-300"></i>
     </button>
-    
+
     <!-- Nav -->
     <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2 custom-scrollbar overflow-x-hidden">
-        
+
         <?php
         $currentPage = basename($_SERVER['PHP_SELF']);
-        
+
         $navItems = [
             'dashboard.php'  => ['label' => 'Overview',       'icon' => 'fas fa-chart-pie',      'path' => BASE_URL . '/dashboard/dashboard.php'],
             'books.php'      => ['label' => 'Books Inventory', 'icon' => 'fas fa-book',            'path' => BASE_URL . '/books/books.php'],
@@ -77,17 +80,17 @@
         $adminRole = $_SESSION['admin_role'] ?? 'admin';
         if ($adminRole === 'staff') {
             $allowedForStaff = ['dashboard.php', 'issueBook.php', 'returnBook.php', 'reports.php'];
-            $navItems = array_filter($navItems, function($key) use ($allowedForStaff) {
+            $navItems = array_filter($navItems, function ($key) use ($allowedForStaff) {
                 return in_array($key, $allowedForStaff);
             }, ARRAY_FILTER_USE_KEY);
         }
 
         foreach ($navItems as $page => $item) {
             $isActive = $currentPage === $page;
-            
+
             // Premium Dark Theme Styles
             $baseClasses = "nav-item flex items-center px-4 py-3.5 mx-2 rounded-2xl text-sm font-medium transition-all duration-300 group relative overflow-hidden";
-            
+
             if ($isActive) {
                 // Active: Indigo gradient background with glowing text
                 $classes = $baseClasses . " bg-indigo-600 shadow-[0_4px_20px_rgba(79,70,229,0.3)] text-white border border-indigo-500/50";
@@ -97,29 +100,29 @@
                 $classes = $baseClasses . " text-slate-400 hover:bg-white/5 hover:text-white border border-transparent";
                 $iconColor = "text-slate-500 group-hover:text-indigo-400 transition-colors duration-300";
             }
-            ?>
+        ?>
             <a href="<?= $item['path'] ?>" class="<?= $classes ?>" title="<?= $item['label'] ?>">
-                <?php if($isActive): ?>
-                <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] animate-[shimmer_2s_infinite]"></div>
+                <?php if ($isActive): ?>
+                    <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] animate-[shimmer_2s_infinite]"></div>
                 <?php endif; ?>
-                
+
                 <div class="flex items-center justify-center w-8 h-8 rounded-xl <?= $isActive ? 'bg-white/20 shadow-inner' : 'bg-slate-800/80 group-hover:bg-slate-800' ?> flex-shrink-0 transition-colors duration-300 relative z-10">
                     <i class="<?= $item['icon'] ?> <?= $iconColor ?> text-sm"></i>
                 </div>
                 <!-- Added margin-left for better spacing -->
                 <span class="ml-4 tracking-wide font-semibold sidebar-text fade-text relative z-10"><?= $item['label'] ?></span>
-                
+
 
             </a>
-            <?php
+        <?php
         }
         ?>
     </nav>
-    
+
     <!-- Footer -->
     <div class="p-4 border-t border-white/5 relative z-20">
-        <a href="<?= BASE_URL ?>/auth/logout.php" 
-           class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all text-slate-400 hover:text-red-400 group overflow-hidden">
+        <a href="<?= BASE_URL ?>/auth/logout.php"
+            class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all text-slate-400 hover:text-red-400 group overflow-hidden">
             <div class="w-6 h-6 flex items-center justify-center flex-shrink-0">
                 <i class="fas fa-power-off text-lg group-hover:scale-110 transition-transform"></i>
             </div>
@@ -129,136 +132,133 @@
 </aside>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const sidebar = document.getElementById('sidebar');
-    const brandHeader = document.getElementById('brand-header');
-    const toggleBtn = document.getElementById('sidebarToggle');
-    const toggleIcon = toggleBtn.querySelector('i');
-    const sidebarTexts = document.querySelectorAll('.sidebar-text');
-    
-    // Select the main content div based on its class
-    const mainContent = document.querySelector('.main-content');
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn'); // from navbar
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.getElementById('sidebar');
+        const brandHeader = document.getElementById('brand-header');
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const toggleIcon = toggleBtn.querySelector('i');
+        const sidebarTexts = document.querySelectorAll('.sidebar-text');
 
-    // Retrieve state
-    let isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        // Select the main content div based on its class
+        const mainContent = document.querySelector('.main-content');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn'); // from navbar
 
-    // Apply initial state
-    if (window.innerWidth >= 768) {
-        applyState(false); 
-    }
+        // Retrieve state
+        let isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
 
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', (e) => {
-            isCollapsed = !isCollapsed;
-            localStorage.setItem('sidebarCollapsed', isCollapsed);
-            applyState(true);
-        });
-    }
+        // Apply initial state
+        if (window.innerWidth >= 768) {
+            applyState(false);
+        }
 
-    // Mobile menu toggle
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', () => {
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-            } else {
-                sidebar.classList.add('-translate-x-full');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', (e) => {
+                isCollapsed = !isCollapsed;
+                localStorage.setItem('sidebarCollapsed', isCollapsed);
+                applyState(true);
+            });
+        }
+
+        // Mobile menu toggle
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                if (sidebar.classList.contains('-translate-x-full')) {
+                    sidebar.classList.remove('-translate-x-full');
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        }
+
+        // Close sidebar on mobile when clicking outside
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 768) { // md breakpoint
+                if (!sidebar.contains(e.target) && mobileMenuBtn && !mobileMenuBtn.contains(e.target)) {
+                    sidebar.classList.add('-translate-x-full');
+                }
             }
         });
-    }
-    
-    // Close sidebar on mobile when clicking outside
-    document.addEventListener('click', (e) => {
-        if (window.innerWidth < 768) { // md breakpoint
-            if (!sidebar.contains(e.target) && mobileMenuBtn && !mobileMenuBtn.contains(e.target)) {
-                sidebar.classList.add('-translate-x-full');
+
+        function applyState(animate) {
+            if (animate) {
+                sidebar.classList.add('sidebar-transition');
+                if (mainContent) mainContent.classList.add('content-transition');
+            } else {
+                sidebar.classList.remove('sidebar-transition');
+                if (mainContent) mainContent.classList.remove('content-transition');
+            }
+
+            const navItems = document.querySelectorAll('.nav-item');
+
+            if (isCollapsed) {
+                // --- COLLAPSED ---
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-20');
+
+                if (mainContent) {
+                    mainContent.classList.remove('md:ml-64');
+                    mainContent.classList.add('md:ml-20');
+                }
+
+                // Adjust Brand Header
+                brandHeader.classList.remove('px-6');
+                brandHeader.classList.add('px-2', 'justify-center');
+
+                // Hide text
+                sidebarTexts.forEach(el => {
+                    el.style.display = 'none';
+                    el.style.opacity = '0';
+                });
+
+                // Adjust Nav Items for center alignment
+                navItems.forEach(el => {
+                    el.classList.remove('px-3');
+                    el.classList.add('px-0', 'justify-center');
+                    // Remove extra internal margins if needed when collapsed
+                    const span = el.querySelector('span');
+                    if (span) span.style.display = 'none';
+                });
+
+                // Adjust Toggle Button (Just rotate icon)
+                if (toggleIcon) {
+                    toggleIcon.classList.remove('fa-chevron-left');
+                    toggleIcon.classList.add('fa-chevron-right');
+                }
+
+            } else {
+                // --- EXPANDED ---
+                sidebar.classList.remove('w-20');
+                sidebar.classList.add('w-64');
+
+                if (mainContent) {
+                    mainContent.classList.remove('md:ml-20');
+                    mainContent.classList.add('md:ml-64');
+                }
+
+                // Reset Brand Header
+                brandHeader.classList.add('px-6');
+                brandHeader.classList.remove('px-2', 'justify-center');
+
+                // Show text
+                sidebarTexts.forEach(el => {
+                    el.style.display = 'block';
+                    setTimeout(() => el.style.opacity = '1', 50);
+                });
+
+                // Reset Nav Items
+                navItems.forEach(el => {
+                    el.classList.add('px-3');
+                    el.classList.remove('px-0', 'justify-center');
+                    const span = el.querySelector('span');
+                    if (span) span.style.display = 'inline';
+                });
+
+                // Reset Toggle Button (Just rotate icon)
+                if (toggleIcon) {
+                    toggleIcon.classList.remove('fa-chevron-right');
+                    toggleIcon.classList.add('fa-chevron-left');
+                }
             }
         }
     });
-
-    function applyState(animate) {
-        if (animate) {
-            sidebar.classList.add('sidebar-transition');
-            if (mainContent) mainContent.classList.add('content-transition');
-        } else {
-            sidebar.classList.remove('sidebar-transition');
-            if (mainContent) mainContent.classList.remove('content-transition');
-        }
-
-        const navItems = document.querySelectorAll('.nav-item');
-
-        if (isCollapsed) {
-            // --- COLLAPSED ---
-            sidebar.classList.remove('w-64');
-            sidebar.classList.add('w-20');
-            
-            if (mainContent) {
-                mainContent.classList.remove('md:ml-64');
-                mainContent.classList.add('md:ml-20');
-            }
-
-            // Adjust Brand Header
-            brandHeader.classList.remove('px-6');
-            brandHeader.classList.add('px-2', 'justify-center');
-
-            // Hide text
-            sidebarTexts.forEach(el => {
-                el.style.display = 'none';
-                el.style.opacity = '0';
-            });
-            
-            // Adjust Nav Items for center alignment
-            navItems.forEach(el => {
-                el.classList.remove('px-3');
-                el.classList.add('px-0', 'justify-center');
-                // Remove extra internal margins if needed when collapsed
-                const span = el.querySelector('span');
-                if(span) span.style.display = 'none';
-            });
-
-            // Adjust Toggle Button (Just rotate icon)
-            if (toggleIcon) {
-                toggleIcon.classList.remove('fa-chevron-left');
-                toggleIcon.classList.add('fa-chevron-right');
-            }
-
-        } else {
-            // --- EXPANDED ---
-            sidebar.classList.remove('w-20');
-            sidebar.classList.add('w-64');
-
-            if (mainContent) {
-                mainContent.classList.remove('md:ml-20');
-                mainContent.classList.add('md:ml-64');
-            }
-
-            // Reset Brand Header
-            brandHeader.classList.add('px-6');
-            brandHeader.classList.remove('px-2', 'justify-center');
-
-            // Show text
-            sidebarTexts.forEach(el => {
-                el.style.display = 'block';
-                setTimeout(() => el.style.opacity = '1', 50);
-            });
-
-            // Reset Nav Items
-            navItems.forEach(el => {
-                el.classList.add('px-3');
-                el.classList.remove('px-0', 'justify-center');
-                const span = el.querySelector('span');
-                if(span) span.style.display = 'inline';
-            });
-
-            // Reset Toggle Button (Just rotate icon)
-            if (toggleIcon) {
-                toggleIcon.classList.remove('fa-chevron-right');
-                toggleIcon.classList.add('fa-chevron-left');
-            }
-        }
-    }
-});
 </script>
-
-
-
