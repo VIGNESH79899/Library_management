@@ -33,21 +33,24 @@
     }
 </style>
 
-<aside id="sidebar" class="w-64 h-screen fixed top-0 left-0 flex flex-col z-50 bg-gradient-to-b from-[#0f172a] via-[#0b1120] to-[#020617] border-r border-slate-800 shadow-2xl shadow-black/50 sidebar-transition group/sidebar -translate-x-full md:translate-x-0">
+<aside id="sidebar" class="w-64 h-screen fixed top-0 left-0 flex flex-col z-50 bg-slate-900/95 backdrop-blur-3xl border-r border-white/10 shadow-[4px_0_24px_rgba(0,0,0,0.4)] sidebar-transition group/sidebar -translate-x-full md:translate-x-0">
     <!-- Brand -->
-    <div id="brand-header" class="h-20 flex items-center px-6 border-b border-white/5 relative z-10 transition-all duration-300">
-        <div class="flex items-center gap-3 overflow-hidden">
-            <div class="h-10 w-10 rounded-xl bg-gradient-brand flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 flex-shrink-0 border border-white/10">
-                <i class="fas fa-layer-group text-lg"></i>
+    <div id="brand-header" class="h-24 flex items-center px-6 border-b border-white/5 relative z-10 transition-all duration-300 bg-gradient-to-b from-white/5 to-transparent">
+        <div class="flex items-center gap-4 overflow-hidden w-full">
+            <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(99,102,241,0.4)] border border-white/20 flex-shrink-0 relative overflow-hidden group">
+                <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+                <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+                <i class="fas fa-layer-group text-xl relative z-10"></i>
             </div>
-            <div class="sidebar-text fade-text">
-                <h2 class="text-base font-extrabold text-white tracking-wider font-inter">LMS <span class="text-indigo-400">ADMIN</span></h2>
+            <div class="sidebar-text fade-text flex flex-col">
+                <h2 class="text-[1.35rem] leading-none font-black text-white tracking-widest font-inter">LMS</h2>
+                <span class="text-[0.65rem] font-bold text-indigo-400 tracking-[0.25em] uppercase mt-1">Admin Pro</span>
             </div>
         </div>
     </div>
 
     <!-- Floating Toggle Button -->
-    <button id="sidebarToggle" class="absolute -right-3 top-8 z-50 h-6 w-6 rounded-full bg-indigo-600 text-white shadow-md border-2 border-[#0f172a] hover:bg-indigo-500 transition-all hidden md:flex items-center justify-center focus:outline-none cursor-pointer">
+    <button id="sidebarToggle" class="absolute -right-3.5 top-10 z-50 h-7 w-7 rounded-full bg-indigo-600 text-white shadow-[0_0_15px_rgba(99,102,241,0.5)] border-2 border-slate-900 hover:bg-indigo-500 hover:scale-110 transition-all hidden md:flex items-center justify-center focus:outline-none cursor-pointer">
         <i class="fas fa-chevron-left text-[10px] transition-transform duration-300"></i>
     </button>
     
@@ -83,28 +86,32 @@
             $isActive = $currentPage === $page;
             
             // Premium Dark Theme Styles
-            $baseClasses = "nav-item flex items-center px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group relative";
+            $baseClasses = "nav-item flex items-center px-4 py-3.5 mx-2 rounded-2xl text-sm font-medium transition-all duration-300 group relative overflow-hidden";
             
             if ($isActive) {
                 // Active: Indigo gradient background with glowing text
-                $classes = $baseClasses . " bg-indigo-600 shadow-lg shadow-indigo-900/20 text-white";
+                $classes = $baseClasses . " bg-indigo-600 shadow-[0_4px_20px_rgba(79,70,229,0.3)] text-white border border-indigo-500/50";
                 $iconColor = "text-white";
             } else {
                 // Inactive: Slate text, hover effect
-                $classes = $baseClasses . " text-slate-400 hover:bg-slate-800 hover:text-white";
-                $iconColor = "text-slate-400 group-hover:text-white transition-colors";
+                $classes = $baseClasses . " text-slate-400 hover:bg-white/5 hover:text-white border border-transparent";
+                $iconColor = "text-slate-500 group-hover:text-indigo-400 transition-colors duration-300";
             }
             ?>
             <a href="<?= $item['path'] ?>" class="<?= $classes ?>" title="<?= $item['label'] ?>">
-                <div class="flex items-center justify-center w-6 h-6 flex-shrink-0">
-                    <i class="<?= $item['icon'] ?> <?= $iconColor ?> text-lg"></i>
+                <?php if($isActive): ?>
+                <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] animate-[shimmer_2s_infinite]"></div>
+                <?php endif; ?>
+                
+                <div class="flex items-center justify-center w-8 h-8 rounded-xl <?= $isActive ? 'bg-white/20 shadow-inner' : 'bg-slate-800/80 group-hover:bg-slate-800' ?> flex-shrink-0 transition-colors duration-300 relative z-10">
+                    <i class="<?= $item['icon'] ?> <?= $iconColor ?> text-sm"></i>
                 </div>
                 <!-- Added margin-left for better spacing -->
-                <span class="ml-4 tracking-wide sidebar-text fade-text"><?= $item['label'] ?></span>
+                <span class="ml-4 tracking-wide font-semibold sidebar-text fade-text relative z-10"><?= $item['label'] ?></span>
                 
                 <?php if($isActive): ?>
                 <!-- Optional: small dot indicator -->
-                <div class="absolute right-3 w-1.5 h-1.5 rounded-full bg-white opacity-50 sidebar-text fade-text"></div>
+                <div class="absolute right-4 w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.8)] sidebar-text fade-text relative z-10"></div>
                 <?php endif; ?>
             </a>
             <?php
