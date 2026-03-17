@@ -109,10 +109,7 @@
                 <!-- Added margin-left for better spacing -->
                 <span class="ml-4 tracking-wide font-semibold sidebar-text fade-text relative z-10"><?= $item['label'] ?></span>
                 
-                <?php if($isActive): ?>
-                <!-- Optional: small dot indicator -->
-                <div class="absolute right-4 w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.8)] sidebar-text fade-text relative z-10"></div>
-                <?php endif; ?>
+
             </a>
             <?php
         }

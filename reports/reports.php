@@ -69,7 +69,7 @@ if ($isStaff && $staffLibrarianId) {
         FROM issue I
         JOIN book B ON I.Book_ID = B.Book_ID
         WHERE I.Librarian_ID = $staffLibrarianId
-        GROUP BY I.Book_ID
+        GROUP BY I.Book_ID, B.Title
         ORDER BY Issue_Count DESC
         LIMIT 5
     ");
@@ -83,7 +83,7 @@ if ($isStaff && $staffLibrarianId) {
         JOIN member M ON I.Member_ID = M.Member_ID
         LEFT JOIN fine F ON I.Issue_ID = F.Issue_ID
         WHERE I.Librarian_ID = $staffLibrarianId
-        GROUP BY I.Member_ID
+        GROUP BY I.Member_ID, M.Member_Name
         ORDER BY Issue_Count DESC
         LIMIT 5
     ");
@@ -130,7 +130,7 @@ if ($isStaff && $staffLibrarianId) {
         SELECT B.Title, COUNT(I.Issue_ID) as Issue_Count
         FROM issue I
         JOIN book B ON I.Book_ID = B.Book_ID
-        GROUP BY I.Book_ID
+        GROUP BY I.Book_ID, B.Title
         ORDER BY Issue_Count DESC
         LIMIT 5
     ");
@@ -142,7 +142,7 @@ if ($isStaff && $staffLibrarianId) {
         FROM issue I
         JOIN member M ON I.Member_ID = M.Member_ID
         LEFT JOIN fine F ON I.Issue_ID = F.Issue_ID
-        GROUP BY I.Member_ID
+        GROUP BY I.Member_ID, M.Member_Name
         ORDER BY Issue_Count DESC
         LIMIT 5
     ");
