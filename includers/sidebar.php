@@ -36,29 +36,36 @@
     }
 </style>
 
-<aside id="sidebar" class="w-64 h-screen fixed top-0 left-0 flex flex-col z-50 bg-slate-900/95 backdrop-blur-3xl border-r border-white/10 shadow-[4px_0_24px_rgba(0,0,0,0.4)] sidebar-transition group/sidebar -translate-x-full md:translate-x-0">
+<aside id="sidebar" class="w-64 h-screen fixed top-0 left-0 flex flex-col z-50 bg-[linear-gradient(160deg,#0f172a_0%,#1e1b4b_100%)] backdrop-blur-3xl border-r border-indigo-500/10 shadow-[4px_0_30px_rgba(0,0,0,0.5)] sidebar-transition group/sidebar -translate-x-full md:translate-x-0 overflow-hidden">
+    <!-- Ambient Sidebar Effect -->
+    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay pointer-events-none"></div>
+    <div class="absolute -top-20 -left-20 w-40 h-40 bg-indigo-500/20 rounded-full blur-[50px] pointer-events-none"></div>
+    
     <!-- Brand -->
-    <div id="brand-header" class="h-24 flex items-center px-6 border-b border-white/5 relative z-10 transition-all duration-300 bg-gradient-to-b from-white/5 to-transparent">
-        <div class="flex items-center gap-4 overflow-hidden w-full">
-            <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(99,102,241,0.4)] border border-white/20 flex-shrink-0 relative overflow-hidden group">
+    <div id="brand-header" class="h-24 flex items-center px-6 border-b border-indigo-500/10 relative z-10 transition-all duration-300 bg-white/[0.02] backdrop-blur-sm">
+        <div class="flex items-center gap-4 overflow-hidden w-full relative">
+            <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-indigo-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(99,102,241,0.4)] border border-white/20 flex-shrink-0 relative overflow-hidden group/brand">
                 <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-                <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
-                <i class="fas fa-layer-group text-xl relative z-10"></i>
+                <div class="absolute inset-0 bg-white/20 translate-y-full group-hover/brand:translate-y-0 transition-transform duration-500 ease-out"></div>
+                <i class="fas fa-layer-group text-xl relative z-10 transform group-hover/brand:scale-110 transition-transform duration-500"></i>
             </div>
-            <div class="sidebar-text fade-text flex flex-col">
-                <h2 class="text-[1.35rem] leading-none font-black text-white tracking-widest font-inter">LMS</h2>
-                <span class="text-[0.65rem] font-bold text-indigo-400 tracking-[0.25em] uppercase mt-1">Admin Portal</span>
+            <div class="sidebar-text fade-text flex flex-col pt-0.5">
+                <h2 class="text-[1.35rem] leading-none font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-300 tracking-widest font-inter">LMS</h2>
+                <span class="text-[0.65rem] font-bold text-indigo-400 tracking-[0.25em] uppercase mt-1 relative inline-block">
+                    Admin Portal
+                    <span class="absolute -bottom-0.5 left-0 w-full h-[1px] bg-gradient-to-r from-indigo-500/0 via-indigo-500/50 to-indigo-500/0"></span>
+                </span>
             </div>
         </div>
     </div>
 
     <!-- Floating Toggle Button -->
-    <button id="sidebarToggle" class="absolute -right-3.5 top-10 z-50 h-7 w-7 rounded-full bg-indigo-600 text-white shadow-[0_0_15px_rgba(99,102,241,0.5)] border-2 border-slate-900 hover:bg-indigo-500 hover:scale-110 transition-all hidden md:flex items-center justify-center focus:outline-none cursor-pointer">
-        <i class="fas fa-chevron-left text-[10px] transition-transform duration-300"></i>
+    <button id="sidebarToggle" class="absolute -right-3.5 top-10 z-50 h-7 w-7 rounded-full bg-indigo-600 text-white shadow-[0_0_20px_rgba(99,102,241,0.6)] border border-indigo-400 hover:bg-indigo-500 hover:scale-110 transition-all hidden md:flex items-center justify-center focus:outline-none cursor-pointer group/toggle">
+        <i class="fas fa-chevron-left text-[10px] group-hover/toggle:-translate-x-0.5 transition-transform duration-300"></i>
     </button>
 
     <!-- Nav -->
-    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2 custom-scrollbar overflow-x-hidden">
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2.5 custom-scrollbar overflow-x-hidden relative z-10">
 
         <?php
         $currentPage = basename($_SERVER['PHP_SELF']);
@@ -93,21 +100,23 @@
 
             if ($isActive) {
                 // Active: Indigo gradient background with glowing text
-                $classes = $baseClasses . " bg-indigo-600 shadow-[0_4px_20px_rgba(79,70,229,0.3)] text-white border border-indigo-500/50";
+                $classes = $baseClasses . " bg-gradient-to-r from-indigo-600 to-purple-600 shadow-[0_4px_25px_rgba(79,70,229,0.4)] text-white border border-indigo-400/50";
                 $iconColor = "text-white";
             } else {
                 // Inactive: Slate text, hover effect
-                $classes = $baseClasses . " text-slate-400 hover:bg-white/5 hover:text-white border border-transparent";
-                $iconColor = "text-slate-500 group-hover:text-indigo-400 transition-colors duration-300";
+                $classes = $baseClasses . " text-slate-400 hover:bg-white/5 hover:text-white border border-transparent hover:translate-x-1";
+                $iconColor = "text-slate-500 group-hover:text-indigo-400 group-hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.5)] transition-all duration-300";
             }
         ?>
             <a href="<?= $item['path'] ?>" class="<?= $classes ?>" title="<?= $item['label'] ?>">
                 <?php if ($isActive): ?>
-                    <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] animate-[shimmer_2s_infinite]"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] animate-[shimmer_2s_infinite]"></div>
+                    <!-- Active Indicator Line -->
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full shadow-[0_0_10px_white]"></div>
                 <?php endif; ?>
 
-                <div class="flex items-center justify-center w-8 h-8 rounded-xl <?= $isActive ? 'bg-white/20 shadow-inner' : 'bg-slate-800/80 group-hover:bg-slate-800' ?> flex-shrink-0 transition-colors duration-300 relative z-10">
-                    <i class="<?= $item['icon'] ?> <?= $iconColor ?> text-sm"></i>
+                <div class="flex items-center justify-center w-8 h-8 rounded-xl <?= $isActive ? 'bg-white/20 shadow-inner backdrop-blur-sm' : 'bg-slate-800/80 group-hover:bg-indigo-500/20 group-hover:shadow-[0_0_15px_rgba(99,102,241,0.2)]' ?> flex-shrink-0 transition-all duration-300 relative z-10">
+                    <i class="<?= $item['icon'] ?> <?= $iconColor ?> text-sm transform group-hover:scale-110 transition-transform duration-300"></i>
                 </div>
                 <!-- Added margin-left for better spacing -->
                 <span class="ml-4 tracking-wide font-semibold sidebar-text fade-text relative z-10"><?= $item['label'] ?></span>
@@ -120,13 +129,14 @@
     </nav>
 
     <!-- Footer -->
-    <div class="p-4 border-t border-white/5 relative z-20">
+    <div class="p-4 border-t border-indigo-500/10 relative z-20 bg-black/10 backdrop-blur-md">
         <a href="<?= BASE_URL ?>/auth/logout.php"
-            class="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all text-slate-400 hover:text-red-400 group overflow-hidden">
-            <div class="w-6 h-6 flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-power-off text-lg group-hover:scale-110 transition-transform"></i>
+            class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-800/40 hover:bg-red-500/10 border border-slate-700/50 hover:border-red-500/30 transition-all duration-300 text-slate-400 hover:text-red-400 group overflow-hidden shadow-inner hover:shadow-[0_0_20px_rgba(239,68,68,0.15)] relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite]"></div>
+            <div class="w-8 h-8 rounded-xl bg-slate-800/80 group-hover:bg-red-500/20 flex items-center justify-center flex-shrink-0 transition-colors relative z-10">
+                <i class="fas fa-power-off text-sm group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] transition-all"></i>
             </div>
-            <span class="text-sm font-semibold sidebar-text fade-text ml-1">Sign Out</span>
+            <span class="text-sm font-semibold sidebar-text fade-text ml-1 relative z-10 tracking-wide">Sign Out</span>
         </a>
     </div>
 </aside>
