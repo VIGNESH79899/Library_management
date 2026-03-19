@@ -32,11 +32,11 @@ $popular_sql = "
 $popular_books = $conn->query($popular_sql);
 
 $gradients = [
-    'from-indigo-500 to-purple-600',
+    'from-brand-500 to-purple-600',
     'from-emerald-400 to-cyan-500',
     'from-rose-400 to-red-500',
     'from-amber-400 to-orange-500',
-    'from-blue-500 to-indigo-600',
+    'from-brand-500 to-brand-600',
     'from-fuchsia-500 to-pink-600',
     'from-teal-400 to-emerald-500',
     'from-violet-500 to-fuchsia-500'
@@ -63,14 +63,14 @@ $gradients = [
      class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4"
      onclick="if(event.target===this)closeModal()">
 
-    <div class="bg-white rounded-3xl shadow-2xl shadow-indigo-500/20 w-full max-w-md p-8 relative animate-fade-in-up">
+    <div class="bg-white rounded-3xl shadow-2xl shadow-brand-500/20 w-full max-w-md p-8 relative animate-fade-in-up">
         <button onclick="closeModal()"
                 class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 transition-colors duration-200">
             <i class="fas fa-times text-lg"></i>
         </button>
 
         <div class="flex items-center gap-4 mb-6">
-            <div class="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 text-2xl flex-shrink-0">
+            <div class="w-14 h-14 rounded-2xl bg-brand-50 flex items-center justify-center text-brand-600 text-2xl flex-shrink-0">
                 <i class="fas fa-book-reader"></i>
             </div>
             <div>
@@ -84,7 +84,7 @@ $gradients = [
                 <i class="fas fa-calendar-alt text-indigo-400 mr-1"></i> Select Return Date
             </label>
             <input type="date" id="returnDateInput"
-                   class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all duration-200 text-slate-700 font-medium text-base"
+                   class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all duration-200 text-slate-700 font-medium text-base"
                    placeholder="Pick a date">
             <p class="text-xs text-slate-400 mt-2">
                 <i class="fas fa-info-circle mr-1 text-indigo-300"></i>
@@ -100,7 +100,7 @@ $gradients = [
                 Cancel
             </button>
             <button id="confirmBorrowBtn" onclick="confirmBorrow()"
-                    class="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-500/30 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2">
+                    class="flex-1 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold shadow-lg shadow-brand-500/30 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2">
                 <i class="fas fa-check"></i> Confirm Borrow
             </button>
         </div>
@@ -270,7 +270,7 @@ $gradients = [
                     <h3 class="text-xl font-bold text-slate-700 mb-2">No books found</h3>
                     <p class="text-slate-400">We couldn't find any available books<?= $search ? ' matching "' . htmlspecialchars($search) . '"' : '' ?>.</p>
                     <?php if ($search): ?>
-                        <a href="browse.php" class="inline-block mt-6 text-indigo-600 font-bold hover:underline">Clear Search</a>
+                        <a href="browse.php" class="inline-block mt-6 text-brand-600 font-bold hover:underline">Clear Search</a>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>

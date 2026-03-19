@@ -54,7 +54,7 @@ while ($row = $result->fetch_assoc()) {
         </div>
         
         <div class="flex gap-2">
-            <a href="browse.php" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-4 py-2 rounded-lg font-bold text-sm transition-colors flex items-center gap-2">
+            <a href="browse.php" class="bg-brand-50 text-brand-600 hover:bg-brand-100 px-4 py-2 rounded-lg font-bold text-sm transition-colors flex items-center gap-2">
                 <i class="fas fa-search"></i> Find New Books
             </a>
         </div>
@@ -64,7 +64,7 @@ while ($row = $result->fetch_assoc()) {
     <?php if (!empty($history_rows)): ?>
     <div class="grid grid-cols-1 md:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         <div class="bg-white border border-slate-100 rounded-2xl p-4 flex items-center gap-3 shadow-sm">
-            <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500">
+            <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-500">
                 <i class="fas fa-book"></i>
             </div>
             <div>
@@ -106,7 +106,7 @@ while ($row = $result->fetch_assoc()) {
                 <div class="bg-white rounded-2xl border border-slate-100 p-5 flex items-start gap-5 hover:shadow-lg transition-shadow group relative overflow-hidden">
                     
                     <!-- Decorative Background -->
-                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700"></div>
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br from-brand-50 to-purple-50 rounded-full blur-xl group-hover:scale-150 transition-transform duration-700"></div>
 
                     <!-- Icon -->
                     <div class="w-16 h-20 rounded-lg bg-slate-50 flex items-center justify-center text-slate-300 text-3xl shadow-inner flex-shrink-0 group-hover:text-indigo-400 transition-colors">
@@ -166,7 +166,7 @@ while ($row = $result->fetch_assoc()) {
                 </div>
                 <h3 class="text-xl font-bold text-slate-700 mb-2">No history yet</h3>
                 <p class="text-slate-500 max-w-md mx-auto mb-6">Once you return borrowed books, they will appear here in your reading history.</p>
-                <a href="browse.php" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-lg shadow-indigo-200 hover:-translate-y-0.5">
+                <a href="browse.php" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-lg shadow-indigo-200 hover:-translate-y-0.5">
                     Start Reading Now
                 </a>
             </div>

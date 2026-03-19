@@ -131,7 +131,7 @@ if ($hour < 12) {
             <div class="premium-card p-6 sm:p-8">
                 <div class="flex items-center justify-between gap-3 mb-6">
                     <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center">
                             <i class="fas fa-chart-line"></i>
                         </div>
                         Learning Summary
@@ -142,11 +142,11 @@ if ($hour < 12) {
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
-                    <div class="rounded-2xl p-5 bg-white border border-indigo-100 shadow-[0_4px_20px_-4px_rgba(99,102,241,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_-4px_rgba(99,102,241,0.15)] relative overflow-hidden group">
+                    <div class="rounded-2xl p-5 bg-white border border-brand-100 shadow-[0_4px_20px_-4px_rgba(99,102,241,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_-4px_rgba(99,102,241,0.15)] relative overflow-hidden group">
                         <div class="absolute -right-4 -top-4 p-4 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
-                            <i class="fas fa-book-reader text-7xl text-indigo-500"></i>
+                            <i class="fas fa-book-reader text-7xl text-brand-500"></i>
                         </div>
-                        <p class="text-[11px] font-bold text-indigo-600 uppercase tracking-widest mb-1.5 relative z-10">Books Borrowed</p>
+                        <p class="text-[11px] font-bold text-brand-600 uppercase tracking-widest mb-1.5 relative z-10">Books Borrowed</p>
                         <p class="text-4xl font-extrabold text-slate-800 relative z-10"><?= $borrowed_count ?></p>
                     </div>
                     <div class="rounded-2xl p-5 bg-white border border-emerald-100 shadow-[0_4px_20px_-4px_rgba(16,185,129,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_-4px_rgba(16,185,129,0.15)] relative overflow-hidden group">
@@ -168,7 +168,7 @@ if ($hour < 12) {
                 <div>
                     <div class="flex items-center justify-between mb-3">
                         <p class="text-sm font-bold text-slate-700">Reading Progress <span class="text-slate-400 font-medium ml-1">(Borrowed vs Returned)</span></p>
-                        <p class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100"><?= $returned_count ?> / <?= max(1, $total_activity) ?></p>
+                        <p class="text-xs font-bold text-brand-600 bg-brand-50 px-3 py-1 rounded-full border border-brand-100"><?= $returned_count ?> / <?= max(1, $total_activity) ?></p>
                     </div>
                     <div class="h-3.5 rounded-full bg-slate-100 overflow-hidden shadow-inner border border-slate-200/50">
                         <div class="h-full rounded-full bg-gradient-to-r from-[#5f2eea] via-[#7d2ae8] to-[#9d2be0] transition-all duration-1000 relative" style="width: <?= $progress_percent ?>%;">
@@ -182,7 +182,7 @@ if ($hour < 12) {
         <div class="space-y-8">
             <div class="premium-card p-6">
                 <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-5">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500">
+                    <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center text-brand-500">
                         <i class="fas fa-eye"></i>
                     </div>
                     Recently Viewed
@@ -195,16 +195,16 @@ if ($hour < 12) {
                     <i class="fas fa-bolt text-amber-400"></i> Quick Actions
                 </h2>
                 <div class="premium-card p-3">
-                    <a href="browse.php" class="flex items-center gap-4 p-3 hover:bg-indigo-50/50 rounded-xl transition-all duration-300 border border-transparent hover:border-indigo-100 group">
-                        <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center transition-all duration-300 group-hover:bg-indigo-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-indigo-200">
+                    <a href="browse.php" class="flex items-center gap-4 p-3 hover:bg-brand-50/50 rounded-xl transition-all duration-300 border border-transparent hover:border-brand-100 group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center transition-all duration-300 group-hover:bg-brand-600 group-hover:text-white group-hover:shadow-md group-hover:shadow-indigo-200">
                             <i class="fas fa-search"></i>
                         </div>
                         <div>
-                            <p class="font-bold text-slate-800 text-sm group-hover:text-indigo-700 transition-colors">Find a Book</p>
+                            <p class="font-bold text-slate-800 text-sm group-hover:text-brand-700 transition-colors">Find a Book</p>
                             <p class="text-xs text-slate-500 mt-0.5">Search the catalog</p>
                         </div>
-                        <div class="ml-auto w-8 h-8 rounded-full flex items-center justify-center bg-white border border-slate-100 group-hover:border-indigo-200 group-hover:bg-indigo-50 transition-all">
-                            <i class="fas fa-chevron-right text-slate-400 text-xs group-hover:text-indigo-600"></i>
+                        <div class="ml-auto w-8 h-8 rounded-full flex items-center justify-center bg-white border border-slate-100 group-hover:border-indigo-200 group-hover:bg-brand-50 transition-all">
+                            <i class="fas fa-chevron-right text-slate-400 text-xs group-hover:text-brand-600"></i>
                         </div>
                     </a>
                     <a href="profile.php" class="flex items-center gap-4 p-3 hover:bg-pink-50/50 rounded-xl transition-all duration-300 border border-transparent hover:border-pink-100 group">
@@ -245,7 +245,7 @@ if ($hour < 12) {
                 </h2>
                 <p class="text-slate-500 text-sm mt-1">Fresh additions to our collection this week.</p>
             </div>
-            <a href="browse.php" class="group flex items-center gap-2 text-indigo-600 font-semibold text-sm hover:text-indigo-700">
+            <a href="browse.php" class="group flex items-center gap-2 text-brand-600 font-semibold text-sm hover:text-brand-700">
                 View All <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </a>
         </div>
@@ -256,11 +256,11 @@ if ($hour < 12) {
             if ($recent_books && $recent_books->num_rows > 0) {
                 while ($book = $recent_books->fetch_assoc()) {
                     $gradients = [
-                        'from-indigo-500 to-purple-600',
+                        'from-brand-500 to-purple-600',
                         'from-emerald-400 to-cyan-500',
                         'from-rose-400 to-red-500',
                         'from-amber-400 to-orange-500',
-                        'from-blue-500 to-indigo-600',
+                        'from-brand-500 to-brand-600',
                         'from-fuchsia-500 to-pink-600',
                         'from-teal-400 to-emerald-500',
                         'from-violet-500 to-fuchsia-500'
@@ -319,12 +319,12 @@ function renderRecentlyViewed() {
     }
 
     recentContainer.innerHTML = books.slice(0, 3).map((book) => `
-        <a href="browse.php?search=${encodeURIComponent(book.title || '')}" class="block p-4 rounded-[16px] border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-indigo-100 hover:shadow-md hover:shadow-indigo-100/50 transition-all duration-300 group">
+        <a href="browse.php?search=${encodeURIComponent(book.title || '')}" class="block p-4 rounded-[16px] border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-brand-100 hover:shadow-md hover:shadow-brand-100/50 transition-all duration-300 group">
             <div class="flex items-center justify-between mb-1">
-                <p class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">${escapeHtml(book.category || 'General')}</p>
-                <i class="fas fa-arrow-right text-slate-300 text-xs opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-indigo-500 transition-all"></i>
+                <p class="text-[10px] font-bold text-brand-600 uppercase tracking-widest">${escapeHtml(book.category || 'General')}</p>
+                <i class="fas fa-arrow-right text-slate-300 text-xs opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-brand-500 transition-all"></i>
             </div>
-            <p class="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-indigo-700 transition-colors">${escapeHtml(book.title || '')}</p>
+            <p class="text-sm font-bold text-slate-800 line-clamp-1 group-hover:text-brand-700 transition-colors">${escapeHtml(book.title || '')}</p>
             <p class="text-xs text-slate-500 mt-1">by <span class="text-slate-700 font-medium">${escapeHtml(book.author || 'Unknown')}</span></p>
         </a>
     `).join('');

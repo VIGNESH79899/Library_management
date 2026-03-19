@@ -20,23 +20,23 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-brand-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                <div class="w-9 h-9 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center text-white shadow-[0_0_20px_rgba(95,46,234,0.4)] border border-brand-400/20">
                     <i class="fas fa-book-open text-sm"></i>
                 </div>
                 <span class="font-bold text-xl tracking-tight text-slate-800">Aurora<span class="text-brand-600">Lib</span></span>
             </div>
 
             <div class="hidden md:flex items-center gap-2">
-                <a href="dashboard.php" class="nav-link-pill inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-lg <?= $current_page === 'dashboard.php' ? 'bg-brand-50 text-brand-600' : 'text-slate-600 hover:text-brand-600 hover:bg-brand-50/60' ?>">
+                <a href="dashboard.php" class="nav-link-pill inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-300 <?= $current_page === 'dashboard.php' ? 'text-white shadow-[0_4px_20px_-4px_rgba(95,46,234,0.4)] bg-gradient-to-r from-brand-500 to-brand-600 border border-brand-400/20' : 'text-slate-600 hover:text-brand-600 hover:bg-brand-50/80 hover:shadow-sm' ?>">
                     <i class="fas fa-gauge-high text-xs"></i> Dashboard
                 </a>
-                <a href="browse.php" class="nav-link-pill inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-lg <?= $current_page === 'browse.php' ? 'bg-brand-50 text-brand-600' : 'text-slate-600 hover:text-brand-600 hover:bg-brand-50/60' ?>">
+                <a href="browse.php" class="nav-link-pill inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-300 <?= $current_page === 'browse.php' ? 'text-white shadow-[0_4px_20px_-4px_rgba(95,46,234,0.4)] bg-gradient-to-r from-brand-500 to-brand-600 border border-brand-400/20' : 'text-slate-600 hover:text-brand-600 hover:bg-brand-50/80 hover:shadow-sm' ?>">
                     <i class="fas fa-book text-xs"></i> Browse Books
                 </a>
-                <a href="my_books.php" class="nav-link-pill inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-lg <?= $current_page === 'my_books.php' ? 'bg-brand-50 text-brand-600' : 'text-slate-600 hover:text-brand-600 hover:bg-brand-50/60' ?>">
+                <a href="my_books.php" class="nav-link-pill inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-300 <?= $current_page === 'my_books.php' ? 'text-white shadow-[0_4px_20px_-4px_rgba(95,46,234,0.4)] bg-gradient-to-r from-brand-500 to-brand-600 border border-brand-400/20' : 'text-slate-600 hover:text-brand-600 hover:bg-brand-50/80 hover:shadow-sm' ?>">
                     <i class="fas fa-book-reader text-xs"></i> My Borrowed Books
                 </a>
-                <a href="profile.php" class="nav-link-pill inline-flex items-center gap-2 text-sm font-semibold px-3.5 py-2 rounded-lg <?= $current_page === 'profile.php' ? 'bg-brand-50 text-brand-600' : 'text-slate-600 hover:text-brand-600 hover:bg-brand-50/60' ?>">
+                <a href="profile.php" class="nav-link-pill inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl transition-all duration-300 <?= $current_page === 'profile.php' ? 'text-white shadow-[0_4px_20px_-4px_rgba(95,46,234,0.4)] bg-gradient-to-r from-brand-500 to-brand-600 border border-brand-400/20' : 'text-slate-600 hover:text-brand-600 hover:bg-brand-50/80 hover:shadow-sm' ?>">
                     <i class="fas fa-user text-xs"></i> Profile
                 </a>
             </div>
@@ -90,17 +90,17 @@
 
     <div id="mobileNavDropdown" class="md:hidden bg-white border-t border-slate-100 shadow-lg hidden">
         <div class="px-2 pt-2 pb-3 space-y-1">
-            <a href="dashboard.php" class="flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium <?= $current_page === 'dashboard.php' ? 'text-brand-600 bg-brand-50' : 'text-slate-700 hover:bg-slate-50 hover:text-brand-600' ?>">
-                <i class="fas fa-gauge-high w-5 text-sm"></i> Dashboard
+            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300 <?= $current_page === 'dashboard.php' ? 'text-white bg-gradient-to-r from-brand-500 to-brand-600 shadow-md shadow-brand-500/20' : 'text-slate-700 hover:bg-brand-50 hover:text-brand-600' ?>">
+                <i class="fas fa-gauge-high w-5 text-center text-sm"></i> Dashboard
             </a>
-            <a href="browse.php" class="flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium <?= $current_page === 'browse.php' ? 'text-brand-600 bg-brand-50' : 'text-slate-700 hover:bg-slate-50 hover:text-brand-600' ?>">
-                <i class="fas fa-book w-5 text-sm"></i> Browse Books
+            <a href="browse.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300 <?= $current_page === 'browse.php' ? 'text-white bg-gradient-to-r from-brand-500 to-brand-600 shadow-md shadow-brand-500/20' : 'text-slate-700 hover:bg-brand-50 hover:text-brand-600' ?>">
+                <i class="fas fa-book w-5 text-center text-sm"></i> Browse Books
             </a>
-            <a href="my_books.php" class="flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium <?= $current_page === 'my_books.php' ? 'text-brand-600 bg-brand-50' : 'text-slate-700 hover:bg-slate-50 hover:text-brand-600' ?>">
-                <i class="fas fa-book-reader w-5 text-sm"></i> My Borrowed Books
+            <a href="my_books.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300 <?= $current_page === 'my_books.php' ? 'text-white bg-gradient-to-r from-brand-500 to-brand-600 shadow-md shadow-brand-500/20' : 'text-slate-700 hover:bg-brand-50 hover:text-brand-600' ?>">
+                <i class="fas fa-book-reader w-5 text-center text-sm"></i> My Borrowed Books
             </a>
-            <a href="profile.php" class="flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium <?= $current_page === 'profile.php' ? 'text-brand-600 bg-brand-50' : 'text-slate-700 hover:bg-slate-50 hover:text-brand-600' ?>">
-                <i class="fas fa-user w-5 text-sm"></i> Profile
+            <a href="profile.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300 <?= $current_page === 'profile.php' ? 'text-white bg-gradient-to-r from-brand-500 to-brand-600 shadow-md shadow-brand-500/20' : 'text-slate-700 hover:bg-brand-50 hover:text-brand-600' ?>">
+                <i class="fas fa-user w-5 text-center text-sm"></i> Profile
             </a>
             <button onclick="toggleTheme()" class="w-full flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600">
                 <i id="themeToggleIconMobile" class="fas fa-moon w-5 text-sm"></i> <span id="themeToggleLabelMobile">Dark Mode</span>

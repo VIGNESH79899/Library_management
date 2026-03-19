@@ -197,7 +197,7 @@ $result = $stmt->get_result();
                     <?php if ($is_late && $fine > 0): ?>
                     <a href="payment.php?issue_id=<?= $row['Issue_ID'] ?>"
                        class="w-full mt-2 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all active:scale-95
-                              bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white shadow-md hover:shadow-cyan-500/30 hover:-translate-y-0.5">
+                              bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white shadow-md hover:shadow-brand-500/30 hover:-translate-y-0.5">
                         <i class="fas fa-receipt"></i>
                         Pay Fine ₹<?= $fine ?>
                     </a>
@@ -312,7 +312,7 @@ function confirmReturn() {
                                     </div>
                                     <h3 class="text-lg font-bold text-slate-700">No active loans</h3>
                                     <p class="text-slate-500 mb-6">All books have been returned.</p>
-                                    <a href="browse.php" class="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline">
+                                    <a href="browse.php" class="inline-flex items-center gap-2 text-brand-600 font-bold hover:underline">
                                         Browse Collection <i class="fas fa-arrow-right"></i>
                                     </a>
                                 </div>`;

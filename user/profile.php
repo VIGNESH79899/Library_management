@@ -87,14 +87,14 @@ $data = $stmt->get_result()->fetch_assoc();
 
     <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-slate-200/50 border border-white/50 overflow-hidden">
         
-        <div class="relative bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-10 overflow-hidden">
+        <div class="relative bg-gradient-to-r from-brand-600 to-brand-800 px-8 py-10 overflow-hidden">
             <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
             <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl"></div>
             
             <div class="relative z-10 flex items-center justify-between">
                 <div>
                     <h1 class="text-3xl font-bold text-white tracking-tight">My Profile</h1>
-                    <p class="text-blue-100 mt-2">Manage your personal information and security settings</p>
+                    <p class="text-brand-100 mt-2">Manage your personal information and security settings</p>
                 </div>
                 <div class="hidden md:block">
                      <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-white text-2xl shadow-inner border border-white/30">
@@ -127,7 +127,7 @@ $data = $stmt->get_result()->fetch_assoc();
                 <!-- Personal Info Section -->
                 <section>
                     <h2 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <i class="fas fa-id-card text-blue-500"></i> Personal Information
+                        <i class="fas fa-id-card text-brand-500"></i> Personal Information
                     </h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -138,7 +138,7 @@ $data = $stmt->get_result()->fetch_assoc();
                                        value="<?= htmlspecialchars($data['Member_Name']) ?>"
                                        maxlength="80"
                                        placeholder="Your full name"
-                                       class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all pl-10"
+                                       class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all pl-10"
                                        required>
                                 <i class="fas fa-user absolute left-3.5 top-3.5 text-slate-400"></i>
                             </div>
@@ -154,14 +154,14 @@ $data = $stmt->get_result()->fetch_assoc();
                         <div class="group">
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Phone Number</label>
                             <div class="relative">
-                                <input type="text" name="phone" value="<?= $data['Phone_Number'] ?>" required class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all pl-10">
+                                <input type="text" name="phone" value="<?= $data['Phone_Number'] ?>" required class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all pl-10">
                                 <i class="fas fa-phone absolute left-3.5 top-3.5 text-slate-400"></i>
                             </div>
                         </div>
                         <div class="group md:col-span-2">
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Address</label>
                             <div class="relative">
-                                <textarea name="address" rows="2" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all pl-10 resize-none"><?= $data['Address'] ?></textarea>
+                                <textarea name="address" rows="2" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all pl-10 resize-none"><?= $data['Address'] ?></textarea>
                                 <i class="fas fa-map-marker-alt absolute left-3.5 top-3.5 text-slate-400"></i>
                             </div>
                         </div>
@@ -173,20 +173,20 @@ $data = $stmt->get_result()->fetch_assoc();
                 <!-- Security Section -->
                 <section>
                     <h2 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <i class="fas fa-lock text-blue-500"></i> Security
+                        <i class="fas fa-lock text-brand-500"></i> Security
                     </h2>
 
                     <div class="bg-slate-50/50 rounded-2xl p-6 border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div class="md:col-span-2">
-                             <p class="text-sm text-slate-500 mb-4 bg-blue-50 p-3 rounded-lg border border-blue-100 inline-block">
-                                <i class="fas fa-info-circle mr-2 text-blue-500"></i> Only fill these fields if you want to change your password.
+                             <p class="text-sm text-slate-500 mb-4 bg-brand-50 p-3 rounded-lg border border-brand-100 inline-block">
+                                <i class="fas fa-info-circle mr-2 text-brand-500"></i> Only fill these fields if you want to change your password.
                              </p>
                          </div>
 
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Current Password</label>
                             <div class="relative">
-                                <input type="password" name="current_password" placeholder="••••••••" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all pl-10">
+                                <input type="password" name="current_password" placeholder="••••••••" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all pl-10">
                                 <i class="fas fa-key absolute left-3.5 top-3.5 text-slate-400"></i>
                             </div>
                         </div>
@@ -195,14 +195,14 @@ $data = $stmt->get_result()->fetch_assoc();
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">New Password</label>
                                 <div class="relative">
-                                    <input type="password" name="new_password" placeholder="••••••••" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all pl-10">
+                                    <input type="password" name="new_password" placeholder="••••••••" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all pl-10">
                                     <i class="fas fa-lock absolute left-3.5 top-3.5 text-slate-400"></i>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Confirm New Password</label>
                                 <div class="relative">
-                                    <input type="password" name="confirm_password" placeholder="••••••••" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all pl-10">
+                                    <input type="password" name="confirm_password" placeholder="••••••••" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all pl-10">
                                     <i class="fas fa-check-circle absolute left-3.5 top-3.5 text-slate-400"></i>
                                 </div>
                             </div>
@@ -211,7 +211,7 @@ $data = $stmt->get_result()->fetch_assoc();
                 </section>
 
                 <div class="pt-4 flex flex-col sm:flex-row gap-4">
-                    <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-500/30 transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2">
+                    <button type="submit" class="flex-1 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-500/30 transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2">
                         <i class="fas fa-save"></i> Save Changes
                     </button>
                     <a href="dashboard.php" class="sm:w-32 block text-center py-3.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition-colors">Cancel</a>
