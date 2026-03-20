@@ -89,9 +89,15 @@ if ($hour < 12) {
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in-up">
     <!-- Hero Section -->
-    <div class="relative bg-gradient-to-br from-[#5f2eea] via-[#7a2ce8] to-[#9d2be0] rounded-[32px] p-8 sm:p-10 lg:p-12 mb-10 overflow-hidden shadow-[0_12px_40px_-10px_rgba(95,46,234,0.5)] transition-all duration-500 hover:shadow-[0_16px_50px_-10px_rgba(95,46,234,0.6)]">
-        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-300/20 rounded-full blur-[60px] translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
+    <div class="relative rounded-[32px] p-8 sm:p-10 lg:p-12 mb-10 overflow-hidden shadow-[0_12px_40px_-10px_rgba(95,46,234,0.5)] transition-all duration-500 hover:shadow-[0_16px_50px_-10px_rgba(95,46,234,0.6)] group">
+        <!-- Background Image -->
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-105" style="background-image: url('../assets/images/library_books_bg.png'); filter: blur(2px) brightness(0.7);"></div>
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-[#5f2eea]/90 via-[#7a2ce8]/85 to-[#9d2be0]/90 blend-multiply"></div>
+        
+        <!-- Decorative Glow Elements -->
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-white/15 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-300/25 rounded-full blur-[60px] translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
         <div class="absolute top-1/2 right-1/4 w-32 h-32 bg-purple-300/30 rounded-full blur-[40px] -translate-y-1/2 pointer-events-none"></div>
 
         <div class="relative z-10 flex flex-col lg:flex-row gap-8 lg:items-center lg:justify-between">
