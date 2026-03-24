@@ -45,11 +45,39 @@ $gradients = [
 
 <style>
 .book-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    animation: idleFloat 6s ease-in-out infinite;
 }
-.book-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+@keyframes idleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+@keyframes particleFloat {
+    0% { transform: translateY(100%) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100%) scale(1); opacity: 0; }
+}
+@keyframes rippleAnim {
+    0% { transform: scale(0); opacity: 0.8; }
+    100% { transform: scale(4); opacity: 0; }
+}
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+}
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: rippleAnim 0.6s ease-out;
+    background: rgba(95, 46, 234, 0.25);
+    z-index: 50;
+    transform: scale(0);
 }
 .borrow-btn {
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
@@ -464,6 +492,91 @@ function showToast(msg) {
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Floating Card 3D, Particles, and Ripple Logic
+document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.book-card');
+    
+    cards.forEach(card => {
+        // Particle Container
+        const pContainer = document.createElement('div');
+        pContainer.className = 'absolute inset-0 overflow-hidden rounded-[2rem] pointer-events-none z-0';
+        card.insertBefore(pContainer, card.firstChild);
+        
+        let particleInterval;
+        let isHovered = false;
+
+        card.addEventListener('mousemove', (e) => {
+            isHovered = true;
+            card.style.animation = 'none'; // Stop idle float
+            
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            const rotateX = (y / rect.height) * -20;
+            const rotateY = (x / rect.width) * 20;
+
+            card.style.transform = `perspective(1000px) translateY(-5px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            card.style.zIndex = '50';
+        });
+
+        card.addEventListener('mouseleave', () => {
+            isHovered = false;
+            card.style.transform = 'perspective(1000px) translateY(0) rotateX(0deg) rotateY(0deg) scale(1)';
+            card.style.zIndex = '1';
+            
+            setTimeout(() => {
+                if (!isHovered) card.style.animation = 'idleFloat 6s ease-in-out infinite';
+            }, 300);
+            
+            if (particleInterval) clearInterval(particleInterval);
+        });
+        
+        card.addEventListener('mouseenter', () => {
+            if (particleInterval) clearInterval(particleInterval);
+            particleInterval = setInterval(() => {
+                if (!isHovered) {
+                    clearInterval(particleInterval);
+                    return;
+                }
+                const particle = document.createElement('div');
+                particle.className = Math.random() > 0.5 ? 'particle bg-white/60 dark:bg-slate-800/40' : 'particle bg-brand-400/50';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}%`;
+                
+                const duration = Math.random() * 3 + 2;
+                particle.style.opacity = Math.random() * 0.5 + 0.2;
+                particle.style.animation = `particleFloat ${duration}s linear forwards`;
+                
+                pContainer.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) particle.remove();
+                }, duration * 1000);
+            }, 300);
+        });
+
+        card.addEventListener('mousedown', (e) => {
+            // Ripple implementation
+            const rect = card.getBoundingClientRect();
+            const size = 160; // Big ripple
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.width = size + 'px';
+            ripple.style.height = size + 'px';
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            
+            card.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+});
 </script>
 
 </body>
