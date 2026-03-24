@@ -175,45 +175,50 @@ $gradients = [
             <?php if ($popular_books && $popular_books->num_rows > 0): ?>
                 <?php while ($popular = $popular_books->fetch_assoc()): ?>
                     <?php
+                        $gradient = $gradients[$popular['Book_ID'] % count($gradients)];
                         $is_available = strtolower((string) $popular['Status']) === 'available' && (int) $popular['Available_Quantity'] > 0;
-                        $isbn = $popular['ISBN'] ?? '';
-                        $cover_url = $isbn ? "https://covers.openlibrary.org/b/isbn/" . urlencode($isbn) . "-L.jpg?default=false" : "https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&q=80";
-                        $fallback_url = "https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&q=80";
+                        $hue_deg = ($popular['Book_ID'] * 47) % 360;
+                        $book_3d_url = "https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Orange%20book/3D/orange_book_3d.png";
                     ?>
-                    <div class="book-card rounded-2xl p-5 text-white relative overflow-hidden flex flex-col min-h-[250px] cursor-pointer group"
+                    <div class="book-card bg-white rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col min-h-[360px] cursor-pointer group border border-slate-100/50"
                          onclick='trackViewedBook(<?= (int) $popular['Book_ID'] ?>, <?= json_encode($popular['Title']) ?>, <?= json_encode($popular['Author']) ?>, <?= json_encode($popular['Category_Name'] ?? 'General') ?>)'>
                         
-                        <img src="<?= $cover_url ?>" 
-                             onerror="this.onerror=null; this.src='<?= $fallback_url ?>';" 
-                             alt="<?= htmlspecialchars($popular['Title']) ?> cover"
-                             class="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-500 group-hover:scale-110">
-                        
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-slate-900/40 z-0"></div>
-                        <div class="relative z-10 flex items-start justify-between gap-3 mb-4">
-                            <span class="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full border border-white/20">
-                                <?= htmlspecialchars($popular['Category_Name'] ?? 'General') ?>
-                            </span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full <?= $is_available ? 'bg-emerald-500/90' : 'bg-red-500/90' ?>">
-                                <?= $is_available ? 'Available' : 'Unavailable' ?>
-                            </span>
+                        <!-- Top Image Area -->
+                        <div class="relative w-full h-52 bg-slate-50 flex items-center justify-center overflow-hidden">
+                            <!-- Soft Gradient Glow -->
+                            <div class="absolute w-40 h-40 bg-gradient-to-br <?= $gradient ?> rounded-full blur-[40px] opacity-40 transition-transform duration-700 group-hover:scale-150"></div>
+                            
+                            <!-- 3D Book Cover -->
+                            <img src="<?= $book_3d_url ?>" 
+                                 style="filter: hue-rotate(<?= $hue_deg ?>deg) saturate(1.1) brightness(1.05); drop-shadow: 0 20px 30px rgba(0,0,0,0.15);" 
+                                 alt="3D Book"
+                                 class="w-36 h-36 object-contain relative z-10 transition-transform duration-500 group-hover:scale-125 group-hover:-rotate-6 group-hover:-translate-y-2">
+                                 
+                            <!-- Top Info Badges -->
+                            <div class="absolute top-4 left-4 right-4 flex items-start justify-between z-20">
+                                <span class="text-[10px] font-bold uppercase tracking-wider bg-white/80 backdrop-blur-md text-slate-700 px-3 py-1.5 rounded-full shadow-sm border border-white">
+                                    <?= htmlspecialchars($popular['Category_Name'] ?? 'General') ?>
+                                </span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full text-white shadow-sm <?= $is_available ? 'bg-emerald-500/95' : 'bg-rose-500/95' ?>">
+                                    <?= $is_available ? 'Available' : 'Unavailable' ?>
+                                </span>
+                            </div>
                         </div>
 
-                        <h3 class="relative z-10 text-xl font-extrabold leading-tight mb-2 line-clamp-2"><?= htmlspecialchars($popular['Title']) ?></h3>
-                        <p class="relative z-10 text-sm text-white/90 mb-2">by <?= htmlspecialchars($popular['Author']) ?></p>
-                        <p class="relative z-10 text-xs text-white/80 mb-5">Borrowed <?= (int) $popular['borrow_count'] ?> times</p>
+                        <!-- Content Area -->
+                        <div class="p-6 flex flex-col flex-1 relative z-20 bg-white">
+                            <h3 class="text-lg font-extrabold text-slate-800 leading-snug mb-1.5 line-clamp-2 group-hover:text-brand-600 transition-colors"><?= htmlspecialchars($popular['Title']) ?></h3>
+                            <p class="text-sm font-medium text-slate-500 mb-4">by <?= htmlspecialchars($popular['Author']) ?></p>
+                            
+                            <p class="text-xs font-semibold text-brand-500 mb-5 bg-brand-50 inline-block px-3 py-1.5 rounded-lg w-fit">
+                                <i class="fas fa-fire-alt mr-1"></i> Borrowed <?= (int) $popular['borrow_count'] ?> times
+                            </p>
 
-                        <div class="mt-auto relative z-10">
-                            <!-- TEMPORARILY DISABLED: Student self-borrowing 
-                            <button
-                                <?= $is_available ? '' : 'disabled' ?>
-                                onclick='event.stopPropagation(); trackViewedBook(<?= (int) $popular['Book_ID'] ?>, <?= json_encode($popular['Title']) ?>, <?= json_encode($popular['Author']) ?>, <?= json_encode($popular['Category_Name'] ?? 'General') ?>); <?= $is_available ? "openBorrowModal(" . (int) $popular['Book_ID'] . ", " . json_encode($popular['Title']) . ")" : "" ?>'
-                                class="borrow-btn w-full text-center py-3 rounded-xl font-bold <?= $is_available ? 'bg-white text-[#5f2eea] hover:bg-white/95 shadow-lg shadow-black/15' : 'bg-white/30 text-white/80 cursor-not-allowed' ?>">
-                                <?= $is_available ? 'Borrow Book' : 'Unavailable' ?>
-                            </button>
-                            -->
-                            <button class="borrow-btn-disabled w-full text-center py-3 rounded-xl font-bold bg-slate-200 text-slate-500 cursor-not-allowed" disabled>
-                                Borrow via Librarian
-                            </button>
+                            <div class="mt-auto">
+                                <button class="borrow-btn-disabled w-full text-center py-3.5 rounded-xl font-bold bg-slate-100 text-slate-400 cursor-not-allowed border-2 border-slate-50" disabled>
+                                    <i class="fas fa-lock mr-2"></i> Borrow via Librarian
+                                </button>
+                            </div>
                         </div>
                     </div>
                 <?php endwhile; ?>
@@ -237,46 +242,55 @@ $gradients = [
             <?php if ($books && $books->num_rows > 0): ?>
                 <?php while ($book = $books->fetch_assoc()): ?>
                     <?php 
-                        $isbn = $book['ISBN'] ?? '';
-                        $cover_url = $isbn ? "https://covers.openlibrary.org/b/isbn/" . urlencode($isbn) . "-L.jpg?default=false" : "https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&q=80";
-                        $fallback_url = "https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&q=80";
+                        $gradient = $gradients[$book['Book_ID'] % count($gradients)];
+                        $hue_deg = ($book['Book_ID'] * 47) % 360;
+                        $book_3d_url = "https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Orange%20book/3D/orange_book_3d.png";
                     ?>
-                    <div class="book-card rounded-2xl p-5 text-white relative overflow-hidden flex flex-col min-h-[250px] cursor-pointer group"
+                    <div class="book-card bg-white rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col min-h-[360px] cursor-pointer group border border-slate-100/50"
                          data-book-id="<?= (int) $book['Book_ID'] ?>"
                          onclick='trackViewedBook(<?= (int) $book['Book_ID'] ?>, <?= json_encode($book['Title']) ?>, <?= json_encode($book['Author']) ?>, <?= json_encode($book['Category_Name'] ?? 'General') ?>)'>
                         
-                        <img src="<?= $cover_url ?>" 
-                             onerror="this.onerror=null; this.src='<?= $fallback_url ?>';" 
-                             alt="<?= htmlspecialchars($book['Title']) ?> cover"
-                             class="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-500 group-hover:scale-110">
-                        
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-slate-900/40 z-0"></div>
-
-                        <div class="relative z-10 flex items-start justify-between gap-2 mb-4">
-                            <span class="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full border border-white/20 truncate max-w-[58%]">
-                                <?= htmlspecialchars($book['Category_Name'] ?? 'General') ?>
-                            </span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-500/90">
-                                Available (<?= (int) $book['Available_Quantity'] ?>)
-                            </span>
+                        <!-- Top Image Area -->
+                        <div class="relative w-full h-52 bg-slate-50 flex items-center justify-center overflow-hidden">
+                            <!-- Soft Gradient Glow -->
+                            <div class="absolute w-40 h-40 bg-gradient-to-br <?= $gradient ?> rounded-full blur-[40px] opacity-40 transition-transform duration-700 group-hover:scale-150"></div>
+                            
+                            <!-- 3D Book Cover -->
+                            <img src="<?= $book_3d_url ?>" 
+                                 style="filter: hue-rotate(<?= $hue_deg ?>deg) saturate(1.1) brightness(1.05); drop-shadow: 0 20px 30px rgba(0,0,0,0.15);" 
+                                 alt="3D Book"
+                                 class="w-36 h-36 object-contain relative z-10 transition-transform duration-500 group-hover:scale-125 group-hover:-rotate-6 group-hover:-translate-y-2">
+                                 
+                            <!-- Top Info Badges -->
+                            <div class="absolute top-4 left-4 right-4 flex items-start justify-between z-20">
+                                <span class="text-[10px] font-bold uppercase tracking-wider bg-white/80 backdrop-blur-md text-slate-700 px-3 py-1.5 rounded-full shadow-sm border border-white max-w-[58%] truncate">
+                                    <?= htmlspecialchars($book['Category_Name'] ?? 'General') ?>
+                                </span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-emerald-500/95 text-white shadow-sm flex-shrink-0">
+                                    Available (<?= (int) $book['Available_Quantity'] ?>)
+                                </span>
+                            </div>
                         </div>
 
-                        <h3 class="relative z-10 text-lg font-extrabold leading-tight mb-2 line-clamp-2" title="<?= htmlspecialchars($book['Title']) ?>">
-                            <?= htmlspecialchars($book['Title']) ?>
-                        </h3>
-                        <p class="relative z-10 text-sm text-white/90 mb-6">by <?= htmlspecialchars($book['Author']) ?></p>
+                        <!-- Content Area -->
+                        <div class="p-6 flex flex-col flex-1 relative z-20 bg-white">
+                            <h3 class="text-lg font-extrabold text-slate-800 leading-snug mb-1.5 line-clamp-2 group-hover:text-brand-600 transition-colors" title="<?= htmlspecialchars($book['Title']) ?>">
+                                <?= htmlspecialchars($book['Title']) ?>
+                            </h3>
+                            <p class="text-sm font-medium text-slate-500 mb-5">by <?= htmlspecialchars($book['Author']) ?></p>
 
-                        <div class="mt-auto relative z-10">
-                            <!-- TEMPORARILY DISABLED: Student self-borrowing
-                            <button
-                                onclick='event.stopPropagation(); trackViewedBook(<?= (int) $book['Book_ID'] ?>, <?= json_encode($book['Title']) ?>, <?= json_encode($book['Author']) ?>, <?= json_encode($book['Category_Name'] ?? 'General') ?>); openBorrowModal(<?= (int) $book['Book_ID'] ?>, <?= json_encode($book['Title']) ?>)'
-                                class="borrow-btn w-full text-center bg-white text-[#5f2eea] font-bold py-3 rounded-xl shadow-lg shadow-black/15 hover:bg-white/95">
-                                Borrow Book
-                            </button>
-                            -->
-                            <button class="borrow-btn-disabled w-full text-center py-3 rounded-xl font-bold bg-slate-200 text-slate-500 cursor-not-allowed" disabled>
-                                Borrow via Librarian
-                            </button>
+                            <div class="mt-auto">
+                                <!-- TEMPORARILY DISABLED: Student self-borrowing
+                                <button
+                                    onclick='event.stopPropagation(); trackViewedBook(<?= (int) $book['Book_ID'] ?>, <?= json_encode($book['Title']) ?>, <?= json_encode($book['Author']) ?>, <?= json_encode($book['Category_Name'] ?? 'General') ?>); openBorrowModal(<?= (int) $book['Book_ID'] ?>, <?= json_encode($book['Title']) ?>)'
+                                    class="borrow-btn w-full text-center bg-brand-600 hover:bg-brand-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-500/30">
+                                    <i class="fas fa-book-reader mr-2"></i> Borrow Book
+                                </button>
+                                -->
+                                <button class="borrow-btn-disabled w-full text-center py-3.5 rounded-xl font-bold bg-slate-100 text-slate-400 cursor-not-allowed border-2 border-slate-50" disabled>
+                                    <i class="fas fa-lock mr-2"></i> Borrow via Librarian
+                                </button>
+                            </div>
                         </div>
                     </div>
                 <?php endwhile; ?>
