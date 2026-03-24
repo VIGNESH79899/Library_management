@@ -19,6 +19,38 @@ $path_to_profile = $base_url . "/profile/index.php";
 $path_to_logout = $base_url . "/auth/logout.php";
 $path_to_settings = "#"; // Placeholder
 ?>
+
+<!-- Global Loader -->
+<div id="global-loader" class="fixed inset-0 z-[9999] bg-white/80 backdrop-blur-3xl flex items-center justify-center transition-all duration-500 opacity-100 visible">
+    <div class="relative flex flex-col items-center justify-center">
+        <!-- Glowing Orb -->
+        <div class="absolute inset-0 bg-indigo-500 rounded-full blur-[70px] opacity-20 animate-pulse"></div>
+        <!-- 3D Book Icon -->
+        <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Orange%20book/3D/orange_book_3d.png" 
+             style="filter: hue-rotate(240deg);"
+             alt="Loading..." class="w-24 h-24 object-contain drop-shadow-2xl animate-bounce relative z-10">
+        <!-- Brand Name -->
+        <h2 class="mt-4 text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight animate-pulse relative z-10">
+            AuroraLib
+        </h2>
+    </div>
+</div>
+
+<script>
+    function hideLoader() {
+        const loader = document.getElementById('global-loader');
+        if (loader && loader.style.opacity !== '0') {
+            loader.style.opacity = '0';
+            loader.style.visibility = 'hidden';
+            setTimeout(() => loader.remove(), 500);
+        }
+    }
+    // Attempt graceful hide when DOM and assets load
+    window.addEventListener('load', hideLoader);
+    // Failsafe timeout to force very fast experience
+    setTimeout(hideLoader, 800);
+</script>
+
 <div class="sticky top-0 z-40 flex items-center justify-between px-6 md:px-10 py-4 md:py-5 bg-white/80 backdrop-blur-2xl border-b border-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300">
     <div class="flex items-center gap-4 md:gap-6">
         <!-- Mobile Menu Toggle -->

@@ -16,6 +16,37 @@
 }
 </style>
 
+<!-- Global Loader -->
+<div id="global-loader" class="fixed inset-0 z-[9999] bg-white/80 dark:bg-[#0b1220]/80 backdrop-blur-3xl flex items-center justify-center transition-all duration-500 opacity-100 visible">
+    <div class="relative flex flex-col items-center justify-center">
+        <!-- Glowing Orb -->
+        <div class="absolute inset-0 bg-brand-500 rounded-full blur-[70px] opacity-20 animate-pulse"></div>
+        <!-- 3D Book Icon -->
+        <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Orange%20book/3D/orange_book_3d.png" 
+             style="filter: hue-rotate(240deg);"
+             alt="Loading..." class="w-24 h-24 object-contain drop-shadow-2xl animate-bounce relative z-10">
+        <!-- Brand Name -->
+        <h2 class="mt-4 text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 tracking-tight animate-pulse relative z-10">
+            AuroraLib
+        </h2>
+    </div>
+</div>
+
+<script>
+    function hideLoader() {
+        const loader = document.getElementById('global-loader');
+        if (loader && loader.style.opacity !== '0') {
+            loader.style.opacity = '0';
+            loader.style.visibility = 'hidden';
+            setTimeout(() => loader.remove(), 500);
+        }
+    }
+    // Attempt graceful hide when DOM and assets load
+    window.addEventListener('load', hideLoader);
+    // Failsafe timeout to force very fast experience
+    setTimeout(hideLoader, 800);
+</script>
+
 <nav class="fixed top-0 left-0 right-0 z-50 glass-nav shadow-sm border-b border-slate-100/70">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
