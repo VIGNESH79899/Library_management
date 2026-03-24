@@ -22,11 +22,11 @@ $categories_sql = "SELECT * FROM category ORDER BY Category_Name";
 $categories_result = $conn->query($categories_sql);
 
 $popular_sql = "
-    SELECT B.Book_ID, B.Title, B.Author, B.Status, B.Available_Quantity, C.Category_Name, COUNT(I.Issue_ID) AS borrow_count
+    SELECT B.Book_ID, B.Title, B.Author, B.Status, B.Available_Quantity, C.Category_Name, B.ISBN, COUNT(I.Issue_ID) AS borrow_count
     FROM book B
     LEFT JOIN category C ON B.Category_ID = C.Category_ID
     LEFT JOIN issue I ON I.Book_ID = B.Book_ID
-    GROUP BY B.Book_ID, B.Title, B.Author, B.Status, B.Available_Quantity, C.Category_Name
+    GROUP BY B.Book_ID, B.Title, B.Author, B.Status, B.Available_Quantity, C.Category_Name, B.ISBN
     ORDER BY borrow_count DESC, B.Book_ID DESC
     LIMIT 6";
 $popular_books = $conn->query($popular_sql);
@@ -175,12 +175,20 @@ $gradients = [
             <?php if ($popular_books && $popular_books->num_rows > 0): ?>
                 <?php while ($popular = $popular_books->fetch_assoc()): ?>
                     <?php
-                        $gradient = $gradients[$popular['Book_ID'] % count($gradients)];
                         $is_available = strtolower((string) $popular['Status']) === 'available' && (int) $popular['Available_Quantity'] > 0;
+                        $isbn = $popular['ISBN'] ?? '';
+                        $cover_url = $isbn ? "https://covers.openlibrary.org/b/isbn/" . urlencode($isbn) . "-L.jpg?default=false" : "https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&q=80";
+                        $fallback_url = "https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&q=80";
                     ?>
-                    <div class="book-card rounded-2xl p-5 bg-gradient-to-br <?= $gradient ?> text-white relative overflow-hidden flex flex-col min-h-[250px] cursor-pointer"
+                    <div class="book-card rounded-2xl p-5 text-white relative overflow-hidden flex flex-col min-h-[250px] cursor-pointer group"
                          onclick='trackViewedBook(<?= (int) $popular['Book_ID'] ?>, <?= json_encode($popular['Title']) ?>, <?= json_encode($popular['Author']) ?>, <?= json_encode($popular['Category_Name'] ?? 'General') ?>)'>
-                        <div class="absolute inset-0 bg-black/25"></div>
+                        
+                        <img src="<?= $cover_url ?>" 
+                             onerror="this.onerror=null; this.src='<?= $fallback_url ?>';" 
+                             alt="<?= htmlspecialchars($popular['Title']) ?> cover"
+                             class="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-500 group-hover:scale-110">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-slate-900/40 z-0"></div>
                         <div class="relative z-10 flex items-start justify-between gap-3 mb-4">
                             <span class="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full border border-white/20">
                                 <?= htmlspecialchars($popular['Category_Name'] ?? 'General') ?>
@@ -228,11 +236,21 @@ $gradients = [
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <?php if ($books && $books->num_rows > 0): ?>
                 <?php while ($book = $books->fetch_assoc()): ?>
-                    <?php $gradient = $gradients[$book['Book_ID'] % count($gradients)]; ?>
-                    <div class="book-card rounded-2xl p-5 bg-gradient-to-br <?= $gradient ?> text-white relative overflow-hidden flex flex-col min-h-[250px] cursor-pointer"
+                    <?php 
+                        $isbn = $book['ISBN'] ?? '';
+                        $cover_url = $isbn ? "https://covers.openlibrary.org/b/isbn/" . urlencode($isbn) . "-L.jpg?default=false" : "https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&q=80";
+                        $fallback_url = "https://images.unsplash.com/photo-1495640388908-05fa85288e61?auto=format&fit=crop&w=400&q=80";
+                    ?>
+                    <div class="book-card rounded-2xl p-5 text-white relative overflow-hidden flex flex-col min-h-[250px] cursor-pointer group"
                          data-book-id="<?= (int) $book['Book_ID'] ?>"
                          onclick='trackViewedBook(<?= (int) $book['Book_ID'] ?>, <?= json_encode($book['Title']) ?>, <?= json_encode($book['Author']) ?>, <?= json_encode($book['Category_Name'] ?? 'General') ?>)'>
-                        <div class="absolute inset-0 bg-black/25"></div>
+                        
+                        <img src="<?= $cover_url ?>" 
+                             onerror="this.onerror=null; this.src='<?= $fallback_url ?>';" 
+                             alt="<?= htmlspecialchars($book['Title']) ?> cover"
+                             class="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-500 group-hover:scale-110">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-slate-900/40 z-0"></div>
 
                         <div class="relative z-10 flex items-start justify-between gap-2 mb-4">
                             <span class="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full border border-white/20 truncate max-w-[58%]">
