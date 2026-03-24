@@ -188,11 +188,20 @@ $gradients = [
                             <!-- Soft Gradient Glow -->
                             <div class="absolute w-40 h-40 bg-gradient-to-br <?= $gradient ?> rounded-full blur-[40px] opacity-40 transition-transform duration-700 group-hover:scale-150"></div>
                             
-                            <!-- 3D Book Cover -->
-                            <img src="<?= $book_3d_url ?>" 
-                                 style="filter: hue-rotate(<?= $hue_deg ?>deg) saturate(1.1) brightness(1.05); drop-shadow: 0 20px 30px rgba(0,0,0,0.15);" 
-                                 alt="3D Book"
-                                 class="w-36 h-36 object-contain relative z-10 transition-transform duration-500 group-hover:scale-125 group-hover:-rotate-6 group-hover:-translate-y-2">
+                            <!-- 3D Book Covers (Closed and Open on Hover) -->
+                            <div class="relative w-40 h-40 z-10 flex items-center justify-center transition-transform duration-500 group-hover:-translate-y-2">
+                                <!-- Closed Book -->
+                                <img src="<?= $book_3d_url ?>" 
+                                     style="filter: hue-rotate(<?= $hue_deg ?>deg) saturate(1.1) brightness(1.05); drop-shadow: 0 15px 25px rgba(0,0,0,0.2);" 
+                                     alt="3D Closed Book"
+                                     class="absolute w-32 h-32 object-contain transition-all duration-500 transform group-hover:opacity-0 group-hover:scale-90 group-hover:-rotate-12 group-hover:translate-y-4">
+                                     
+                                <!-- Open Book -->
+                                <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Open%20book/3D/open_book_3d.png" 
+                                     style="filter: hue-rotate(<?= ($hue_deg - 180) ?>deg) saturate(1.2) brightness(1.05); drop-shadow: 0 25px 35px rgba(0,0,0,0.25);" 
+                                     alt="3D Open Book"
+                                     class="absolute w-40 h-40 object-contain opacity-0 transition-all duration-500 transform scale-75 rotate-12 translate-y-4 group-hover:opacity-100 group-hover:scale-110 group-hover:rotate-0 group-hover:translate-y-0">
+                            </div>
                                  
                             <!-- Top Info Badges -->
                             <div class="absolute top-4 left-4 right-4 flex items-start justify-between z-20">
@@ -255,11 +264,20 @@ $gradients = [
                             <!-- Soft Gradient Glow -->
                             <div class="absolute w-40 h-40 bg-gradient-to-br <?= $gradient ?> rounded-full blur-[40px] opacity-40 transition-transform duration-700 group-hover:scale-150"></div>
                             
-                            <!-- 3D Book Cover -->
-                            <img src="<?= $book_3d_url ?>" 
-                                 style="filter: hue-rotate(<?= $hue_deg ?>deg) saturate(1.1) brightness(1.05); drop-shadow: 0 20px 30px rgba(0,0,0,0.15);" 
-                                 alt="3D Book"
-                                 class="w-36 h-36 object-contain relative z-10 transition-transform duration-500 group-hover:scale-125 group-hover:-rotate-6 group-hover:-translate-y-2">
+                            <!-- 3D Book Covers (Closed and Open on Hover) -->
+                            <div class="relative w-40 h-40 z-10 flex items-center justify-center transition-transform duration-500 group-hover:-translate-y-2">
+                                <!-- Closed Book -->
+                                <img src="<?= $book_3d_url ?>" 
+                                     style="filter: hue-rotate(<?= $hue_deg ?>deg) saturate(1.1) brightness(1.05); drop-shadow: 0 15px 25px rgba(0,0,0,0.2);" 
+                                     alt="3D Closed Book"
+                                     class="absolute w-32 h-32 object-contain transition-all duration-500 transform group-hover:opacity-0 group-hover:scale-90 group-hover:-rotate-12 group-hover:translate-y-4">
+                                     
+                                <!-- Open Book -->
+                                <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Open%20book/3D/open_book_3d.png" 
+                                     style="filter: hue-rotate(<?= ($hue_deg - 180) ?>deg) saturate(1.2) brightness(1.05); drop-shadow: 0 25px 35px rgba(0,0,0,0.25);" 
+                                     alt="3D Open Book"
+                                     class="absolute w-40 h-40 object-contain opacity-0 transition-all duration-500 transform scale-75 rotate-12 translate-y-4 group-hover:opacity-100 group-hover:scale-110 group-hover:rotate-0 group-hover:translate-y-0">
+                            </div>
                                  
                             <!-- Top Info Badges -->
                             <div class="absolute top-4 left-4 right-4 flex items-start justify-between z-20">
