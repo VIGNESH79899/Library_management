@@ -39,6 +39,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conn->query("UPDATE book SET Status='Unavailable' WHERE Book_ID=$book_id AND Available_Quantity <= 0");
             $conn->commit();
             $message = "Book issued successfully! Due date set to " . date('M d, Y', strtotime($due_date)) . ".";
+
+            // ----- Email Notification Logic -----
+            try {
+                require_once __DIR__ . '/../emails/send_borrow_email.php';
+                
+                $memStmt = $conn->prepare('SELECT Member_Name, Email FROM member WHERE Member_ID = ? LIMIT 1');
+                $memStmt->bind_param('i', $member_id);
+                $memStmt->execute();
+                $memRow = $memStmt->get_result()->fetch_assoc();
+                $memStmt->close();
+                
+                $bkStmt = $conn->prepare('SELECT Title FROM book WHERE Book_ID = ? LIMIT 1');
+                $bkStmt->bind_param('i', $book_id);
+                $bkStmt->execute();
+                $bkRow = $bkStmt->get_result()->fetch_assoc();
+                $bkStmt->close();
+                
+                if ($memRow && !empty($memRow['Email']) && $bkRow) {
+                    $emailResult = sendBorrowEmail(
+                        $conn,
+                        $member_id,
+                        $memRow['Member_Name'],
+                        $memRow['Email'],
+                        $bkRow['Title'],
+                        date('M d, Y', strtotime($due_date)),
+                        date('M d, Y', strtotime($issue_date)),
+                        'ARI-' . sprintf('%04d', $member_id)
+                    );
+                    
+                    if (!$emailResult['success']) {
+                        $message .= " (Email notification could not be sent.)";
+                    }
+                }
+            } catch (Throwable $emailEx) {
+                error_log('[issueBook] Unexpected email error: ' . $emailEx->getMessage());
+            }
+            // ------------------------------------
         } catch (Exception $e) {
             $conn->rollback();
             $error = "Failed to issue book. " . $e->getMessage();
