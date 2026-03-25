@@ -153,7 +153,7 @@ while ($row = $result->fetch_assoc()) {
     $days_left    = 2;
     $contact_email = $mailCfg->contactEmail;
 
-    $subject = "⏰ Return Reminder: \"{$book_title}\" due in 2 days | Antigravity Library";
+    $subject = "⏰ Return Reminder: \"{$book_title}\" due in 2 days | Aurora Library";
 
     cronLog('info', "Processing Issue #{$issue_id} — {$member_name} <{$member_email}> — \"{$book_title}\"");
 
@@ -169,7 +169,7 @@ while ($row = $result->fetch_assoc()) {
         "Due Date : {$due_date}\n" .
         "Member ID: {$member_id_str}\n\n" .
         "Please return the book before the due date to avoid late fines (₹10/day).\n\n" .
-        "— Antigravity Library\n" . $mailCfg->contactEmail;
+        "— Aurora Library\n" . $mailCfg->contactEmail;
 
     // ── Send email ───────────────────────────────────────────
     $mail = new PHPMailer(true);
@@ -204,7 +204,6 @@ while ($row = $result->fetch_assoc()) {
 
         cronLog('info', "  ✓ Sent & marked — Issue #{$issue_id}");
         $sent_count++;
-
     } catch (Exception $e) {
         $error = $mail->ErrorInfo;
 
@@ -229,6 +228,3 @@ cronLog('info', "Job complete. Sent: {$sent_count} | Failed: {$failed_count} | T
 cronLog('info', '════════════════════════════════════════');
 
 exit($failed_count > 0 ? 1 : 0); // Non-zero exit code on any failure
-
-
-

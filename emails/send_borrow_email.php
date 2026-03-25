@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ============================================================
  *  ANTIGRAVITY LMS — Send Borrow Confirmation Email (SendGrid)
@@ -50,7 +51,7 @@ function sendBorrowEmail(
     }
 
     $logger  = new EmailLogger($conn);
-    $subject = "📚 Book Issued – {$book_title} | Antigravity Library";
+    $subject = "📚 Book Issued – {$book_title} | Aurora Library";
 
     /* =========================================================
        Build Email Body (HTML Template)
@@ -69,7 +70,7 @@ function sendBorrowEmail(
         "Due Date   : {$due_date}\n" .
         "Member ID  : {$member_id}\n\n" .
         "Please return before the due date to avoid fines (₹10/day).\n\n" .
-        "— Antigravity Library\n{$contact_email}";
+        "— Aurora Library\n{$contact_email}";
 
     /* =========================================================
        Send via SendGrid API (HTTPS - NOT SMTP)
@@ -85,7 +86,7 @@ function sendBorrowEmail(
         ]],
         "from" => [
             "email" => $contact_email,
-            "name"  => "Antigravity Library"
+            "name"  => "Aurora Library"
         ],
         "content" => [
             [
@@ -137,7 +138,6 @@ function sendBorrowEmail(
             'success' => true,
             'message' => 'Email sent successfully.'
         ];
-
     } else {
 
         // Log failure
@@ -157,5 +157,3 @@ function sendBorrowEmail(
         ];
     }
 }
-
-
